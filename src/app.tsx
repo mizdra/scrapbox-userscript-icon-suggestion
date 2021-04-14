@@ -1,6 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
 
 export type AppProps = {};
 
@@ -10,11 +8,5 @@ export function App(_props: AppProps) {
     setCount(count + 1);
   }, [count]);
 
-  return (
-    <Container maxWidth="sm">
-      <Button variant="contained" color="primary" onClick={handleClick}>
-        {count}
-      </Button>
-    </Container>
-  );
+  return <button onClick={handleClick}>{count}</button>;
 }
