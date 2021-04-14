@@ -1,0 +1,30 @@
+{
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "esnext", // ES周りは必要に応じて babel に任せる
+    "lib": ["esnext", "dom"],
+
+    /* Module Options */
+    "module": "esnext", // モジュール周りは tsc 側で弄らず webpack に任せる
+    "esModuleInterop": true, // CommonJS モジュールを `import _ from 'commonjs'` で import できるように
+    "resolveJsonModule": true, // import した json の型を推論するように
+    "moduleResolution": "node", // `node` にしないと `resolveJsonModule` が使えない
+    "forceConsistentCasingInFileNames": true, // 大文字小文字を区別しない環境 (win) でも unix と同じように区別する
+
+    /* Additional Features */
+    "jsx": "react",
+
+    /* Strict Type-Checking Options */
+    "strict": true,
+
+    /* Lint Options */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    /* Debug Options */
+    "sourceMap": true, // for ts-loader (ref: https://github.com/TypeStrong/ts-loader#devtool--sourcemaps)
+    "locale": "ja"
+  }
+}
