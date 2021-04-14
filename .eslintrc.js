@@ -9,5 +9,7 @@ module.exports = {
     es6: true,
     browser: true,
   },
-  rules: {},
+  rules: {
+    'react/react-in-jsx-scope': 0,
+  },
 };

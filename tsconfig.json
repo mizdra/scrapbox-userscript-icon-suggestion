@@ -14,7 +14,8 @@
     "forceConsistentCasingInFileNames": true, // 大文字小文字を区別しない環境 (win) でも unix と同じように区別する
 
     /* Additional Features */
-    "jsx": "react",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
 
     /* Strict Type-Checking Options */
     "strict": true,
