@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 
-export type AppProps = {};
+export type AppProps = Record<string, never>;
 
 export function App(_props: AppProps) {
   const [count, setCount] = useState(0);
