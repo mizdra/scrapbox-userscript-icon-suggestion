@@ -7,7 +7,7 @@
     "start": "yarn run dev",
     "build": "webpack --mode production",
     "dev": "webpack-dev-server --mode development",
-    "check": "run-p -l -c 'check:tsc --pretty' 'check:eslint --color' check:prettier",
+    "check": "run-s -c check:*",
     "check:tsc": "tsc --noEmit",
     "check:eslint": "eslint .",
     "check:prettier": "prettier --check ."
