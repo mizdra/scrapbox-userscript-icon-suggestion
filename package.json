@@ -7,10 +7,10 @@
     "start": "yarn run dev",
     "build": "webpack --mode production",
     "dev": "webpack-dev-server --mode development",
-    "check": "run-s -c check:*",
-    "check:tsc": "tsc --noEmit",
-    "check:eslint": "eslint .",
-    "check:prettier": "prettier --check ."
+    "lint": "run-s -c lint:*",
+    "lint:tsc": "tsc --noEmit",
+    "lint:eslint": "eslint .",
+    "lint:prettier": "prettier --check ."
   },
   "repository": {
     "type": "git",
