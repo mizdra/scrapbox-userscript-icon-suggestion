@@ -1,6 +1,6 @@
-# webpack-ts-skeleton
+# scrapbox-userscript-icon-suggestion
 
-TypeScript 向け素振り環境。
+Scrapbox's UserScript to suggest and insert icons.
 
 ## Usage
 

@@ -1,7 +1,7 @@
 {
-  "name": "webpack-ts-skeleton",
+  "name": "scrapbox-userscript-icon-suggestion",
   "version": "0.0.0",
-  "description": "",
+  "description": "Scrapbox's UserScript to suggest and insert icons.",
   "main": "index.js",
   "scripts": {
     "start": "yarn run dev",
