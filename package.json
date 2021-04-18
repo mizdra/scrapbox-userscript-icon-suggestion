@@ -23,12 +23,21 @@
   },
   "homepage": "https://github.com/mizdra/webpack-ts-skeleton#readme",
   "dependencies": {
+    "@emotion/css": "^11.1.3",
+    "@progfay/scrapbox-parser": "^7.0.2",
+    "@use-it/event-listener": "^0.1.6",
+    "classnames": "^2.3.1",
+    "lodash": "^4.17.21",
     "preact": "^10.5.13",
-    "preact-compat": "^3.19.0"
+    "preact-compat": "^3.19.0",
+    "react-hook-form": "^7.1.1"
   },
   "devDependencies": {
     "@mizdra/eslint-config-mizdra": "^0.8.0",
     "@mizdra/prettier-config-mizdra": "^0.3.0",
+    "@types/lodash": "^4.14.168",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.3",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "eslint": "^7.24.0",
@@ -37,12 +46,12 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "html-webpack-plugin": "^5.3.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
     "ts-loader": "^8.1.0",
     "typescript": "^4.2.4",
     "webpack": "^5.32.0",
+    "webpack-bundle-analyzer": "^4.4.1",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2"
   }

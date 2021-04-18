@@ -1,12 +1,44 @@
-import React, { useState, useCallback } from 'react';
+import useEventListener from '@use-it/event-listener';
+import { FunctionComponent } from 'preact';
+import { useCallback, useState } from 'preact/hooks';
+import { SuggestionBox } from './components/SuggestionBox';
 
-export type AppProps = Record<string, never>;
+type AppProps = {
+  isSuggestionOpenKeyDown: (e: KeyboardEvent) => boolean;
+  editor: HTMLElement;
+  textInput: HTMLElement;
+};
 
-export function App(_props: AppProps) {
-  const [count, setCount] = useState(0);
-  const handleClick = useCallback(() => {
-    setCount(count + 1);
-  }, [count]);
+export const App: FunctionComponent<AppProps> = (props) => {
+  const [opened, setOpened] = useState(false);
 
-  return <button onClick={handleClick}>{count}</button>;
-}
+  const handleIconSelect = useCallback((iconPath: string) => {
+    setOpened(false);
+    requestAnimationFrame(() => {
+      document.execCommand('insertText', undefined, iconPath);
+    });
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setOpened(false);
+  }, []);
+
+  const handleKeydown = useCallback(
+    (e: KeyboardEvent) => {
+      debugger;
+      const isSuggestionOpenKeyDown = props.isSuggestionOpenKeyDown(e);
+      if (!opened && isSuggestionOpenKeyDown) {
+        if (isSuggestionOpenKeyDown) {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpened(true);
+        }
+      }
+    },
+    [opened, props],
+  );
+
+  useEventListener('keydown', handleKeydown, document, { capture: true });
+
+  return <div>{opened && <SuggestionBox onSelect={handleIconSelect} onClose={handleClose} />}</div>;
+};
