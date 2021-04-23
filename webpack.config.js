@@ -2,6 +2,7 @@
 /* eslint-env node */
 
 const { resolve } = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const rootPath = resolve(__dirname, '.');
 const srcPath = resolve(__dirname, './src');
@@ -36,15 +37,15 @@ module.exports = (env, argv) => ({
 
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
-    alias: {
-      'react': 'preact-compat',
-      'react-dom': 'preact-compat',
-    },
   },
 
-  externals: {
-    'preact': '/api/code/pokutuna/preact@10.4.4/script.js',
-    'preact-compat': '/api/code/pokutuna/preact-compat@10.4.4/script.js',
+  optimization: {
+    minimize: false,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: { compress: {}, mangle: false },
+      }),
+    ],
   },
 
   experiments: {
