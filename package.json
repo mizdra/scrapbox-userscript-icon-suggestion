@@ -23,10 +23,8 @@
   },
   "homepage": "https://github.com/mizdra/webpack-ts-skeleton#readme",
   "dependencies": {
-    "@emotion/css": "^11.1.3",
     "@progfay/scrapbox-parser": "^7.0.2",
     "@use-it/event-listener": "^0.1.6",
-    "classnames": "^2.3.1",
     "lodash": "^4.17.21",
     "preact": "^10.5.13",
     "preact-compat": "^3.19.0",

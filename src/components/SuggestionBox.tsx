@@ -1,6 +1,6 @@
-import { css } from '@emotion/css';
 import { FunctionComponent, JSX } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
+import { JSXInternal } from 'preact/src/jsx';
 import { PopupMenu } from './PopupMenu';
 
 type SuggestionBoxProps = {
@@ -21,6 +21,6 @@ export const SuggestionBox: FunctionComponent<SuggestionBoxProps> = ({ onSelect,
   );
 };
 
-const queryInputStyle = css`
-  position: absolute;
-`;
+const queryInputStyle: JSXInternal.CSSProperties = {
+  position: 'absolute',
+};

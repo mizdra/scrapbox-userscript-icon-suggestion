@@ -1,7 +1,7 @@
-import { css } from '@emotion/css';
 import { uniqBy } from 'lodash';
 import { FunctionComponent } from 'preact';
 import { useEffect, useMemo, useState } from 'preact/hooks';
+import { JSXInternal } from 'preact/src/jsx';
 import { getCursor, scanIconsFromNotation } from '../lib/scrapbox';
 import { PopupMenuButton } from './PopupMenu/Button';
 
@@ -28,17 +28,18 @@ function useMatchedIcons(query: string) {
 
 function useStyles() {
   const cursor = getCursor();
-  const popupMenuStyle = css`
-    display: block;
-    top: ${cursor.top};
-  `;
-  const buttonContainerStyle = css`
-    left: ${cursor.left};
-    transform: translateX(-50%);
-  `;
-  const triangleStyle = css`
-    left: ${cursor.left};
-  `;
+  const popupMenuStyle: JSXInternal.CSSProperties = {
+    display: 'block',
+    top: cursor.top,
+    left: 0,
+  };
+  const buttonContainerStyle: JSXInternal.CSSProperties = {
+    left: cursor.left,
+    transform: 'translateX(-50%)',
+  };
+  const triangleStyle: JSXInternal.CSSProperties = {
+    left: cursor.left,
+  };
   return { popupMenuStyle, buttonContainerStyle, triangleStyle };
 }
 
@@ -74,13 +75,13 @@ export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, onSelect, 
   const { popupMenuStyle, buttonContainerStyle, triangleStyle } = useStyles();
 
   return (
-    <div className={`popup-menu ${popupMenuStyle}`} style="left: 0px">
-      <div className={`button-container ${buttonContainerStyle}`} style="transform: translateX(-50%);">
+    <div className="popup-menu" style={popupMenuStyle}>
+      <div className="button-container" style={buttonContainerStyle}>
         {icons.map((icon) => (
           <PopupMenuButton key={icon.path} icon={icon} />
         ))}
       </div>
-      <div className={`triangle ${triangleStyle}`} />
+      <div className="triangle" style={triangleStyle} />
     </div>
   );
 };

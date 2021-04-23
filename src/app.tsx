@@ -25,7 +25,6 @@ export const App: FunctionComponent<AppProps> = (props) => {
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
-      debugger;
       const isSuggestionOpenKeyDown = props.isSuggestionOpenKeyDown(e);
       if (!opened && isSuggestionOpenKeyDown) {
         if (isSuggestionOpenKeyDown) {
