@@ -15,7 +15,7 @@
 
     /* Additional Features */
     "jsx": "react-jsx",
-    "jsxImportSource": "jsx-dom",
+    "jsxImportSource": "preact",
 
     /* Strict Type-Checking Options */
     "strict": true,

@@ -1,5 +1,7 @@
-import { useClassList, useRef } from 'jsx-dom';
-import { SuggestionBox, SuggestionBoxHandler } from './components/SuggestionBox';
+import useEventListener from '@use-it/event-listener';
+import { FunctionComponent } from 'preact';
+import { useCallback, useState } from 'preact/hooks';
+import { SuggestionBox } from './components/SuggestionBox';
 
 type AppProps = {
   isSuggestionOpenKeyDown: (e: KeyboardEvent) => boolean;
@@ -7,41 +9,36 @@ type AppProps = {
   textInput: HTMLElement;
 };
 
-export const App = (props: AppProps) => {
-  const cls = useClassList(['icon-suggestion', 'hidden']);
-  const suggestionBoxRef = useRef<SuggestionBoxHandler>(null);
+export const App: FunctionComponent<AppProps> = (props) => {
+  const [opened, setOpened] = useState(false);
 
-  document.addEventListener(
-    'keydown',
-    (e) => {
+  const handleIconSelect = useCallback((iconPath: string) => {
+    setOpened(false);
+    requestAnimationFrame(() => {
+      document.execCommand('insertText', undefined, iconPath);
+    });
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setOpened(false);
+  }, []);
+
+  const handleKeydown = useCallback(
+    (e: KeyboardEvent) => {
+      debugger;
       const isSuggestionOpenKeyDown = props.isSuggestionOpenKeyDown(e);
-      if (cls.contains('hidden') && isSuggestionOpenKeyDown) {
+      if (!opened && isSuggestionOpenKeyDown) {
         if (isSuggestionOpenKeyDown) {
           e.preventDefault();
           e.stopPropagation();
-          cls.remove('hidden');
-          console.log({ suggestionBoxRef });
-          console.log(suggestionBoxRef.current);
-          suggestionBoxRef.current?.open();
+          setOpened(true);
         }
       }
     },
-    { capture: true },
+    [opened, props],
   );
 
-  const onSelect = (iconPath: string) => {
-    props.textInput.focus();
-    document.execCommand('insertText', undefined, `[${iconPath}.icon]`);
-    suggestionBoxRef.current?.close();
-  };
-  const onClose = () => {
-    cls.add('hidden');
-    props.textInput.focus();
-  };
+  useEventListener('keydown', handleKeydown, document, { capture: true });
 
-  return (
-    <div className={cls}>
-      <SuggestionBox rref={suggestionBoxRef} onSelect={onSelect} onClose={onClose} />
-    </div>
-  );
+  return <div>{opened && <SuggestionBox onSelect={handleIconSelect} onClose={handleClose} />}</div>;
 };

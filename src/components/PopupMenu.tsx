@@ -1,71 +1,86 @@
-import { useClassList, useRef } from 'jsx-dom';
-import { useImperativeHandle } from '../hooks/useImperativeHandle';
-import { RefObject } from '../types';
+import { css } from '@emotion/css';
+import { uniqBy } from 'lodash';
+import { FunctionComponent } from 'preact';
+import { useEffect, useMemo, useState } from 'preact/hooks';
+import { getCursor, scanIconsFromNotation } from '../lib/scrapbox';
+import { PopupMenuButton } from './PopupMenu/Button';
 
-export type PopupMenuHandler = {
-  setQuery: (query: string) => void;
-  open: () => void;
-  close: () => void;
-};
-
-export type PopupMenuProps = {
-  rref: RefObject<PopupMenuHandler>;
+type PopupMenuProps = {
+  query: string;
   onSelect: (iconPath: string) => void;
   onClose: () => void;
 };
 
-export const PopupMenu = ({ rref: ref, onSelect, onClose }: PopupMenuProps) => {
-  const cls = useClassList(['popup-menu', { hidden: true }]);
-  const buttonContainerRef = useRef<HTMLDivElement>(null);
-  const state = {
-    query: '',
-  };
+function useMatchedIcons(query: string) {
+  const icons = useMemo(() => {
+    const notation = scrapbox.Page.lines.map((line) => line.text).join('\n');
+    const icons = scanIconsFromNotation(notation);
+    return uniqBy(icons, (icon) => icon.path);
+  }, []); // render 毎ではなく最初に mount された時にだけ icon を取得すれば十分なので、 `[]` を第2引数に渡しておく
+  const matchedIcons = useMemo(() => {
+    return icons.filter((icon) => {
+      const target = icon.path.toLowerCase();
+      return target.includes(query.toLowerCase());
+    });
+  }, [icons, query]);
+  return matchedIcons;
+}
 
-  useImperativeHandle(ref, {
-    setQuery: (query) => {
-      state.query = query;
-    },
-    open: () => {
-      cls.remove('hidden');
-    },
-    close: () => {
-      cls.add('hidden');
-      onClose();
-    },
-  });
+function useStyles() {
+  const cursor = getCursor();
+  const popupMenuStyle = css`
+    display: block;
+    top: ${cursor.top};
+  `;
+  const buttonContainerStyle = css`
+    left: ${cursor.left};
+    transform: translateX(-50%);
+  `;
+  const triangleStyle = css`
+    left: ${cursor.left};
+  `;
+  return { popupMenuStyle, buttonContainerStyle, triangleStyle };
+}
 
-  document.addEventListener(
-    'keydown',
-    (e) => {
-      if (cls.contains('hidden')) return;
+export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, onSelect, onClose }) => {
+  const icons = useMatchedIcons(query);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-      const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-      const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
-      const isEnter = e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-      const isEscape = e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+  useEffect(() => {
+    document.addEventListener(
+      'keydown',
+      (e) => {
+        const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+        const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
+        const isEnter = e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+        const isEscape = e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
 
-      // IMEによる変換中は何もしない
-      if (e.isComposing) return;
+        // IMEによる変換中は何もしない
+        if (e.isComposing) return;
 
-      if (isTab || isShiftTab || isEnter || isEscape) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      if (isTab) console.log('tab');
-      if (isShiftTab) console.log('shift + tab');
-      if (isEnter) onSelect(state.query);
-      if (isEscape) {
-        ref.current?.close();
-        onClose();
-      }
-    },
-    true,
-  );
+        if (isTab || isShiftTab || isEnter || isEscape) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        if (isTab) setSelectedIndex((selectedIndex) => (selectedIndex + 1) % icons.length);
+        if (isShiftTab) setSelectedIndex((selectedIndex) => (selectedIndex - 1 + icons.length) % icons.length);
+        if (isEnter) onSelect(icons[selectedIndex].path);
+        if (isEscape) onClose();
+      },
+      true,
+    );
+  }, [icons, onClose, onSelect, selectedIndex]);
+
+  const { popupMenuStyle, buttonContainerStyle, triangleStyle } = useStyles();
 
   return (
-    <div className={cls} style="left: 0px">
-      <div ref={buttonContainerRef} className="button-container" style="transform: translateX(-50%);" />
-      <div className="triangle" />
+    <div className={`popup-menu ${popupMenuStyle}`} style="left: 0px">
+      <div className={`button-container ${buttonContainerStyle}`} style="transform: translateX(-50%);">
+        {icons.map((icon) => (
+          <PopupMenuButton key={icon.path} icon={icon} />
+        ))}
+      </div>
+      <div className={`triangle ${triangleStyle}`} />
     </div>
   );
 };
