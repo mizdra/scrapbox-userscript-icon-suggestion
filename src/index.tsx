@@ -9,7 +9,7 @@ const DEFAULT_IS_SUGEGSTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
 };
 
-export function registerIconSuggestion({ isSuggestionOpenKeyDown }: Options) {
+export function registerIconSuggestion(options?: Options) {
   const editor = document.querySelector<HTMLElement>('.editor');
   const textInput = document.querySelector<HTMLElement>('#text-input');
 
@@ -20,7 +20,7 @@ export function registerIconSuggestion({ isSuggestionOpenKeyDown }: Options) {
     <App
       textInput={textInput}
       editor={editor}
-      isSuggestionOpenKeyDown={isSuggestionOpenKeyDown ?? DEFAULT_IS_SUGEGSTION_OPEN_KEY_DOWN}
+      isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown ?? DEFAULT_IS_SUGEGSTION_OPEN_KEY_DOWN}
     />,
     editor,
   );

@@ -1,7 +1,7 @@
-import { uniqBy } from 'lodash';
 import { FunctionComponent } from 'preact';
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { JSXInternal } from 'preact/src/jsx';
+import { uniqBy } from '../lib/collection';
 import { getCursor, scanIconsFromNotation } from '../lib/scrapbox';
 import { PopupMenuButton } from './PopupMenu/Button';
 
