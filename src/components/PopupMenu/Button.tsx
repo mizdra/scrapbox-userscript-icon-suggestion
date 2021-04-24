@@ -1,8 +1,8 @@
 import { FunctionComponent } from 'preact';
-import { IconNode } from '../../types';
+import { Icon } from '../../types';
 
 export type PopupMenuButtonProps = {
-  icon: IconNode;
+  icon: Icon;
 };
 
 export const PopupMenuButton: FunctionComponent<PopupMenuButtonProps> = ({ icon }) => {

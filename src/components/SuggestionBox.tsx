@@ -1,10 +1,11 @@
 import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
+import { Icon } from '../types';
 import { PopupMenu } from './PopupMenu';
 import { QueryInput } from './QueryInput';
 
 type SuggestionBoxProps = {
-  onSelect: (iconPath: string) => void;
+  onSelect: (icon: Icon) => void;
   onClose: () => void;
 };
 

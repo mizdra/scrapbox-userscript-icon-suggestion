@@ -1,7 +1,8 @@
 import { FunctionComponent } from 'preact';
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useCallback, useState } from 'preact/hooks';
 import { SuggestionBox } from './components/SuggestionBox';
 import { useDocumentEventListener } from './hooks/useDocumentEventListener';
+import { Icon } from './types';
 
 type AppProps = {
   isSuggestionOpenKeyDown: (e: KeyboardEvent) => boolean;
@@ -13,10 +14,10 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, edit
   const [opened, setOpened] = useState(false);
 
   const handleIconSelect = useCallback(
-    (iconPath: string) => {
+    (icon: Icon) => {
       setOpened(false);
       textInput.focus();
-      document.execCommand('insertText', undefined, `[${iconPath}.icon]`);
+      document.execCommand('insertText', undefined, `[${icon.pagePath}.icon]`);
     },
     [textInput],
   );

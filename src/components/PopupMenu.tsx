@@ -4,11 +4,12 @@ import { JSXInternal } from 'preact/src/jsx';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { uniqBy } from '../lib/collection';
 import { getCursor, scanIconsFromNotation } from '../lib/scrapbox';
+import { Icon } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
 type PopupMenuProps = {
   query: string;
-  onSelect: (iconPath: string) => void;
+  onSelect: (icon: Icon) => void;
   onClose: () => void;
 };
 
@@ -63,7 +64,7 @@ export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, onSelect, 
       }
       if (isTab) setSelectedIndex((selectedIndex) => (selectedIndex + 1) % icons.length);
       if (isShiftTab) setSelectedIndex((selectedIndex) => (selectedIndex - 1 + icons.length) % icons.length);
-      if (isEnter) onSelect(icons[selectedIndex].pagePath);
+      if (isEnter) onSelect(icons[selectedIndex]);
       if (isEscape) onClose();
     },
     [icons, onClose, onSelect, selectedIndex],
@@ -86,7 +87,7 @@ export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, onSelect, 
       }
       if (isTab) setSelectedIndex((selectedIndex) => (selectedIndex + 1) % icons.length);
       if (isShiftTab) setSelectedIndex((selectedIndex) => (selectedIndex - 1 + icons.length) % icons.length);
-      if (isEnter) onSelect(icons[selectedIndex].pagePath);
+      if (isEnter) onSelect(icons[selectedIndex]);
       if (isEscape) onClose();
     };
     document.addEventListener('keydown', handleKeydown, { capture: true });

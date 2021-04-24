@@ -1,6 +1,6 @@
-import { IconNode } from '../types';
+import { Icon } from '../types';
 
-export function scanIconsFromNotation(): IconNode[] {
+export function scanIconsFromNotation(): Icon[] {
   const projectName = scrapbox.Project.name;
   const editor = document.querySelector('.editor')!;
   const iconElements = Array.from(editor.querySelectorAll<HTMLAnchorElement>('a.link.icon'));

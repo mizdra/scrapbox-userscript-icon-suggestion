@@ -2,7 +2,7 @@ export type FormData = {
   query: string;
 };
 
-export type IconNode = {
+export type Icon = {
   pagePath: string;
   imgAlt: string;
   imgTitle: string;
