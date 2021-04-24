@@ -1,6 +1,7 @@
 import { FunctionComponent, JSX } from 'preact';
-import { useCallback, useState } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { JSXInternal } from 'preact/src/jsx';
+import { getCursor } from '../lib/scrapbox';
 import { PopupMenu } from './PopupMenu';
 
 type SuggestionBoxProps = {
@@ -8,19 +9,38 @@ type SuggestionBoxProps = {
   onClose: () => void;
 };
 
+function useStyles() {
+  const cursor = getCursor();
+  const queryInputStyle: JSXInternal.CSSProperties = {
+    position: 'absolute',
+    top: cursor.top,
+    left: cursor.left,
+  };
+  return { queryInputStyle };
+}
+
 export const SuggestionBox: FunctionComponent<SuggestionBoxProps> = ({ onSelect, onClose }) => {
+  const queryInputRef = useRef<HTMLInputElement>();
   const [query, setQuery] = useState('');
-  const handleBlur = useCallback((e: JSX.TargetedEvent<HTMLInputElement, Event>) => {
+  const { queryInputStyle } = useStyles();
+
+  const handleInput = useCallback((e: JSX.TargetedEvent<HTMLInputElement, Event>) => {
     if (e.currentTarget?.value) setQuery(e.currentTarget.value);
   }, []);
+  useEffect(() => {
+    queryInputRef.current.focus();
+  });
+
   return (
     <div>
       <PopupMenu query={query} onSelect={onSelect} onClose={onClose} />;
-      <input className="form-control" style={queryInputStyle} onBlur={handleBlur} />
+      <input
+        ref={queryInputRef}
+        className="form-control"
+        style={queryInputStyle}
+        onInput={handleInput}
+        onBlur={onClose}
+      />
     </div>
   );
-};
-
-const queryInputStyle: JSXInternal.CSSProperties = {
-  position: 'absolute',
 };

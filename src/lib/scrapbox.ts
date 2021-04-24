@@ -10,9 +10,9 @@ export function scanIconsFromNotation(): IconNode[] {
       // NOTE: 今の所 projectName はアルファベット・数字・ハイフンしか利用できないので、
       // パーセントエンコーディングは意識せずに href をパースしている。
       // TODO: もし scrapbox が projectName に日本語などを混ぜられるようになったら、パースの仕方を見直す
-      pagePath: iconElement.href.startsWith(`/${projectName}/`)
-        ? iconElement.href.slice(projectName.length + 2)
-        : iconElement.href,
+      pagePath: iconElement.pathname.startsWith(`/${projectName}/`)
+        ? iconElement.pathname.slice(projectName.length + 2)
+        : iconElement.pathname,
       imgAlt: imgElement.alt,
       imgTitle: imgElement.title,
       imgSrc: imgElement.src,

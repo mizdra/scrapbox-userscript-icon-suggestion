@@ -15,6 +15,7 @@ export const PopupMenuButton: FunctionComponent<PopupMenuButtonProps> = ({ icon 
           style="width: 1.3em; height: 1.3em; object-fit: contain;"
           src={icon.imgSrc}
         />
+        {icon.pagePath}
       </span>
     </div>
   );
