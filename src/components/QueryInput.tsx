@@ -34,14 +34,16 @@ export const QueryInput: FunctionComponent<QueryInputProps> = ({ defaultQuery, o
   );
 
   return (
-    <input
-      ref={ref}
-      className="form-control"
-      style={queryInputStyle}
-      value={defaultQuery}
-      default
-      onInput={handleInput}
-      onBlur={onBlur}
-    />
+    <form className="form-inline">
+      <input
+        ref={ref}
+        className="form-control"
+        style={queryInputStyle}
+        value={defaultQuery}
+        default
+        onInput={handleInput}
+        onBlur={onBlur}
+      />
+    </form>
   );
 };
