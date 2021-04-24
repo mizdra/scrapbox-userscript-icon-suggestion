@@ -39,7 +39,7 @@ export const QueryInput: FunctionComponent<QueryInputProps> = ({ defaultQuery, c
         value={defaultQuery}
         default
         onInput={handleInput}
-        // onBlur={onBlur}
+        onBlur={onBlur}
       />
     </form>
   );
