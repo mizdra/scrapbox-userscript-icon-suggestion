@@ -23,7 +23,7 @@
   "homepage": "https://github.com/mizdra/webpack-ts-skeleton#readme",
   "dependencies": {
     "preact": "^10.5.13",
-    "react-use": "^17.2.4"
+    "use-resize-observer": "^7.0.0"
   },
   "devDependencies": {
     "@mizdra/eslint-config-mizdra": "^0.8.0",

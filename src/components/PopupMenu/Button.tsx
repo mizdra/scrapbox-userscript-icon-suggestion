@@ -1,23 +1,11 @@
-import { FunctionComponent } from 'preact';
-import { Icon } from '../../types';
+import { VNode } from 'preact';
+import { Item } from '../PopupMenu';
 
-export type PopupMenuButtonProps = {
+export type PopupMenuButtonProps<T extends VNode> = {
   selected?: boolean;
-  icon: Icon;
+  item: Item<T>;
 };
 
-export const PopupMenuButton: FunctionComponent<PopupMenuButtonProps> = ({ icon, selected }) => {
-  return (
-    <div className={selected ? 'button selected' : 'button'}>
-      <span>
-        <img
-          alt={icon.imgAlt}
-          title={icon.imgTitle}
-          style="width: 1.3em; height: 1.3em; object-fit: contain;"
-          src={icon.imgSrc}
-        />
-        {' ' + icon.pagePath}
-      </span>
-    </div>
-  );
-};
+export function PopupMenuButton<T extends VNode>({ item, selected }: PopupMenuButtonProps<T>) {
+  return <div className={selected ? 'button selected' : 'button'}>{item.element}</div>;
+}

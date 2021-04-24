@@ -1,85 +1,107 @@
-import { FunctionComponent } from 'preact';
+import { Key, VNode } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { useMeasure } from 'react-use';
+import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
-import { uniqBy } from '../lib/collection';
 import { calcButtonContainerPosition, calcPopupMenuStyle, calcTrianglePosition } from '../lib/position';
-import { scanIconsFromEditor } from '../lib/scrapbox';
-import { CursorPosition, Icon } from '../types';
+import { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
-type PopupMenuProps = {
+const editor = document.querySelector<HTMLElement>('.editor')!;
+
+export type Item<T extends VNode> = { element: T; searchableText: string; key: Key };
+
+type PopupMenuProps<T extends VNode> = {
+  open: boolean;
+  emptyMessage: string;
   query: string;
   cursorPosition: CursorPosition;
-  onSelect: (icon: Icon) => void;
+  items: Item<T>[];
+  onSelect: (item: Item<T>) => void;
+  onSelectNonexistent: () => void;
   onClose: () => void;
 };
 
-function useMatchedIcons(query: string) {
-  const projectName = scrapbox.Project.name;
-  const editor = document.querySelector<HTMLElement>('.editor')!;
-  const icons = useMemo(() => {
-    const icons = scanIconsFromEditor(projectName, editor);
-    return uniqBy(icons, (icon) => icon.pagePath);
-  }, [editor, projectName]); // render 毎ではなく最初に mount された時にだけ icon を取得すれば十分なので、 `[]` を第2引数に渡しておく
-  const matchedIcons = useMemo(() => {
-    return icons.filter((icon) => {
-      const target = icon.pagePath.toLowerCase();
+function useMatchedItems<T extends VNode>(query: string, items: Item<T>[]): Item<T>[] {
+  const matchedItems = useMemo(() => {
+    return items.filter((item) => {
+      const target = item.searchableText.toLowerCase();
       return target.includes(query.toLowerCase());
     });
-  }, [icons, query]);
-  return matchedIcons;
+  }, [items, query]);
+  return matchedItems;
 }
 
-export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, cursorPosition, onSelect, onClose }) => {
-  const [ref, { width: buttonContainerWidth }] = useMeasure();
-  const icons = useMatchedIcons(query);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const editorWidth = useMemo(() => document.querySelector('.editor')!.clientWidth, []);
+export function PopupMenu<T extends VNode>({
+  open,
+  emptyMessage,
+  query,
+  cursorPosition,
+  items,
+  onSelect,
+  onSelectNonexistent,
+  onClose,
+}: PopupMenuProps<T>) {
+  const { ref, width: buttonContainerWidth = 0 } = useResizeObserver<HTMLDivElement>();
+  const matchedItems = useMatchedItems(query, items);
+  const isEmpty = useMemo(() => matchedItems.length === 0, [matchedItems.length]);
 
-  // query が変わったら選択位置を 0 番目に戻す
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const { width: editorWidth = 0 } = useResizeObserver({ ref: editor });
+
+  // query や items が変わったら選択位置を 0 番目に戻す。ただし空なら null にセットする。
   useEffect(() => {
-    setSelectedIndex(0);
-  }, [query]);
+    setSelectedIndex(isEmpty ? null : 0);
+  }, [isEmpty, query, items]);
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
+      // 閉じている時は何もしない
+      if (!open) return;
+      // IMEによる変換中は何もしない
+      if (e.isComposing) return;
+
       const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
       const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
       const isEnter = e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey;
       const isEscape = e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
 
-      // IMEによる変換中は何もしない
-      if (e.isComposing) return;
-
       if (isTab || isShiftTab || isEnter || isEscape) {
         e.preventDefault();
         e.stopPropagation();
       }
-      if (isTab) setSelectedIndex((selectedIndex) => (selectedIndex + 1) % icons.length);
-      if (isShiftTab) setSelectedIndex((selectedIndex) => (selectedIndex - 1 + icons.length) % icons.length);
-      if (isEnter) onSelect(icons[selectedIndex]);
-      if (isEscape) onClose();
+
+      if (isEmpty || selectedIndex === null) {
+        if (isEnter) onSelectNonexistent();
+        if (isEscape) onClose();
+      } else {
+        if (isTab) setSelectedIndex((selectedIndex + 1) % matchedItems.length);
+        if (isShiftTab) setSelectedIndex((selectedIndex - 1 + matchedItems.length) % matchedItems.length);
+        if (isEnter) onSelect(matchedItems[selectedIndex]);
+        if (isEscape) onClose();
+      }
     },
-    [icons, onClose, onSelect, selectedIndex],
+    [isEmpty, matchedItems, onClose, onSelect, onSelectNonexistent, open, selectedIndex],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
-  const isEmpty = icons.length === 0;
   const popupMenuStyle = calcPopupMenuStyle(cursorPosition);
   const triangleStyle = calcTrianglePosition(cursorPosition, isEmpty);
   const buttonContainerStyle = calcButtonContainerPosition(editorWidth, buttonContainerWidth, cursorPosition, isEmpty);
 
-  const iconListElement = icons.map((icon, i) => (
-    <PopupMenuButton key={icon.pagePath} selected={selectedIndex === i} icon={icon} />
+  const itemListElement = matchedItems.map((item, i) => (
+    <PopupMenuButton key={item.searchableText} selected={selectedIndex === i} item={item} />
   ));
 
   return (
-    <div className="popup-menu" style={popupMenuStyle}>
-      <div ref={ref as any} className="button-container" style={buttonContainerStyle}>
-        {icons.length === 0 ? 'キーワードにマッチするアイコンがありません' : iconListElement}
-      </div>
-      <div className="triangle" style={triangleStyle} />
-    </div>
+    <>
+      {open && (
+        <div className="popup-menu" style={popupMenuStyle}>
+          <div ref={ref} className="button-container" style={buttonContainerStyle}>
+            {matchedItems.length === 0 ? emptyMessage : itemListElement}
+          </div>
+          <div className="triangle" style={triangleStyle} />
+        </div>
+      )}
+    </>
   );
-};
+}
