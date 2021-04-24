@@ -4,7 +4,7 @@ import { useMeasure } from 'react-use';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { uniqBy } from '../lib/collection';
 import { calcButtonContainerPosition, calcPopupMenuStyle, calcTrianglePosition } from '../lib/position';
-import { scanIconsFromNotation } from '../lib/scrapbox';
+import { scanIconsFromEditor } from '../lib/scrapbox';
 import { CursorPosition, Icon } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
@@ -16,10 +16,12 @@ type PopupMenuProps = {
 };
 
 function useMatchedIcons(query: string) {
+  const projectName = scrapbox.Project.name;
+  const editor = document.querySelector<HTMLElement>('.editor')!;
   const icons = useMemo(() => {
-    const icons = scanIconsFromNotation();
+    const icons = scanIconsFromEditor(projectName, editor);
     return uniqBy(icons, (icon) => icon.pagePath);
-  }, []); // render 毎ではなく最初に mount された時にだけ icon を取得すれば十分なので、 `[]` を第2引数に渡しておく
+  }, [editor, projectName]); // render 毎ではなく最初に mount された時にだけ icon を取得すれば十分なので、 `[]` を第2引数に渡しておく
   const matchedIcons = useMemo(() => {
     return icons.filter((icon) => {
       const target = icon.pagePath.toLowerCase();

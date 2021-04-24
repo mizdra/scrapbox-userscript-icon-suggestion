@@ -1,8 +1,6 @@
 import { CursorPosition, Icon } from '../types';
 
-export function scanIconsFromNotation(): Icon[] {
-  const projectName = scrapbox.Project.name;
-  const editor = document.querySelector('.editor')!;
+export function scanIconsFromEditor(projectName: string, editor: HTMLElement): Icon[] {
   const iconElements = Array.from(editor.querySelectorAll<HTMLAnchorElement>('a.link.icon'));
   return iconElements.map((iconElement) => {
     const imgElement = iconElement.querySelector<HTMLImageElement>('img.icon')!;

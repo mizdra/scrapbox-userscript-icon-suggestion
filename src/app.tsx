@@ -37,10 +37,17 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, edit
         e.stopPropagation();
         const cursorPosition = calcCursorPosition(window, document.querySelector<HTMLElement>('.cursor')!);
         setCursorPosition(cursorPosition);
-        setOpened(true);
+
+        // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanIconsFromEditor` で
+        // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった
+        // 行のアイコン記法が画像化されるようにしておく。
+        textInput.blur();
+        requestAnimationFrame(() => {
+          setOpened(true);
+        });
       }
     },
-    [isSuggestionOpenKeyDown, opened],
+    [isSuggestionOpenKeyDown, opened, textInput],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
