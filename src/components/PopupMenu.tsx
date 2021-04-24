@@ -47,28 +47,26 @@ export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, onSelect, 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
-    document.addEventListener(
-      'keydown',
-      (e) => {
-        const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-        const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
-        const isEnter = e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-        const isEscape = e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+    const handleKeydown = (e: KeyboardEvent) => {
+      const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+      const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
+      const isEnter = e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+      const isEscape = e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
 
-        // IMEによる変換中は何もしない
-        if (e.isComposing) return;
+      // IMEによる変換中は何もしない
+      if (e.isComposing) return;
 
-        if (isTab || isShiftTab || isEnter || isEscape) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-        if (isTab) setSelectedIndex((selectedIndex) => (selectedIndex + 1) % icons.length);
-        if (isShiftTab) setSelectedIndex((selectedIndex) => (selectedIndex - 1 + icons.length) % icons.length);
-        if (isEnter) onSelect(icons[selectedIndex].pagePath);
-        if (isEscape) onClose();
-      },
-      true,
-    );
+      if (isTab || isShiftTab || isEnter || isEscape) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (isTab) setSelectedIndex((selectedIndex) => (selectedIndex + 1) % icons.length);
+      if (isShiftTab) setSelectedIndex((selectedIndex) => (selectedIndex - 1 + icons.length) % icons.length);
+      if (isEnter) onSelect(icons[selectedIndex].pagePath);
+      if (isEscape) onClose();
+    };
+    document.addEventListener('keydown', handleKeydown, { capture: true });
+    return () => document.removeEventListener('keydown', handleKeydown, { capture: true });
   }, [icons, onClose, onSelect, selectedIndex]);
 
   const { popupMenuStyle, buttonContainerStyle, triangleStyle } = useStyles();

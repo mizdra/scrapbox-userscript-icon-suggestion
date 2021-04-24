@@ -25,7 +25,7 @@ export const QueryInput: FunctionComponent<QueryInputProps> = ({ defaultQuery, o
 
   useEffect(() => {
     ref.current.focus();
-  });
+  }, []);
   const handleInput = useCallback(
     (e: JSX.TargetedEvent<HTMLInputElement, Event>) => {
       if (e.currentTarget?.value) onInput(e.currentTarget.value);

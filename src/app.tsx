@@ -8,25 +8,28 @@ type AppProps = {
   textInput: HTMLElement;
 };
 
-export const App: FunctionComponent<AppProps> = (props) => {
+export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, editor, textInput }) => {
   const [opened, setOpened] = useState(false);
 
-  const handleIconSelect = useCallback((iconPath: string) => {
-    setOpened(false);
-    requestAnimationFrame(() => {
-      document.execCommand('insertText', undefined, iconPath);
-    });
-  }, []);
+  const handleIconSelect = useCallback(
+    (iconPath: string) => {
+      setOpened(false);
+      textInput.focus();
+      document.execCommand('insertText', undefined, `[${iconPath}.icon]`);
+    },
+    [textInput],
+  );
 
   const handleClose = useCallback(() => {
     setOpened(false);
-  }, []);
+    textInput.focus();
+  }, [textInput]);
 
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {
-      const isSuggestionOpenKeyDown = props.isSuggestionOpenKeyDown(e);
-      if (!opened && isSuggestionOpenKeyDown) {
-        if (isSuggestionOpenKeyDown) {
+      const isSuggestionOpen = isSuggestionOpenKeyDown(e);
+      if (!opened && isSuggestionOpen) {
+        if (isSuggestionOpen) {
           e.preventDefault();
           e.stopPropagation();
           setOpened(true);
@@ -34,7 +37,7 @@ export const App: FunctionComponent<AppProps> = (props) => {
       }
     };
     document.addEventListener('keydown', handleKeydown, { capture: true });
-    return () => document.removeEventListener('keydown', handleKeydown);
+    return () => document.removeEventListener('keydown', handleKeydown, { capture: true });
   });
 
   return <div>{opened && <SuggestionBox onSelect={handleIconSelect} onClose={handleClose} />}</div>;
