@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'preact';
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { JSXInternal } from 'preact/src/jsx';
+import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { uniqBy } from '../lib/collection';
 import { getCursor, scanIconsFromNotation } from '../lib/scrapbox';
 import { PopupMenuButton } from './PopupMenu/Button';
@@ -45,6 +46,29 @@ function useStyles() {
 export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, onSelect, onClose }) => {
   const icons = useMatchedIcons(query);
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const handleKeydown = useCallback(
+    (e: KeyboardEvent) => {
+      const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+      const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
+      const isEnter = e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+      const isEscape = e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+
+      // IMEによる変換中は何もしない
+      if (e.isComposing) return;
+
+      if (isTab || isShiftTab || isEnter || isEscape) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (isTab) setSelectedIndex((selectedIndex) => (selectedIndex + 1) % icons.length);
+      if (isShiftTab) setSelectedIndex((selectedIndex) => (selectedIndex - 1 + icons.length) % icons.length);
+      if (isEnter) onSelect(icons[selectedIndex].pagePath);
+      if (isEscape) onClose();
+    },
+    [icons, onClose, onSelect, selectedIndex],
+  );
+  useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {

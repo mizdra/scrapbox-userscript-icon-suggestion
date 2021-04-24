@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import { SuggestionBox } from './components/SuggestionBox';
+import { useDocumentEventListener } from './hooks/useDocumentEventListener';
 
 type AppProps = {
   isSuggestionOpenKeyDown: (e: KeyboardEvent) => boolean;
@@ -25,20 +26,18 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, edit
     textInput.focus();
   }, [textInput]);
 
-  useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent) => {
+  const handleKeydown = useCallback(
+    (e: KeyboardEvent) => {
       const isSuggestionOpen = isSuggestionOpenKeyDown(e);
       if (!opened && isSuggestionOpen) {
-        if (isSuggestionOpen) {
-          e.preventDefault();
-          e.stopPropagation();
-          setOpened(true);
-        }
+        e.preventDefault();
+        e.stopPropagation();
+        setOpened(true);
       }
-    };
-    document.addEventListener('keydown', handleKeydown, { capture: true });
-    return () => document.removeEventListener('keydown', handleKeydown, { capture: true });
-  });
+    },
+    [isSuggestionOpenKeyDown, opened],
+  );
+  useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
   return <div>{opened && <SuggestionBox onSelect={handleIconSelect} onClose={handleClose} />}</div>;
 };
