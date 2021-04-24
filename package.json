@@ -24,7 +24,6 @@
   "dependencies": {
     "@use-it/event-listener": "^0.1.6",
     "preact": "^10.5.13",
-    "preact-compat": "^3.19.0",
     "react-hook-form": "^7.1.1"
   },
   "devDependencies": {
