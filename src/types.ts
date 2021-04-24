@@ -1,9 +1,10 @@
-export type Icon = {
-  projectName: string;
-  pageName: string;
-  identifier: string;
-};
-
 export type FormData = {
   query: string;
+};
+
+export type IconNode = {
+  pagePath: string;
+  imgAlt: string;
+  imgTitle: string;
+  imgSrc: string;
 };

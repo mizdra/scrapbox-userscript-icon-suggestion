@@ -1,6 +1,5 @@
-import { IconNode } from '@progfay/scrapbox-parser';
 import { FunctionComponent } from 'preact';
-import { generateIconSrc } from '../../lib/scrapbox';
+import { IconNode } from '../../types';
 
 export type PopupMenuButtonProps = {
   icon: IconNode;
@@ -11,10 +10,10 @@ export const PopupMenuButton: FunctionComponent<PopupMenuButtonProps> = ({ icon 
     <div className="button">
       <span>
         <img
-          alt={icon.path}
-          title={icon.path}
+          alt={icon.imgAlt}
+          title={icon.imgTitle}
           style="width: 1.3em; height: 1.3em; object-fit: contain;"
-          src={generateIconSrc(icon, scrapbox.Project.name)}
+          src={icon.imgSrc}
         />
       </span>
     </div>

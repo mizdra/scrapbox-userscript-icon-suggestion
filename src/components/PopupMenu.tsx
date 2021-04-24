@@ -13,13 +13,12 @@ type PopupMenuProps = {
 
 function useMatchedIcons(query: string) {
   const icons = useMemo(() => {
-    const notation = scrapbox.Page.lines.map((line) => line.text).join('\n');
-    const icons = scanIconsFromNotation(notation);
-    return uniqBy(icons, (icon) => icon.path);
+    const icons = scanIconsFromNotation();
+    return uniqBy(icons, (icon) => icon.pagePath);
   }, []); // render 毎ではなく最初に mount された時にだけ icon を取得すれば十分なので、 `[]` を第2引数に渡しておく
   const matchedIcons = useMemo(() => {
     return icons.filter((icon) => {
-      const target = icon.path.toLowerCase();
+      const target = icon.pagePath.toLowerCase();
       return target.includes(query.toLowerCase());
     });
   }, [icons, query]);
@@ -65,7 +64,7 @@ export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, onSelect, 
         }
         if (isTab) setSelectedIndex((selectedIndex) => (selectedIndex + 1) % icons.length);
         if (isShiftTab) setSelectedIndex((selectedIndex) => (selectedIndex - 1 + icons.length) % icons.length);
-        if (isEnter) onSelect(icons[selectedIndex].path);
+        if (isEnter) onSelect(icons[selectedIndex].pagePath);
         if (isEscape) onClose();
       },
       true,
@@ -78,7 +77,7 @@ export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, onSelect, 
     <div className="popup-menu" style={popupMenuStyle}>
       <div className="button-container" style={buttonContainerStyle}>
         {icons.map((icon) => (
-          <PopupMenuButton key={icon.path} icon={icon} />
+          <PopupMenuButton key={icon.pagePath} icon={icon} />
         ))}
       </div>
       <div className="triangle" style={triangleStyle} />
