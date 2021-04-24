@@ -22,8 +22,7 @@
   },
   "homepage": "https://github.com/mizdra/webpack-ts-skeleton#readme",
   "dependencies": {
-    "preact": "^10.5.13",
-    "react-hook-form": "^7.1.1"
+    "preact": "^10.5.13"
   },
   "devDependencies": {
     "@mizdra/eslint-config-mizdra": "^0.8.0",
