@@ -29,12 +29,6 @@ function useMatchedIcons(query: string) {
   return matchedIcons;
 }
 
-function useStyles(cursorPosition: CursorPosition) {
-  const popupMenuStyle = calcPopupMenuStyle(cursorPosition);
-  const triangleStyle = calcTrianglePosition(cursorPosition);
-  return { popupMenuStyle, triangleStyle };
-}
-
 export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, cursorPosition, onSelect, onClose }) => {
   const [ref, { width: buttonContainerWidth }] = useMeasure();
   const icons = useMatchedIcons(query);
@@ -69,15 +63,19 @@ export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, cursorPosi
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
-  const { popupMenuStyle, triangleStyle } = useStyles(cursorPosition);
-  const buttonContainerStyle = calcButtonContainerPosition(editorWidth, buttonContainerWidth, cursorPosition);
+  const isEmpty = icons.length === 0;
+  const popupMenuStyle = calcPopupMenuStyle(cursorPosition);
+  const triangleStyle = calcTrianglePosition(cursorPosition, isEmpty);
+  const buttonContainerStyle = calcButtonContainerPosition(editorWidth, buttonContainerWidth, cursorPosition, isEmpty);
+
+  const iconListElement = icons.map((icon, i) => (
+    <PopupMenuButton key={icon.pagePath} selected={selectedIndex === i} icon={icon} />
+  ));
 
   return (
     <div className="popup-menu" style={popupMenuStyle}>
       <div ref={ref as any} className="button-container" style={buttonContainerStyle}>
-        {icons.map((icon, i) => (
-          <PopupMenuButton key={icon.pagePath} selected={selectedIndex === i} icon={icon} />
-        ))}
+        {icons.length === 0 ? 'キーワードにマッチするアイコンがありません' : iconListElement}
       </div>
       <div className="triangle" style={triangleStyle} />
     </div>
