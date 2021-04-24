@@ -16,12 +16,17 @@ export function registerIconSuggestion(options?: Options) {
   if (!editor) throw new Error('.editor が存在しません');
   if (!textInput) throw new Error('#text-input が存在しません');
 
+  // 直接 editor に mount すると scrapbox 側の react renderer と干渉して壊れるので、
+  // editor 内に差し込んだ container に mount する
+  const container = document.createElement('div');
+  editor.appendChild(container);
+
   render(
     <App
       textInput={textInput}
       editor={editor}
       isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown ?? DEFAULT_IS_SUGEGSTION_OPEN_KEY_DOWN}
     />,
-    editor,
+    container,
   );
 }
