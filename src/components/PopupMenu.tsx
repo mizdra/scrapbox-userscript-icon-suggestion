@@ -1,7 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { ReactElement } from 'react';
-import { useSize } from 'react-use';
+import { useMeasure } from 'react-use';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { uniqBy } from '../lib/collection';
 import { calcButtonContainerPosition, calcPopupMenuStyle, calcTrianglePosition } from '../lib/position';
@@ -37,9 +36,15 @@ function useStyles(cursorPosition: CursorPosition) {
 }
 
 export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, cursorPosition, onSelect, onClose }) => {
+  const [ref, { width: buttonContainerWidth }] = useMeasure();
   const icons = useMatchedIcons(query);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const editorWidth = useMemo(() => document.querySelector('.editor')!.clientWidth, []);
+
+  // query が変わったら選択位置を 0 番目に戻す
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [query]);
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
@@ -65,21 +70,15 @@ export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, cursorPosi
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
   const { popupMenuStyle, triangleStyle } = useStyles(cursorPosition);
-
-  const [sized] = useSize(({ width }) => {
-    const buttonContainerStyle = calcButtonContainerPosition(editorWidth, width, cursorPosition);
-    return (
-      <div className="button-container" style={buttonContainerStyle}>
-        {icons.map((icon) => (
-          <PopupMenuButton key={icon.pagePath} icon={icon} />
-        ))}
-      </div>
-    ) as ReactElement;
-  });
+  const buttonContainerStyle = calcButtonContainerPosition(editorWidth, buttonContainerWidth, cursorPosition);
 
   return (
     <div className="popup-menu" style={popupMenuStyle}>
-      {sized}
+      <div ref={ref as any} className="button-container" style={buttonContainerStyle}>
+        {icons.map((icon, i) => (
+          <PopupMenuButton key={icon.pagePath} selected={selectedIndex === i} icon={icon} />
+        ))}
+      </div>
       <div className="triangle" style={triangleStyle} />
     </div>
   );

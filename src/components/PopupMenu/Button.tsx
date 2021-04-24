@@ -2,12 +2,13 @@ import { FunctionComponent } from 'preact';
 import { Icon } from '../../types';
 
 export type PopupMenuButtonProps = {
+  selected?: boolean;
   icon: Icon;
 };
 
-export const PopupMenuButton: FunctionComponent<PopupMenuButtonProps> = ({ icon }) => {
+export const PopupMenuButton: FunctionComponent<PopupMenuButtonProps> = ({ icon, selected }) => {
   return (
-    <div className="button">
+    <div className={selected ? 'button selected' : 'button'}>
       <span>
         <img
           alt={icon.imgAlt}
