@@ -1,14 +1,17 @@
 import { FunctionComponent } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { JSXInternal } from 'preact/src/jsx';
+import { ReactElement } from 'react';
+import { useSize } from 'react-use';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { uniqBy } from '../lib/collection';
-import { getCursor, scanIconsFromNotation } from '../lib/scrapbox';
-import { Icon } from '../types';
+import { calcButtonContainerPosition, calcPopupMenuStyle, calcTrianglePosition } from '../lib/position';
+import { scanIconsFromNotation } from '../lib/scrapbox';
+import { CursorPosition, Icon } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
 type PopupMenuProps = {
   query: string;
+  cursorPosition: CursorPosition;
   onSelect: (icon: Icon) => void;
   onClose: () => void;
 };
@@ -27,26 +30,16 @@ function useMatchedIcons(query: string) {
   return matchedIcons;
 }
 
-function useStyles() {
-  const cursor = getCursor();
-  const popupMenuStyle: JSXInternal.CSSProperties = {
-    display: 'block',
-    top: cursor.top,
-    left: 0,
-  };
-  const buttonContainerStyle: JSXInternal.CSSProperties = {
-    left: cursor.left,
-    transform: 'translateX(-50%)',
-  };
-  const triangleStyle: JSXInternal.CSSProperties = {
-    left: cursor.left,
-  };
-  return { popupMenuStyle, buttonContainerStyle, triangleStyle };
+function useStyles(cursorPosition: CursorPosition) {
+  const popupMenuStyle = calcPopupMenuStyle(cursorPosition);
+  const triangleStyle = calcTrianglePosition(cursorPosition);
+  return { popupMenuStyle, triangleStyle };
 }
 
-export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, onSelect, onClose }) => {
+export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, cursorPosition, onSelect, onClose }) => {
   const icons = useMatchedIcons(query);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const editorWidth = useMemo(() => document.querySelector('.editor')!.clientWidth, []);
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
@@ -71,38 +64,22 @@ export const PopupMenu: FunctionComponent<PopupMenuProps> = ({ query, onSelect, 
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
-  useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent) => {
-      const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-      const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
-      const isEnter = e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-      const isEscape = e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+  const { popupMenuStyle, triangleStyle } = useStyles(cursorPosition);
 
-      // IMEによる変換中は何もしない
-      if (e.isComposing) return;
-
-      if (isTab || isShiftTab || isEnter || isEscape) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      if (isTab) setSelectedIndex((selectedIndex) => (selectedIndex + 1) % icons.length);
-      if (isShiftTab) setSelectedIndex((selectedIndex) => (selectedIndex - 1 + icons.length) % icons.length);
-      if (isEnter) onSelect(icons[selectedIndex]);
-      if (isEscape) onClose();
-    };
-    document.addEventListener('keydown', handleKeydown, { capture: true });
-    return () => document.removeEventListener('keydown', handleKeydown, { capture: true });
-  }, [icons, onClose, onSelect, selectedIndex]);
-
-  const { popupMenuStyle, buttonContainerStyle, triangleStyle } = useStyles();
-
-  return (
-    <div className="popup-menu" style={popupMenuStyle}>
+  const [sized] = useSize(({ width }) => {
+    const buttonContainerStyle = calcButtonContainerPosition(editorWidth, width, cursorPosition);
+    return (
       <div className="button-container" style={buttonContainerStyle}>
         {icons.map((icon) => (
           <PopupMenuButton key={icon.pagePath} icon={icon} />
         ))}
       </div>
+    ) as ReactElement;
+  });
+
+  return (
+    <div className="popup-menu" style={popupMenuStyle}>
+      {sized}
       <div className="triangle" style={triangleStyle} />
     </div>
   );

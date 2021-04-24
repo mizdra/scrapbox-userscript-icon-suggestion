@@ -1,4 +1,4 @@
-import { Icon } from '../types';
+import { CursorPosition, Icon } from '../types';
 
 export function scanIconsFromNotation(): Icon[] {
   const projectName = scrapbox.Project.name;
@@ -30,4 +30,14 @@ export function getEditor() {
   const editor = document.querySelector('.editor');
   if (!editor) throw new Error('.editor が存在しません');
   return { clientWidth: editor.clientWidth };
+}
+
+export function calcCursorPosition(window: Window, cursor: HTMLElement): CursorPosition {
+  const top = +cursor.style.top.slice(0, -2);
+  const left = +cursor.style.left.slice(0, -2);
+  return {
+    left: window.scrollY + cursor.getBoundingClientRect().left,
+    styleTop: top,
+    styleLeft: left,
+  };
 }

@@ -1,27 +1,24 @@
 import { FunctionComponent, JSX } from 'preact';
-import { useCallback, useEffect, useRef } from 'preact/hooks';
-import { JSXInternal } from 'preact/src/jsx';
-import { getCursor } from '../lib/scrapbox';
+import { useCallback, useEffect, useMemo, useRef } from 'preact/hooks';
+import { calcQueryInputPosition } from '../lib/position';
+import { CursorPosition } from '../types';
 
 export type QueryInputProps = {
   defaultQuery: string;
+  cursorPosition: CursorPosition;
   onInput: (newQuery: string) => void;
   onBlur: () => void;
 };
 
-function useStyles() {
-  const cursor = getCursor();
-  const queryInputStyle: JSXInternal.CSSProperties = {
-    position: 'absolute',
-    top: cursor.top,
-    left: cursor.left,
-  };
+function useStyles(viewportWidth: number, cursorPosition: CursorPosition) {
+  const queryInputStyle = calcQueryInputPosition(viewportWidth, cursorPosition);
   return { queryInputStyle };
 }
 
-export const QueryInput: FunctionComponent<QueryInputProps> = ({ defaultQuery, onInput, onBlur }) => {
+export const QueryInput: FunctionComponent<QueryInputProps> = ({ defaultQuery, cursorPosition, onInput, onBlur }) => {
   const ref = useRef<HTMLInputElement>();
-  const { queryInputStyle } = useStyles();
+  const viewportWidth = useMemo(() => document.body.clientWidth, []);
+  const { queryInputStyle } = useStyles(viewportWidth, cursorPosition);
 
   useEffect(() => {
     ref.current.focus();
@@ -42,7 +39,7 @@ export const QueryInput: FunctionComponent<QueryInputProps> = ({ defaultQuery, o
         value={defaultQuery}
         default
         onInput={handleInput}
-        onBlur={onBlur}
+        // onBlur={onBlur}
       />
     </form>
   );

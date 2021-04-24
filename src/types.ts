@@ -8,3 +8,9 @@ export type Icon = {
   imgTitle: string;
   imgSrc: string;
 };
+
+export type CursorPosition = {
+  left: number;
+  styleTop: number;
+  styleLeft: number;
+};
