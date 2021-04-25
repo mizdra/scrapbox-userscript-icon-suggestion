@@ -8,20 +8,20 @@ import { PopupMenuButton } from './PopupMenu/Button';
 
 const editor = document.querySelector<HTMLElement>('.editor')!;
 
-export type Item<T extends VNode> = { element: T; searchableText: string; key: Key };
+export type Item<T extends VNode, U> = { element: T; searchableText: string; value: U };
 
-type PopupMenuProps<T extends VNode> = {
+type PopupMenuProps<T extends VNode, U> = {
   open: boolean;
   emptyMessage: string;
   query: string;
   cursorPosition: CursorPosition;
-  items: Item<T>[];
-  onSelect: (item: Item<T>) => void;
+  items: Item<T, U>[];
+  onSelect: (item: Item<T, U>) => void;
   onSelectNonexistent: () => void;
   onClose: () => void;
 };
 
-function useMatchedItems<T extends VNode>(query: string, items: Item<T>[]): Item<T>[] {
+function useMatchedItems<T extends VNode, U>(query: string, items: Item<T, U>[]): Item<T, U>[] {
   const matchedItems = useMemo(() => {
     return items.filter((item) => {
       const target = item.searchableText.toLowerCase();
@@ -31,7 +31,7 @@ function useMatchedItems<T extends VNode>(query: string, items: Item<T>[]): Item
   return matchedItems;
 }
 
-export function PopupMenu<T extends VNode>({
+export function PopupMenu<T extends VNode, U>({
   open,
   emptyMessage,
   query,
@@ -40,7 +40,7 @@ export function PopupMenu<T extends VNode>({
   onSelect,
   onSelectNonexistent,
   onClose,
-}: PopupMenuProps<T>) {
+}: PopupMenuProps<T, U>) {
   const { ref, width: buttonContainerWidth = 0 } = useResizeObserver<HTMLDivElement>();
   const matchedItems = useMatchedItems(query, items);
   const isEmpty = useMemo(() => matchedItems.length === 0, [matchedItems.length]);
@@ -89,7 +89,7 @@ export function PopupMenu<T extends VNode>({
   const buttonContainerStyle = calcButtonContainerPosition(editorWidth, buttonContainerWidth, cursorPosition, isEmpty);
 
   const itemListElement = matchedItems.map((item, i) => (
-    <PopupMenuButton key={item.searchableText} selected={selectedIndex === i} item={item} />
+    <PopupMenuButton key={i} selected={selectedIndex === i} item={item} />
   ));
 
   return (

@@ -4,17 +4,17 @@ import { CursorPosition } from '../types';
 import { Item, PopupMenu } from './PopupMenu';
 import { QueryInput } from './SuggestionBox/QueryInput';
 
-type SuggestionBoxProps<T extends VNode> = {
+type SuggestionBoxProps<T extends VNode, U> = {
   open: boolean;
   emptyMessage: string;
-  items: Item<T>[];
+  items: Item<T, U>[];
   cursorPosition: CursorPosition;
-  onSelect: (item: Item<T>, query: string) => void;
+  onSelect: (item: Item<T, U>, query: string) => void;
   onSelectNonexistent: (query: string) => void;
   onClose: (query: string) => void;
 };
 
-export function SuggestionBox<T extends VNode>({
+export function SuggestionBox<T extends VNode, U>({
   open,
   emptyMessage,
   items,
@@ -22,7 +22,7 @@ export function SuggestionBox<T extends VNode>({
   onSelect,
   onSelectNonexistent,
   onClose,
-}: SuggestionBoxProps<T>) {
+}: SuggestionBoxProps<T, U>) {
   const [query, setQuery] = useState('');
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export function SuggestionBox<T extends VNode>({
   }, [open]);
 
   const handleSelect = useCallback(
-    (item: Item<T>) => {
+    (item: Item<T, U>) => {
       onSelect(item, query);
     },
     [onSelect, query],
@@ -44,7 +44,7 @@ export function SuggestionBox<T extends VNode>({
 
   return (
     <div>
-      <PopupMenu<T>
+      <PopupMenu<T, U>
         open={open}
         emptyMessage={emptyMessage}
         items={items}
