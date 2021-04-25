@@ -1,26 +1,14 @@
 import { CursorPosition, Icon } from '../types';
 import { uniqBy } from './collection';
+import { iconLinkElementToIcon } from './icon';
 
 export function scanUniqueIconsFromEditor(projectName: string, editor: HTMLElement): Icon[] {
   return uniqBy(scanIconsFromEditor(projectName, editor), (icon) => icon.pagePath);
 }
 
 export function scanIconsFromEditor(projectName: string, editor: HTMLElement): Icon[] {
-  const iconElements = Array.from(editor.querySelectorAll<HTMLAnchorElement>('a.link.icon'));
-  return iconElements.map((iconElement) => {
-    const imgElement = iconElement.querySelector<HTMLImageElement>('img.icon')!;
-    return {
-      // NOTE: 今の所 projectName はアルファベット・数字・ハイフンしか利用できないので、
-      // パーセントエンコーディングは意識せずに href をパースしている。
-      // TODO: もし scrapbox が projectName に日本語などを混ぜられるようになったら、パースの仕方を見直す
-      pagePath: iconElement.pathname.startsWith(`/${projectName}/`)
-        ? iconElement.pathname.slice(projectName.length + 2)
-        : iconElement.pathname,
-      imgAlt: imgElement.alt,
-      imgTitle: imgElement.title,
-      imgSrc: imgElement.src,
-    };
-  });
+  const iconLinkElements = Array.from(editor.querySelectorAll<HTMLAnchorElement>('a.link.icon'));
+  return iconLinkElements.map((iconLinkElement) => iconLinkElementToIcon(projectName, iconLinkElement));
 }
 
 export function getCursor() {

@@ -19,7 +19,7 @@ function generateItems(icons: Icon[]) {
           style="width: 1.3em; height: 1.3em; object-fit: contain;"
           src={icon.imgSrc}
         />
-        {' ' + decodeURI(icon.pagePath)}
+        {' ' + icon.pagePath}
       </span>
     ),
     searchableText: icon.pagePath,
@@ -44,7 +44,7 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
     (item: Item<VNode, Icon>) => {
       setOpen(false);
       textInput.focus();
-      document.execCommand('insertText', undefined, `[${item.value.pagePath}.icon]`);
+      document.execCommand('insertText', undefined, item.value.notation);
     },
     [textInput],
   );
