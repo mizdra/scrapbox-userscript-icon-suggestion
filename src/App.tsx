@@ -4,7 +4,7 @@ import { Item } from './components/PopupMenu';
 import { SuggestionBox } from './components/SuggestionBox';
 import { useDocumentEventListener } from './hooks/useDocumentEventListener';
 import { uniqBy } from './lib/collection';
-import { calcCursorPosition, scanIconsFromEditor } from './lib/scrapbox';
+import { calcCursorPosition, insertText, scanIconsFromEditor } from './lib/scrapbox';
 import { CursorPosition, Icon } from './types';
 
 const cursor = document.querySelector<HTMLElement>('.cursor')!;
@@ -31,7 +31,7 @@ type AppProps = {
   isSuggestionOpenKeyDown: (e: KeyboardEvent) => boolean;
   presetIcons: Icon[];
   editor: HTMLElement;
-  textInput: HTMLElement;
+  textInput: HTMLTextAreaElement;
 };
 
 export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, presetIcons, editor, textInput }) => {
@@ -43,8 +43,7 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
   const handleSelect = useCallback(
     (item: Item<VNode, Icon>) => {
       setOpen(false);
-      textInput.focus();
-      document.execCommand('insertText', undefined, item.value.notation);
+      insertText(textInput, item.value.notation);
     },
     [textInput],
   );
@@ -52,8 +51,7 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
   const handleSelectNonexistent = useCallback(
     (query: string) => {
       setOpen(false);
-      textInput.focus();
-      document.execCommand('insertText', undefined, `[${query}.icon]`);
+      insertText(textInput, `[${query}.icon]`);
     },
     [textInput],
   );

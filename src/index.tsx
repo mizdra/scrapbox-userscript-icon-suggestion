@@ -15,7 +15,7 @@ const DEFAULT_IS_SUGEGSTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
 
 export function registerIconSuggestion(options?: Options) {
   const editor = document.querySelector<HTMLElement>('.editor');
-  const textInput = document.querySelector<HTMLElement>('#text-input');
+  const textInput = document.querySelector<HTMLTextAreaElement>('#text-input');
 
   if (!editor) throw new Error('.editor が存在しません');
   if (!textInput) throw new Error('#text-input が存在しません');
