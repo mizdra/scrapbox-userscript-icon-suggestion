@@ -20,3 +20,15 @@ export function calcCursorPosition(window: Window, cursor: HTMLElement): CursorP
     styleLeft: left,
   };
 }
+
+// https://scrapbox.io/customize/scrapbox-insert-text よりコピペ。
+// Thanks @takker99!
+export function insertText(textInput: HTMLTextAreaElement, text: string) {
+  textInput.focus();
+  const start = textInput.selectionStart;
+  textInput.setRangeText(text);
+  textInput.selectionStart = textInput.selectionEnd = start + text.length;
+  const uiEvent = document.createEvent('UIEvent');
+  uiEvent.initEvent('input', true, false);
+  textInput.dispatchEvent(uiEvent);
+}
