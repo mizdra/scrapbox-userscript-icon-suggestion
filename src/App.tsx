@@ -9,8 +9,7 @@ import { CursorPosition, Icon } from './types';
 
 const cursor = document.querySelector<HTMLElement>('.cursor')!;
 
-function generateItems(projectName: string, editor: HTMLElement) {
-  const icons = scanIconsFromEditor(projectName, editor);
+function generateItems(icons: Icon[]) {
   return uniqBy(icons, (icon) => icon.pagePath).map((icon) => ({
     element: (
       <span>
@@ -30,14 +29,16 @@ function generateItems(projectName: string, editor: HTMLElement) {
 
 type AppProps = {
   isSuggestionOpenKeyDown: (e: KeyboardEvent) => boolean;
+  presetIcons: Icon[];
   editor: HTMLElement;
   textInput: HTMLElement;
 };
 
-export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, editor, textInput }) => {
+export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, presetIcons, editor, textInput }) => {
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ left: 0, styleTop: 0, styleLeft: 0 });
   const [items, setItems] = useState<Item<VNode, Icon>[]>([]);
+  const [presetAppended, setPresetAppended] = useState(false);
 
   const handleSelect = useCallback(
     (item: Item<VNode, Icon>) => {
@@ -64,20 +65,28 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, edit
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
-      if (!open && isSuggestionOpenKeyDown(e)) {
-        e.preventDefault();
-        e.stopPropagation();
+      if (!isSuggestionOpenKeyDown(e)) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      const icons = scanIconsFromEditor(scrapbox.Project.name, editor);
+
+      if (open && !presetAppended) {
+        setItems([...items, ...generateItems(presetIcons)]);
+        setPresetAppended(true);
+      } else {
         setCursorPosition(calcCursorPosition(window, cursor));
 
         // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanIconsFromEditor` で
         // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった
         // 行のアイコン記法が画像化されるようにしておく。
         textInput.blur();
-        setItems(generateItems(scrapbox.Project.name, editor));
+        setItems(generateItems(icons));
         setOpen(true);
+        setPresetAppended(false);
       }
     },
-    [editor, isSuggestionOpenKeyDown, open, textInput],
+    [editor, isSuggestionOpenKeyDown, items, open, presetAppended, presetIcons, textInput],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 

@@ -1,8 +1,12 @@
 import { render } from 'preact';
 import { App } from './App';
+import { pagePathToIcon } from './lib/icon';
+import { Icon } from './types';
 
 type Options = {
   isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
+  // `string` is `pagePath`
+  presetIcons?: string[];
 };
 
 const DEFAULT_IS_SUGEGSTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
@@ -21,11 +25,16 @@ export function registerIconSuggestion(options?: Options) {
   const container = document.createElement('div');
   editor.appendChild(container);
 
+  const presetIcons: Icon[] = (options?.presetIcons ?? []).map((pagePath) =>
+    pagePathToIcon(scrapbox.Project.name, pagePath),
+  );
+
   render(
     <App
       textInput={textInput}
       editor={editor}
       isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown ?? DEFAULT_IS_SUGEGSTION_OPEN_KEY_DOWN}
+      presetIcons={presetIcons}
     />,
     container,
   );
