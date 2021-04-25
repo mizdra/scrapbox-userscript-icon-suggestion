@@ -20,7 +20,7 @@ function generateItems(projectName: string, editor: HTMLElement) {
           style="width: 1.3em; height: 1.3em; object-fit: contain;"
           src={icon.imgSrc}
         />
-        {' ' + icon.pagePath}
+        {' ' + decodeURI(icon.pagePath)}
       </span>
     ),
     searchableText: icon.pagePath,
