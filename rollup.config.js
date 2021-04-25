@@ -15,7 +15,7 @@ export default {
     format: 'es',
   },
   plugins: [
-    typescript(),
+    typescript({ sourceMap: false }),
     resolve(),
     commonjs(),
     alias({

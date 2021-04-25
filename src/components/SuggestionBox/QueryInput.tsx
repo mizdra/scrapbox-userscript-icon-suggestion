@@ -1,5 +1,5 @@
 import { FunctionComponent, JSX } from 'preact';
-import { useCallback, useEffect, useMemo, useRef } from 'preact/hooks';
+import { useCallback, useEffect, useRef } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
 import { calcQueryInputPosition } from '../../lib/position';
 import { CursorPosition } from '../../types';

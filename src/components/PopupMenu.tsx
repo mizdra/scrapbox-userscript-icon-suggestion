@@ -1,4 +1,4 @@
-import { Key, VNode } from 'preact';
+import { VNode } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
