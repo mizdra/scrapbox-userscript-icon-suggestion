@@ -39,11 +39,20 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, edit
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ left: 0, styleTop: 0, styleLeft: 0 });
   const [items, setItems] = useState<Item<VNode, Icon>[]>([]);
 
-  const handleIconSelect = useCallback(
+  const handleSelect = useCallback(
     (item: Item<VNode, Icon>) => {
       setOpen(false);
       textInput.focus();
       document.execCommand('insertText', undefined, `[${item.value.pagePath}.icon]`);
+    },
+    [textInput],
+  );
+
+  const handleSelectNonexistent = useCallback(
+    (query: string) => {
+      setOpen(false);
+      textInput.focus();
+      document.execCommand('insertText', undefined, `[${query}.icon]`);
     },
     [textInput],
   );
@@ -78,8 +87,8 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, edit
       emptyMessage="キーワードにマッチするアイコンがありません"
       items={items}
       cursorPosition={cursorPosition}
-      onSelect={handleIconSelect}
-      onSelectNonexistent={() => {}}
+      onSelect={handleSelect}
+      onSelectNonexistent={handleSelectNonexistent}
       onClose={handleClose}
     />
   );
