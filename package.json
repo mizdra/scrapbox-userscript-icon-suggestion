@@ -4,7 +4,6 @@
   "description": "Scrapbox's UserScript to suggest and insert icons.",
   "main": "index.js",
   "scripts": {
-    "start": "yarn run dev",
     "build": "NODE_ENV=production rollup -c",
     "lint": "run-s -c lint:*",
     "lint:tsc": "tsc --noEmit",
@@ -13,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mizdra/webpack-ts-skeleton.git"
+    "url": "git+https://github.com/mizdra/scrapbox-userscript-icon-suggestion.git"
   },
   "author": "mizdra",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mizdra/webpack-ts-skeleton/issues"
+    "url": "https://github.com/mizdra/scrapbox-userscript-icon-suggestion/issues"
   },
-  "homepage": "https://github.com/mizdra/webpack-ts-skeleton#readme",
+  "homepage": "https://github.com/mizdra/scrapbox-userscript-icon-suggestion#readme",
   "dependencies": {
     "preact": "^10.5.13",
     "use-resize-observer": "^7.0.0"
