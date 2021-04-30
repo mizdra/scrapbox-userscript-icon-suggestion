@@ -17,6 +17,7 @@ $ yarn run build
 
 - `yarn run build`: JS のビルドを実行
 - `yarn run lint`: lint や format を実行
+- `yarn run test`: テストを実行
 
 ## リリース方法 (for maintainer)
 

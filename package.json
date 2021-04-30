@@ -8,7 +8,8 @@
     "lint": "run-s -c lint:*",
     "lint:tsc": "tsc --noEmit",
     "lint:eslint": "eslint .",
-    "lint:prettier": "prettier --check ."
+    "lint:prettier": "prettier --check .",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
