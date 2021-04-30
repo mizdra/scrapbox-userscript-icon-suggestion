@@ -20,4 +20,21 @@ module.exports = {
     '@typescript-eslint/no-unsafe-call': 0,
     'react/react-in-jsx-scope': 0,
   },
+  overrides: [
+    {
+      files: ['src/**/*.ts', 'src/**/*.tsx'],
+      parserOptions: {
+        project: './tsconfig.src.json',
+      },
+    },
+    {
+      files: ['test/**/*.ts', 'test/**/*.tsx'],
+      parserOptions: {
+        project: './tsconfig.test.json',
+      },
+      env: {
+        jest: true,
+      },
+    },
+  ],
 };
