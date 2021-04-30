@@ -22,7 +22,7 @@ export default {
     }),
     resolve({ extensions: ['.js', '.jsx', '.ts', '.tsx'] }),
     commonjs(),
-    typescript({ sourceMap: false }),
+    typescript({ tsconfig: 'tsconfig.src.json', sourceMap: false }),
     !!process.env.ANALYZE && visualizer({ template: 'treemap' }),
   ],
 };
