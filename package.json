@@ -6,7 +6,9 @@
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
     "lint": "run-s -c lint:*",
-    "lint:tsc": "tsc --noEmit",
+    "lint:tsc": "run-s -c lint:tsc:*",
+    "lint:tsc:src": "tsc -p tsconfig.src.json --noEmit",
+    "lint:tsc:test": "tsc -p tsconfig.test.json --noEmit",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier --check .",
     "test": "jest"
