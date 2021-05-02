@@ -15,7 +15,6 @@ export function calcCursorPosition(window: Window, cursor: HTMLElement): CursorP
   const top = +cursor.style.top.slice(0, -2);
   const left = +cursor.style.left.slice(0, -2);
   return {
-    left: window.scrollY + cursor.getBoundingClientRect().left,
     styleTop: top,
     styleLeft: left,
   };

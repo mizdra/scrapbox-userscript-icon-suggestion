@@ -36,7 +36,7 @@ type AppProps = {
 
 export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, presetIcons, editor, textInput }) => {
   const [open, setOpen] = useState(false);
-  const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ left: 0, styleTop: 0, styleLeft: 0 });
+  const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [items, setItems] = useState<Item<VNode, Icon>[]>([]);
   const [presetAppended, setPresetAppended] = useState(false);
 
