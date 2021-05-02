@@ -1,11 +1,3 @@
-export function htmlToHTMLElement(html: string): HTMLElement | null {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  const element = doc.body.firstElementChild;
-  if (element instanceof HTMLElement) return element;
-  return null;
-}
-
 // scrapbox のアイコンの a タグを再現したものを返す関数
 export function createIconLinkElement(projectName: string, pageName: string): HTMLAnchorElement {
   const anchor = document.createElement('a');

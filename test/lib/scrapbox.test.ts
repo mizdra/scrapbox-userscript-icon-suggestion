@@ -15,7 +15,6 @@ const cursor = createCursor({ styleTop: 147, styleLeft: 0 });
 
 test('scanIconsFromEditor', () => {
   const expectedIcons = scanIconsFromEditor('project', editor);
-  console.log(expectedIcons);
 
   const expectedIconPagePaths = expectedIcons.map((icon) => icon.pagePath);
   expect(expectedIconPagePaths).toStrictEqual([
