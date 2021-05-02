@@ -11,11 +11,10 @@ export function scanIconsFromEditor(projectName: string, editor: HTMLElement): I
   return iconLinkElements.map((iconLinkElement) => iconLinkElementToIcon(projectName, iconLinkElement));
 }
 
-export function calcCursorPosition(window: Window, cursor: HTMLElement): CursorPosition {
+export function calcCursorPosition(cursor: HTMLElement): CursorPosition {
   const top = +cursor.style.top.slice(0, -2);
   const left = +cursor.style.left.slice(0, -2);
   return {
-    left: window.scrollY + cursor.getBoundingClientRect().left,
     styleTop: top,
     styleLeft: left,
   };

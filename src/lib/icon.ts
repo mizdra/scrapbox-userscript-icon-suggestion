@@ -29,7 +29,9 @@ export function iconLinkElementToIcon(currentProjectName: string, iconLinkElemen
     pagePath: pagePath,
     imgAlt: imgElement.alt,
     imgTitle: imgElement.alt,
-    imgSrc: imgElement.src,
+    // NOTE: imgSrc にはパスだけ設定する規約になっているが、HTMLImageElement#src には origin が含まれているので、
+    // URL#pathname でパスだけ取り出してやる。
+    imgSrc: new URL(imgElement.src, location.origin).pathname,
     notation: `[${pagePath}.icon]`,
   };
 }

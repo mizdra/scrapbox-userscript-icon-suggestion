@@ -36,7 +36,7 @@ type AppProps = {
 
 export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, presetIcons, editor, textInput }) => {
   const [open, setOpen] = useState(false);
-  const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ left: 0, styleTop: 0, styleLeft: 0 });
+  const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [items, setItems] = useState<Item<VNode, Icon>[]>([]);
   const [presetAppended, setPresetAppended] = useState(false);
 
@@ -73,7 +73,7 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
         setItems([...items, ...generateItems(presetIcons)]);
         setPresetAppended(true);
       } else {
-        setCursorPosition(calcCursorPosition(window, cursor));
+        setCursorPosition(calcCursorPosition(cursor));
 
         // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanIconsFromEditor` で
         // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった

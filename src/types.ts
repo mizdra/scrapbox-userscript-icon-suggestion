@@ -48,7 +48,6 @@ export type Icon = {
 };
 
 export type CursorPosition = {
-  left: number;
   styleTop: number;
   styleLeft: number;
 };
