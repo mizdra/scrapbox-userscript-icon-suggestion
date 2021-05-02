@@ -1,0 +1,138 @@
+import { iconLinkElementToIcon, pagePathToIcon } from '../../src/lib/icon';
+
+describe('pagePathToIcon', () => {
+  test('`pagePath` が相対パスの時', () => {
+    expect(pagePathToIcon('project', 'foo')).toStrictEqual({
+      pagePath: 'foo',
+      imgAlt: 'foo',
+      imgTitle: 'foo',
+      imgSrc: `/api/pages/project/foo/icon`,
+      notation: `[foo.icon]`,
+    });
+  });
+  describe('`pagePath` が絶対パスの時', () => {
+    test('カレントプロジェクトのアイコンが指定されている時', () => {
+      // `/project/` がトリミングされる
+      expect(pagePathToIcon('project', '/project/foo')).toStrictEqual({
+        pagePath: 'foo',
+        imgAlt: 'foo',
+        imgTitle: 'foo',
+        imgSrc: `/api/pages/project/foo/icon`,
+        notation: `[foo.icon]`,
+      });
+    });
+    test('カレントプロジェクト以外のアイコンが指定されている時', () => {
+      expect(pagePathToIcon('project', '/other-project/foo')).toStrictEqual({
+        // `pagePath` では `/other-project/` がそのまま残る
+        pagePath: '/other-project/foo',
+        // `imgAlt` などでは `/other-project/` がトリミングされる
+        imgAlt: 'foo',
+        imgTitle: 'foo',
+        imgSrc: `/api/pages/other-project/foo/icon`,
+        notation: `[/other-project/foo.icon]`,
+      });
+    });
+  });
+  test('`pagePath` に空白が含まれている時', () => {
+    expect(pagePathToIcon('project', 'foo bar')).toStrictEqual({
+      pagePath: 'foo bar',
+      imgAlt: 'foo bar',
+      imgTitle: 'foo bar',
+      imgSrc: `/api/pages/project/foo%20bar/icon`,
+      notation: `[foo bar.icon]`,
+    });
+  });
+  test('`pagePath` にスラッシュが含まれている時', () => {
+    expect(pagePathToIcon('project', 'foo/bar')).toStrictEqual({
+      pagePath: 'foo/bar',
+      imgAlt: 'foo/bar',
+      imgTitle: 'foo/bar',
+      imgSrc: `/api/pages/project/foo%2Fbar/icon`,
+      notation: `[foo/bar.icon]`,
+    });
+  });
+  test('`pagePath` に日本語が含まれている時', () => {
+    expect(pagePathToIcon('project', '日本語')).toStrictEqual({
+      pagePath: '日本語',
+      imgAlt: '日本語',
+      imgTitle: '日本語',
+      imgSrc: `/api/pages/project/%E6%97%A5%E6%9C%AC%E8%AA%9E/icon`,
+      notation: `[日本語.icon]`,
+    });
+  });
+});
+
+// scrapbox で実際に利用されている a タグを再現したものを返す関数
+function createIconLinkElement(projectName: string, pageName: string) {
+  const anchor = document.createElement('a');
+  anchor.setAttribute('class', 'link icon');
+  anchor.setAttribute('rel', 'route');
+  anchor.setAttribute('href', `/${projectName}/${pageName}`);
+  const img = document.createElement('img');
+  img.setAttribute('class', 'icon');
+  img.setAttribute('alt', pageName);
+  img.setAttribute('title', pageName);
+  img.setAttribute('src', `/api/pages/${projectName}/${pageName}/icon`);
+  anchor.appendChild(img);
+  return anchor;
+}
+
+describe('iconLinkElementToIcon', () => {
+  test('カレントプロジェクトのアイコンを表す要素が与えられた時', () => {
+    const iconLinkElement = createIconLinkElement('project', 'foo');
+    expect(iconLinkElementToIcon('project', iconLinkElement)).toStrictEqual({
+      pagePath: 'foo',
+      imgAlt: 'foo',
+      imgTitle: 'foo',
+      imgSrc: `/api/pages/project/foo/icon`,
+      notation: `[foo.icon]`,
+    });
+  });
+  test('カレントプロジェクト以外のアイコンを表す要素が与えられた時', () => {
+    const iconLinkElement = createIconLinkElement('other-project', 'foo');
+    expect(iconLinkElementToIcon('project', iconLinkElement)).toStrictEqual({
+      pagePath: '/other-project/foo',
+      imgAlt: 'foo',
+      imgTitle: 'foo',
+      imgSrc: `/api/pages/other-project/foo/icon`,
+      notation: `[/other-project/foo.icon]`,
+    });
+  });
+  test('空白を含む名前のアイコンを表す要素が与えられた時', () => {
+    const iconLinkElement = createIconLinkElement('project', 'foo bar');
+    expect(iconLinkElementToIcon('project', iconLinkElement)).toStrictEqual({
+      pagePath: 'foo bar',
+      imgAlt: 'foo bar',
+      imgTitle: 'foo bar',
+      imgSrc: `/api/pages/project/foo%20bar/icon`,
+      notation: `[foo bar.icon]`,
+    });
+  });
+  test('スラッシュを含む名前のアイコンを表す要素が与えられた時', () => {
+    const iconLinkElement = createIconLinkElement('project', 'foo/bar');
+    expect(iconLinkElementToIcon('project', iconLinkElement)).toStrictEqual({
+      pagePath: 'foo/bar',
+      imgAlt: 'foo/bar',
+      imgTitle: 'foo/bar',
+      imgSrc: `/api/pages/project/foo%2Fbar/icon`,
+      notation: `[foo/bar.icon]`,
+    });
+    expect(pagePathToIcon('project', 'foo/bar')).toStrictEqual({
+      pagePath: 'foo/bar',
+      imgAlt: 'foo/bar',
+      imgTitle: 'foo/bar',
+      imgSrc: `/api/pages/project/foo%2Fbar/icon`,
+      notation: `[foo/bar.icon]`,
+    });
+  });
+  test('日本語を含む名前のアイコンを表す要素が与えられた時', () => {
+    const iconLinkElement = createIconLinkElement('project', '日本語');
+    expect(iconLinkElementToIcon('project', iconLinkElement)).toStrictEqual({
+      pagePath: '日本語',
+      imgAlt: '日本語',
+      imgTitle: '日本語',
+      imgSrc: `/api/pages/project/%E6%97%A5%E6%9C%AC%E8%AA%9E/icon`,
+      notation: `[日本語.icon]`,
+    });
+  });
+});
