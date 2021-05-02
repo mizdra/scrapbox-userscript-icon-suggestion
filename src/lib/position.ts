@@ -1,10 +1,12 @@
 import { JSXInternal } from 'preact/src/jsx';
 import { CursorPosition } from '../types';
 
+/** .popup-menu のスタイルを計算する */
 export function calcPopupMenuStyle(cursorPosition: CursorPosition): JSXInternal.CSSProperties {
   return { top: cursorPosition.styleTop };
 }
 
+/** .triangle のスタイルを計算する */
 export function calcTrianglePosition(cursorPosition: CursorPosition, isEmpty: boolean): JSXInternal.CSSProperties {
   return {
     left: cursorPosition.styleLeft,
@@ -16,6 +18,7 @@ export function calcTrianglePosition(cursorPosition: CursorPosition, isEmpty: bo
   };
 }
 
+/** .button-container のスタイルを計算する */
 export function calcButtonContainerPosition(
   editorWidth: number,
   buttonContainerWidth: number,
@@ -44,6 +47,7 @@ export function calcButtonContainerPosition(
   };
 }
 
+/** <QueryInput> のスタイルを計算する */
 export function calcQueryInputPosition(editorWidth: number, cursorPosition: CursorPosition): JSXInternal.CSSProperties {
   const translateX = (cursorPosition.styleLeft / editorWidth) * 100;
 
