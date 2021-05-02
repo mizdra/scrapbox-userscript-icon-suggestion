@@ -73,7 +73,7 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
         setItems([...items, ...generateItems(presetIcons)]);
         setPresetAppended(true);
       } else {
-        setCursorPosition(calcCursorPosition(window, cursor));
+        setCursorPosition(calcCursorPosition(cursor));
 
         // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanIconsFromEditor` で
         // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった

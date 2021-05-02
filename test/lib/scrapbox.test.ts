@@ -67,7 +67,7 @@ test('scanUniqueIconsFromEditor', () => {
 });
 
 test('calcCursorPosition', () => {
-  const position = calcCursorPosition(window, cursor);
+  const position = calcCursorPosition(cursor);
   expect(position).toStrictEqual({
     styleTop: 147,
     styleLeft: 0,
