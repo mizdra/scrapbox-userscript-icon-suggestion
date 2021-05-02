@@ -1,7 +1,7 @@
 import { FunctionComponent, JSX } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
-import { calcQueryInputStyle } from '../../lib/position';
+import { calcQueryInputStyle } from '../../lib/calc-style';
 import { CursorPosition } from '../../types';
 
 const editor = document.querySelector<HTMLElement>('.editor')!;

@@ -1,4 +1,4 @@
-import { calcPopupMenuStyle } from '../../src/lib/position';
+import { calcPopupMenuStyle } from '../../src/lib/calc-style';
 
 describe('calcPopupMenuStyle', () => {
   test('.cursor の top プロパティがそのまま .popup-menu の top プロパティになる', () => {
