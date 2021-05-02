@@ -7,7 +7,7 @@ export function calcPopupMenuStyle(cursorPosition: CursorPosition): JSXInternal.
 }
 
 /** .triangle のスタイルを計算する */
-export function calcTrianglePosition(cursorPosition: CursorPosition, isEmpty: boolean): JSXInternal.CSSProperties {
+export function calcTriangleStyle(cursorPosition: CursorPosition, isEmpty: boolean): JSXInternal.CSSProperties {
   return {
     left: cursorPosition.styleLeft,
     ...(isEmpty
@@ -19,7 +19,7 @@ export function calcTrianglePosition(cursorPosition: CursorPosition, isEmpty: bo
 }
 
 /** .button-container のスタイルを計算する */
-export function calcButtonContainerPosition(
+export function calcButtonContainerStyle(
   editorWidth: number,
   buttonContainerWidth: number,
   cursorPosition: CursorPosition,
@@ -48,7 +48,7 @@ export function calcButtonContainerPosition(
 }
 
 /** <QueryInput> のスタイルを計算する */
-export function calcQueryInputPosition(editorWidth: number, cursorPosition: CursorPosition): JSXInternal.CSSProperties {
+export function calcQueryInputStyle(editorWidth: number, cursorPosition: CursorPosition): JSXInternal.CSSProperties {
   const translateX = (cursorPosition.styleLeft / editorWidth) * 100;
 
   return {

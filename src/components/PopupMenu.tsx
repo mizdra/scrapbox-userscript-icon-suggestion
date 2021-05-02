@@ -2,7 +2,7 @@ import { VNode } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
-import { calcButtonContainerPosition, calcPopupMenuStyle, calcTrianglePosition } from '../lib/position';
+import { calcButtonContainerStyle, calcPopupMenuStyle, calcTriangleStyle } from '../lib/position';
 import { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
@@ -85,8 +85,8 @@ export function PopupMenu<T extends VNode, U>({
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
   const popupMenuStyle = calcPopupMenuStyle(cursorPosition);
-  const triangleStyle = calcTrianglePosition(cursorPosition, isEmpty);
-  const buttonContainerStyle = calcButtonContainerPosition(editorWidth, buttonContainerWidth, cursorPosition, isEmpty);
+  const triangleStyle = calcTriangleStyle(cursorPosition, isEmpty);
+  const buttonContainerStyle = calcButtonContainerStyle(editorWidth, buttonContainerWidth, cursorPosition, isEmpty);
 
   const itemListElement = matchedItems.map((item, i) => (
     <PopupMenuButton key={i} selected={selectedIndex === i} item={item} />

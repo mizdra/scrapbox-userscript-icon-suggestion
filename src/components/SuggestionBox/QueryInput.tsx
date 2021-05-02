@@ -1,7 +1,7 @@
 import { FunctionComponent, JSX } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
-import { calcQueryInputPosition } from '../../lib/position';
+import { calcQueryInputStyle } from '../../lib/position';
 import { CursorPosition } from '../../types';
 
 const editor = document.querySelector<HTMLElement>('.editor')!;
@@ -16,7 +16,7 @@ export type QueryInputProps = {
 export const QueryInput: FunctionComponent<QueryInputProps> = ({ defaultQuery, cursorPosition, onInput, onBlur }) => {
   const ref = useRef<HTMLInputElement>();
   const { width: editorWidth = 0 } = useResizeObserver({ ref: editor });
-  const queryInputStyle = calcQueryInputPosition(editorWidth, cursorPosition);
+  const queryInputStyle = calcQueryInputStyle(editorWidth, cursorPosition);
 
   // mount されたら即 focus する
   useEffect(() => {
