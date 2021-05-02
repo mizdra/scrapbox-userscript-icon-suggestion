@@ -1,40 +1,17 @@
 import { calcCursorPosition, scanIconsFromEditor, scanUniqueIconsFromEditor } from '../../src/lib/scrapbox';
-import { htmlToHTMLElement } from '../helpers/html';
+import { createEditor, createIconLinkElement, createCursor } from '../helpers/html';
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const editor = htmlToHTMLElement(`
-<div class="editor>
-  <a class="link icon" rel="route" href="/project/foo">
-    <img class="icon" alt="foo" title="foo" src="/api/pages/project/foo/icon" />
-  </a>
-  <a class="link icon" rel="route" href="/project/bar">
-    <img class="icon" alt="bar" title="bar" src="/api/pages/project/bar/icon" />
-  </a>
-  <a class="link icon" rel="route" href="/project/baz">
-    <img class="icon" alt="baz" title="baz" src="/api/pages/project/baz/icon" />
-  </a>
-  <a class="link icon" rel="route" href="/project/foo">
-    <img class="icon" alt="foo" title="foo" src="/api/pages/project/foo/icon" />
-  </a>
-  <a class="link icon" rel="route" href="/other-project/foo">
-    <img class="icon" alt="foo" title="foo" src="/api/pages/other-project/foo/icon" />
-  </a>
-  <a class="link icon" rel="route" href="/other-project/bar">
-    <img class="icon" alt="bar" title="bar" src="/api/pages/other-project/bar/icon" />
-  </a>
-  <a class="link icon" rel="route" href="/other-project/baz">
-    <img class="icon" alt="baz" title="baz" src="/api/pages/other-project/baz/icon" />
-  </a>
-  <a class="link icon" rel="route" href="/other-project/foo">
-    <img class="icon" alt="foo" title="foo" src="/api/pages/other-project/foo/icon" />
-  </a>
-</div>
-`)!;
+const editor = createEditor();
+editor.appendChild(createIconLinkElement('project', 'foo'));
+editor.appendChild(createIconLinkElement('project', 'bar'));
+editor.appendChild(createIconLinkElement('project', 'baz'));
+editor.appendChild(createIconLinkElement('project', 'foo'));
+editor.appendChild(createIconLinkElement('other-project', 'foo'));
+editor.appendChild(createIconLinkElement('other-project', 'bar'));
+editor.appendChild(createIconLinkElement('other-project', 'baz'));
+editor.appendChild(createIconLinkElement('other-project', 'foo'));
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const cursor = htmlToHTMLElement(`
-  <div class="cursor" style="top: 147px; left: 0px; height: 28px; display: none;"></div>
-`)!;
+const cursor = createCursor({ styleTop: 147, styleLeft: 0 });
 
 test('scanIconsFromEditor', () => {
   const expectedIcons = scanIconsFromEditor('project', editor);

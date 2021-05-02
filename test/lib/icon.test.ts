@@ -1,4 +1,5 @@
 import { iconLinkElementToIcon, pagePathToIcon } from '../../src/lib/icon';
+import { createIconLinkElement } from '../helpers/html';
 
 describe('pagePathToIcon', () => {
   test('`pagePath` が相対パスの時', () => {
@@ -61,21 +62,6 @@ describe('pagePathToIcon', () => {
     });
   });
 });
-
-// scrapbox で実際に利用されている a タグを再現したものを返す関数
-function createIconLinkElement(projectName: string, pageName: string) {
-  const anchor = document.createElement('a');
-  anchor.setAttribute('class', 'link icon');
-  anchor.setAttribute('rel', 'route');
-  anchor.setAttribute('href', `/${projectName}/${encodeURIComponent(pageName)}`);
-  const img = document.createElement('img');
-  img.setAttribute('class', 'icon');
-  img.setAttribute('alt', pageName);
-  img.setAttribute('title', pageName);
-  img.setAttribute('src', `/api/pages/${projectName}/${encodeURIComponent(pageName)}/icon`);
-  anchor.appendChild(img);
-  return anchor;
-}
 
 describe('iconLinkElementToIcon', () => {
   test('カレントプロジェクトのアイコンを表す要素が与えられた時', () => {
