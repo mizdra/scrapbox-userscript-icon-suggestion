@@ -1,4 +1,5 @@
 import { fireEvent, render, waitFor } from '@testing-library/preact';
+import faker from 'faker';
 import { QueryInput } from '../../../src/components/SuggestionBox/QueryInput';
 import { calcQueryInputStyle } from '../../../src/lib/calc-style';
 import { CursorPosition } from '../../../src/types';
@@ -30,15 +31,17 @@ describe('QueryInput', () => {
   });
   test('文字を入力すると onInput が発火する', async () => {
     const onInput = jest.fn();
+    const query = faker.helpers.randomize(['', faker.datatype.string()]);
+
     const { getByRole } = render(<QueryInput cursorPosition={cursorPosition} onInput={onInput} />);
     const input = getByRole('textbox');
 
     expect(onInput).not.toHaveBeenCalled();
-    fireEvent.input(input, { target: { value: 'query' } });
+    fireEvent.input(input, { target: { value: query } });
 
     await waitFor(() => {
       expect(onInput).toHaveBeenCalled();
-      expect(onInput).toHaveBeenCalledWith('query');
+      expect(onInput).toHaveBeenCalledWith(query);
     });
   });
   test('フォーカスを外すと onBlur が発火する', async () => {
