@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button children が表示される 1`] = `
+<div>
+  <div
+    class="button"
+  >
+    text
+  </div>
+</div>
+`;
+
+exports[`Button selected === true の時、選択状態であることを表すクラスが付与される 1`] = `
+<div>
+  <div
+    class="button selected"
+  >
+    text
+  </div>
+</div>
+`;
