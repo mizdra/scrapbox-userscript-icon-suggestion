@@ -1,8 +1,8 @@
-import { VNode } from 'preact';
+import { ComponentChildren } from 'preact';
 
 export type PopupMenuButtonProps = {
   selected?: boolean;
-  children: VNode;
+  children: ComponentChildren;
 };
 
 export function PopupMenuButton({ children, selected }: PopupMenuButtonProps) {
