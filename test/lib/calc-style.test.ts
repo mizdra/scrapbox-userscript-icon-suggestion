@@ -30,40 +30,23 @@ describe('calcTriangleStyle', () => {
 describe('calcButtonContainerStyle', () => {
   const editorWidth = 1000;
   const buttonContainerWidth = 50;
-  const cursorPositionStyleTop = 200;
+  const cursorPosition = { styleTop: 200, styleLeft: 500 };
   test('エディタの中央にカーソルがあれば、.button-container を中央に表示するスタイルが返される', () => {
-    expect(
-      calcButtonContainerStyle(
-        editorWidth,
-        buttonContainerWidth,
-        { styleTop: cursorPositionStyleTop, styleLeft: 500 },
-        false,
-      ),
-    ).toStrictEqual({
+    expect(calcButtonContainerStyle(editorWidth, buttonContainerWidth, cursorPosition, false)).toStrictEqual({
       left: 500,
       transform: `translateX(-50%)`,
     });
   });
   describe('エディタの左側にカーソルがあれば、.button-container を左側に表示するスタイルが返される', () => {
     expect(
-      calcButtonContainerStyle(
-        editorWidth,
-        buttonContainerWidth,
-        { styleTop: cursorPositionStyleTop, styleLeft: 400 },
-        false,
-      ),
+      calcButtonContainerStyle(editorWidth, buttonContainerWidth, { ...cursorPosition, styleLeft: 400 }, false),
     ).toStrictEqual({
       left: 400,
       transform: `translateX(-40%)`,
     });
     test('.button-container が左側に寄りすぎてウインドウからはみ出ないよう、一定以上は左に寄らないようになっている', () => {
       expect(
-        calcButtonContainerStyle(
-          editorWidth,
-          buttonContainerWidth,
-          { styleTop: cursorPositionStyleTop, styleLeft: 399 },
-          false,
-        ),
+        calcButtonContainerStyle(editorWidth, buttonContainerWidth, { ...cursorPosition, styleLeft: 399 }, false),
       ).toStrictEqual({
         left: 399,
         transform: `translateX(-40%)`,
@@ -72,24 +55,14 @@ describe('calcButtonContainerStyle', () => {
   });
   describe('エディタの右側にカーソルがあれば、.button-container を右側に表示するスタイルが返される', () => {
     expect(
-      calcButtonContainerStyle(
-        editorWidth,
-        buttonContainerWidth,
-        { styleTop: cursorPositionStyleTop, styleLeft: 600 },
-        false,
-      ),
+      calcButtonContainerStyle(editorWidth, buttonContainerWidth, { ...cursorPosition, styleLeft: 600 }, false),
     ).toStrictEqual({
       left: 600,
       transform: `translateX(-60%)`,
     });
     test('.button-container が右側に寄りすぎてウインドウからはみ出ないよう、一定以上は右に寄らないようになっている', () => {
       expect(
-        calcButtonContainerStyle(
-          editorWidth,
-          buttonContainerWidth,
-          { styleTop: cursorPositionStyleTop, styleLeft: 601 },
-          false,
-        ),
+        calcButtonContainerStyle(editorWidth, buttonContainerWidth, { ...cursorPosition, styleLeft: 601 }, false),
       ).toStrictEqual({
         left: 601,
         transform: `translateX(-60%)`,
@@ -97,14 +70,7 @@ describe('calcButtonContainerStyle', () => {
     });
   });
   test('isEmpty === true の時、ボタンが無いことを視覚的に表現するためのスタイルが返される', () => {
-    expect(
-      calcButtonContainerStyle(
-        editorWidth,
-        buttonContainerWidth,
-        { styleTop: cursorPositionStyleTop, styleLeft: 500 },
-        true,
-      ),
-    ).toStrictEqual({
+    expect(calcButtonContainerStyle(editorWidth, buttonContainerWidth, cursorPosition, true)).toStrictEqual({
       left: 500,
       transform: `translateX(-50%)`,
       color: '#eee',
@@ -119,27 +85,27 @@ describe('calcButtonContainerStyle', () => {
 
 describe('calcQueryInputStyle', () => {
   const editorWidth = 1000;
-  const cursorPositionStyleTop = 200;
+  const cursorPosition = { styleTop: 200, styleLeft: 500 };
   test('エディタの中央にカーソルがあれば、<QueryInput> を中央に表示するスタイルが返される', () => {
-    expect(calcQueryInputStyle(editorWidth, { styleTop: cursorPositionStyleTop, styleLeft: 500 })).toStrictEqual({
+    expect(calcQueryInputStyle(editorWidth, cursorPosition)).toStrictEqual({
       position: 'absolute',
-      top: cursorPositionStyleTop,
+      top: cursorPosition.styleTop,
       left: 500,
       transform: `translateX(-50%)`,
     });
   });
   test('エディタの左側にカーソルがあれば、<QueryInput> を左側に表示するスタイルが返される', () => {
-    expect(calcQueryInputStyle(editorWidth, { styleTop: cursorPositionStyleTop, styleLeft: 100 })).toStrictEqual({
+    expect(calcQueryInputStyle(editorWidth, { ...cursorPosition, styleLeft: 100 })).toStrictEqual({
       position: 'absolute',
-      top: cursorPositionStyleTop,
+      top: cursorPosition.styleTop,
       left: 100,
       transform: `translateX(-10%)`,
     });
   });
   test('エディタの右側にカーソルがあれば、<QueryInput> を右側に表示するスタイルが返される', () => {
-    expect(calcQueryInputStyle(editorWidth, { styleTop: cursorPositionStyleTop, styleLeft: 900 })).toStrictEqual({
+    expect(calcQueryInputStyle(editorWidth, { ...cursorPosition, styleLeft: 900 })).toStrictEqual({
       position: 'absolute',
-      top: cursorPositionStyleTop,
+      top: cursorPosition.styleTop,
       left: 900,
       transform: `translateX(-90%)`,
     });
