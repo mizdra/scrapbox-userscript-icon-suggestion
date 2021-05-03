@@ -5,6 +5,6 @@ export type PopupMenuButtonProps = {
   children: VNode;
 };
 
-export function PopupMenuButton<T extends VNode, U>({ children, selected }: PopupMenuButtonProps<T, U>) {
+export function PopupMenuButton({ children, selected }: PopupMenuButtonProps) {
   return <div className={selected ? 'button selected' : 'button'}>{children}</div>;
 }
