@@ -7,10 +7,10 @@ import { CursorPosition } from '../../types';
 const editor = document.querySelector<HTMLElement>('.editor')!;
 
 export type QueryInputProps = {
-  defaultQuery: string;
+  defaultQuery?: string;
   cursorPosition: CursorPosition;
-  onInput: (newQuery: string) => void;
-  onBlur: () => void;
+  onInput?: (newQuery: string) => void;
+  onBlur?: () => void;
 };
 
 export const QueryInput: FunctionComponent<QueryInputProps> = ({ defaultQuery, cursorPosition, onInput, onBlur }) => {
@@ -25,7 +25,7 @@ export const QueryInput: FunctionComponent<QueryInputProps> = ({ defaultQuery, c
 
   const handleInput = useCallback(
     (e: JSX.TargetedEvent<HTMLInputElement, Event>) => {
-      if (e.currentTarget?.value) onInput(e.currentTarget.value);
+      if (e.currentTarget?.value) onInput?.(e.currentTarget.value);
     },
     [onInput],
   );
