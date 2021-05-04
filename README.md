@@ -32,7 +32,6 @@ $ # ソースコードコーナーにクリップボードの中身をペース�
 ## 著作権情報
 
 - `function insertText` は [scrapbox-insert-text - Scrapbox カスタマイズコレクション](https://scrapbox.io/customize/scrapbox-insert-text) を [@takker99](https://github.com/takker99) 氏の許諾を経て複製・改変しており、その著作権は[@takker99](https://github.com/takker99) 氏に帰属します
-  に帰属します
 - それ以外のアプリケーションコードについては、全て [@mizdra](https://github.com/mizdra) に帰属しており、MIT License で配布されています
 
 ## Special Thanks
