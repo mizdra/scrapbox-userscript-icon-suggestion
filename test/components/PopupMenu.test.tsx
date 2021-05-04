@@ -13,6 +13,9 @@ const items = [<span key="1">item1</span>, <span key="2">item2</span>, <span key
 // テストに利用するイベント
 const keydownEnterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
 const keydownEscapeEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+const keydownTabEvent = new KeyboardEvent('keydown', { key: 'Tab' });
+const keydownShiftTabEvent = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true });
+const keydownEnterWithComposingEvent = new KeyboardEvent('keydown', { key: 'Enter', isComposing: true });
 
 // <QueryInput> は .editor 要素が document にあることを前提にしているので、 document に .editor を埋め込んでおく
 const editor = createEditor();
@@ -86,11 +89,67 @@ describe('PopupMenu', () => {
       });
     });
     describe('アイテムが1つ以上ある時', () => {
-      test.todo('Tab 押下で次のアイテムを選択できる');
-      test.todo('Shift+Tab 押下で前のアイテムを選択できる');
-      test.todo('Enter 押下で onSelect が呼び出される');
-      test.todo('Escape 押下で onClose が呼び出される', () => {
-        test.todo('ただし IME による変換中の Enter 押下では、何もしない');
+      test('Tab 押下で次のアイテムを選択できる', async () => {
+        const { getByText } = render(<PopupMenu open cursorPosition={cursorPosition} items={items} />);
+        expect(getByText('item1').parentElement).toHaveClass('selected');
+        await act(() => {
+          fireEvent(document, keydownTabEvent);
+        });
+        expect(getByText('item2').parentElement).toHaveClass('selected');
+        await act(() => {
+          fireEvent(document, keydownTabEvent);
+        });
+        expect(getByText('item3').parentElement).toHaveClass('selected');
+        await act(() => {
+          fireEvent(document, keydownTabEvent);
+        });
+        expect(getByText('item1').parentElement).toHaveClass('selected');
+      });
+      test('Shift+Tab 押下で前のアイテムを選択できる', async () => {
+        const { getByText } = render(<PopupMenu open cursorPosition={cursorPosition} items={items} />);
+        expect(getByText('item1').parentElement).toHaveClass('selected');
+        await act(() => {
+          fireEvent(document, keydownShiftTabEvent);
+        });
+        expect(getByText('item3').parentElement).toHaveClass('selected');
+        await act(() => {
+          fireEvent(document, keydownShiftTabEvent);
+        });
+        expect(getByText('item2').parentElement).toHaveClass('selected');
+        await act(() => {
+          fireEvent(document, keydownShiftTabEvent);
+        });
+        expect(getByText('item1').parentElement).toHaveClass('selected');
+      });
+      test('Enter 押下で onSelect が呼び出される', async () => {
+        const onSelect = jest.fn();
+        render(<PopupMenu open cursorPosition={cursorPosition} items={items} onSelect={onSelect} />);
+
+        expect(onSelect).toBeCalledTimes(0);
+        await act(() => {
+          fireEvent(document, keydownTabEvent);
+        });
+        await act(() => {
+          fireEvent(document, keydownEnterEvent);
+        });
+        expect(onSelect).toBeCalledTimes(1);
+        expect(onSelect).lastCalledWith(items[1], 1);
+
+        // ただし IME による変換中の Enter 押下では、 onSelect は呼び出されない
+        await act(() => {
+          fireEvent(document, keydownEnterWithComposingEvent);
+        });
+        expect(onSelect).toBeCalledTimes(1);
+      });
+      test('Escape 押下で onClose が呼び出される', async () => {
+        const onClose = jest.fn();
+        render(<PopupMenu open cursorPosition={cursorPosition} items={items} onClose={onClose} />);
+
+        expect(onClose).toBeCalledTimes(0);
+        await act(() => {
+          fireEvent(document, keydownEscapeEvent);
+        });
+        expect(onClose).toBeCalledTimes(1);
       });
       test.todo('Tab / Shift+Tab / Enter / Escape 以外が押下されても、イベントはキャンセルされない');
     });
