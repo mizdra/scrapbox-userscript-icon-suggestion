@@ -1,10 +1,5 @@
 import { CursorPosition, Icon } from '../types';
-import { uniqBy } from './collection';
 import { iconLinkElementToIcon } from './icon';
-
-export function scanUniqueIconsFromEditor(projectName: string, editor: HTMLElement): Icon[] {
-  return uniqBy(scanIconsFromEditor(projectName, editor), (icon) => icon.pagePath);
-}
 
 export function scanIconsFromEditor(projectName: string, editor: HTMLElement): Icon[] {
   const iconLinkElements = Array.from(editor.querySelectorAll<HTMLAnchorElement>('a.link.icon'));
