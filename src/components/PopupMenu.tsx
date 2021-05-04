@@ -12,29 +12,17 @@ export type Item<T extends VNode, U> = { element: T; searchableText: string; val
 
 type PopupMenuProps<T extends VNode, U> = {
   open: boolean;
-  emptyMessage: string;
-  query: string;
+  emptyMessage?: string;
   cursorPosition: CursorPosition;
   items: Item<T, U>[];
-  onSelect: (item: Item<T, U>) => void;
-  onSelectNonexistent: () => void;
-  onClose: () => void;
+  onSelect?: (item: Item<T, U>) => void;
+  onSelectNonexistent?: () => void;
+  onClose?: () => void;
 };
-
-function useMatchedItems<T extends VNode, U>(query: string, items: Item<T, U>[]): Item<T, U>[] {
-  const matchedItems = useMemo(() => {
-    return items.filter((item) => {
-      const target = item.searchableText.toLowerCase();
-      return target.includes(query.toLowerCase());
-    });
-  }, [items, query]);
-  return matchedItems;
-}
 
 export function PopupMenu<T extends VNode, U>({
   open,
   emptyMessage,
-  query,
   cursorPosition,
   items,
   onSelect,
@@ -42,16 +30,15 @@ export function PopupMenu<T extends VNode, U>({
   onClose,
 }: PopupMenuProps<T, U>) {
   const { ref, width: buttonContainerWidth = 0 } = useResizeObserver<HTMLDivElement>();
-  const matchedItems = useMatchedItems(query, items);
-  const isEmpty = useMemo(() => matchedItems.length === 0, [matchedItems.length]);
+  const isEmpty = useMemo(() => items.length === 0, [items.length]);
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const { width: editorWidth = 0 } = useResizeObserver({ ref: editor });
 
-  // query や items が変わったら選択位置を 0 番目に戻す。ただし空なら null にセットする。
+  // items が変わったら選択位置を 0 番目に戻す。ただし空なら null にセットする。
   useEffect(() => {
     setSelectedIndex(isEmpty ? null : 0);
-  }, [isEmpty, query, items]);
+  }, [isEmpty, items]);
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
@@ -71,16 +58,16 @@ export function PopupMenu<T extends VNode, U>({
       }
 
       if (isEmpty || selectedIndex === null) {
-        if (isEnter) onSelectNonexistent();
-        if (isEscape) onClose();
+        if (isEnter) onSelectNonexistent?.();
+        if (isEscape) onClose?.();
       } else {
-        if (isTab) setSelectedIndex((selectedIndex + 1) % matchedItems.length);
-        if (isShiftTab) setSelectedIndex((selectedIndex - 1 + matchedItems.length) % matchedItems.length);
-        if (isEnter) onSelect(matchedItems[selectedIndex]);
-        if (isEscape) onClose();
+        if (isTab) setSelectedIndex((selectedIndex + 1) % items.length);
+        if (isShiftTab) setSelectedIndex((selectedIndex - 1 + items.length) % items.length);
+        if (isEnter) onSelect?.(items[selectedIndex]);
+        if (isEscape) onClose?.();
       }
     },
-    [isEmpty, matchedItems, onClose, onSelect, onSelectNonexistent, open, selectedIndex],
+    [isEmpty, items, onClose, onSelect, onSelectNonexistent, open, selectedIndex],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
@@ -88,7 +75,7 @@ export function PopupMenu<T extends VNode, U>({
   const triangleStyle = calcTriangleStyle(cursorPosition, isEmpty);
   const buttonContainerStyle = calcButtonContainerStyle(editorWidth, buttonContainerWidth, cursorPosition, isEmpty);
 
-  const itemListElement = matchedItems.map((item, i) => (
+  const itemListElement = items.map((item, i) => (
     <PopupMenuButton key={i} selected={selectedIndex === i}>
       {item.element}
     </PopupMenuButton>
@@ -99,7 +86,7 @@ export function PopupMenu<T extends VNode, U>({
       {open && (
         <div className="popup-menu" style={popupMenuStyle}>
           <div ref={ref} className="button-container" style={buttonContainerStyle}>
-            {matchedItems.length === 0 ? emptyMessage : itemListElement}
+            {items.length === 0 ? emptyMessage ?? 'アイテムは空です' : itemListElement}
           </div>
           <div className="triangle" style={triangleStyle} />
         </div>

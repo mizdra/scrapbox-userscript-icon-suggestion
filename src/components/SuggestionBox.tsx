@@ -1,8 +1,18 @@
 import { VNode } from 'preact';
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { CursorPosition } from '../types';
 import { Item, PopupMenu } from './PopupMenu';
 import { QueryInput } from './SuggestionBox/QueryInput';
+
+function useMatchedItems<T extends VNode, U>(query: string, items: Item<T, U>[]): Item<T, U>[] {
+  const matchedItems = useMemo(() => {
+    return items.filter((item) => {
+      const target = item.searchableText.toLowerCase();
+      return target.includes(query.toLowerCase());
+    });
+  }, [items, query]);
+  return matchedItems;
+}
 
 type SuggestionBoxProps<T extends VNode, U> = {
   open: boolean;
@@ -24,6 +34,7 @@ export function SuggestionBox<T extends VNode, U>({
   onClose,
 }: SuggestionBoxProps<T, U>) {
   const [query, setQuery] = useState('');
+  const matchedItems = useMatchedItems(query, items);
 
   useEffect(() => {
     if (open === false) setQuery('');
@@ -47,9 +58,8 @@ export function SuggestionBox<T extends VNode, U>({
       <PopupMenu<T, U>
         open={open}
         emptyMessage={emptyMessage}
-        items={items}
+        items={matchedItems}
         cursorPosition={cursorPosition}
-        query={query}
         onSelect={handleSelect}
         onSelectNonexistent={handleSelectNonexistent}
         onClose={handleClose}
