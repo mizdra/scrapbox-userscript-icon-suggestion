@@ -1,20 +1,32 @@
-import { VNode } from 'preact';
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { ComponentChild } from 'preact';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { CursorPosition } from '../types';
-import { Item, PopupMenu } from './PopupMenu';
+import { PopupMenu } from './PopupMenu';
 import { QueryInput } from './SuggestionBox/QueryInput';
 
-type SuggestionBoxProps<T extends VNode, U> = {
+export type Item<T> = { element: ComponentChild; searchableText: string; value: T };
+
+function useMatchedItems<T>(query: string, items: Item<T>[]): Item<T>[] {
+  const matchedItems = useMemo(() => {
+    return items.filter((item) => {
+      const target = item.searchableText.toLowerCase();
+      return target.includes(query.toLowerCase());
+    });
+  }, [items, query]);
+  return matchedItems;
+}
+
+type SuggestionBoxProps<T> = {
   open: boolean;
   emptyMessage: string;
-  items: Item<T, U>[];
+  items: Item<T>[];
   cursorPosition: CursorPosition;
-  onSelect: (item: Item<T, U>, query: string) => void;
+  onSelect: (item: Item<T>, query: string) => void;
   onSelectNonexistent: (query: string) => void;
   onClose: (query: string) => void;
 };
 
-export function SuggestionBox<T extends VNode, U>({
+export function SuggestionBox<T>({
   open,
   emptyMessage,
   items,
@@ -22,18 +34,20 @@ export function SuggestionBox<T extends VNode, U>({
   onSelect,
   onSelectNonexistent,
   onClose,
-}: SuggestionBoxProps<T, U>) {
+}: SuggestionBoxProps<T>) {
   const [query, setQuery] = useState('');
+  const matchedItems = useMatchedItems(query, items);
+  const matchedItemsForPopupMenu = useMemo(() => matchedItems.map((item) => item.element), [matchedItems]);
 
   useEffect(() => {
     if (open === false) setQuery('');
   }, [open]);
 
   const handleSelect = useCallback(
-    (item: Item<T, U>) => {
-      onSelect(item, query);
+    (_item: ComponentChild, index: number) => {
+      onSelect(matchedItems[index], query);
     },
-    [onSelect, query],
+    [matchedItems, onSelect, query],
   );
   const handleSelectNonexistent = useCallback(() => {
     onSelectNonexistent(query);
@@ -44,12 +58,11 @@ export function SuggestionBox<T extends VNode, U>({
 
   return (
     <div>
-      <PopupMenu<T, U>
+      <PopupMenu
         open={open}
         emptyMessage={emptyMessage}
-        items={items}
+        items={matchedItemsForPopupMenu}
         cursorPosition={cursorPosition}
-        query={query}
         onSelect={handleSelect}
         onSelectNonexistent={handleSelectNonexistent}
         onClose={handleClose}
