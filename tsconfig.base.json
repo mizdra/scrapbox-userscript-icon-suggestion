@@ -21,8 +21,8 @@
     "strict": true,
 
     /* Lint Options */
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false, // eslint のほうが警告レベルやルールを柔軟に設定できるので、eslint に任せる
+    "noUnusedParameters": false, // eslint のほうが警告レベルやルールを柔軟に設定できるので、eslint に任せる
 
     /* Debug Options */
     "sourceMap": true, // for ts-loader (ref: https://github.com/TypeStrong/ts-loader#devtool--sourcemaps)

@@ -18,6 +18,7 @@ export function createEditor(): HTMLDivElement {
   const editor = document.createElement('div');
   editor.setAttribute('class', 'editor');
   editor.setAttribute('id', 'editor');
+  editor.style.width = '1000px';
   return editor;
 }
 

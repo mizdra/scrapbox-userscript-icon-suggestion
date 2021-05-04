@@ -1,11 +1,10 @@
-import { VNode } from 'preact';
-import { Item } from '../PopupMenu';
+import { ComponentChildren } from 'preact';
 
-export type PopupMenuButtonProps<T extends VNode, U> = {
+export type PopupMenuButtonProps = {
   selected?: boolean;
-  item: Item<T, U>;
+  children: ComponentChildren;
 };
 
-export function PopupMenuButton<T extends VNode, U>({ item, selected }: PopupMenuButtonProps<T, U>) {
-  return <div className={selected ? 'button selected' : 'button'}>{item.element}</div>;
+export function PopupMenuButton({ children, selected }: PopupMenuButtonProps) {
+  return <div className={selected ? 'button selected' : 'button'}>{children}</div>;
 }

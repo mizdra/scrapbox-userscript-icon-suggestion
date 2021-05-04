@@ -89,7 +89,9 @@ export function PopupMenu<T extends VNode, U>({
   const buttonContainerStyle = calcButtonContainerStyle(editorWidth, buttonContainerWidth, cursorPosition, isEmpty);
 
   const itemListElement = matchedItems.map((item, i) => (
-    <PopupMenuButton key={i} selected={selectedIndex === i} item={item} />
+    <PopupMenuButton key={i} selected={selectedIndex === i}>
+      {item.element}
+    </PopupMenuButton>
   ));
 
   return (
