@@ -16,10 +16,18 @@ const keydownEscapeEvent = new KeyboardEvent('keydown', { key: 'Escape' });
 const keydownTabEvent = new KeyboardEvent('keydown', { key: 'Tab' });
 const keydownShiftTabEvent = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true });
 const keydownEnterWithComposingEvent = new KeyboardEvent('keydown', { key: 'Enter', isComposing: true });
+const keydownAEvent = new KeyboardEvent('keydown', { key: 'a' });
 
-// <QueryInput> は .editor 要素が document にあることを前提にしているので、 document に .editor を埋め込んでおく
+// .editor 要素が document にあることを前提にしているので、 document に .editor を埋め込んでおく
 const editor = createEditor();
 document.body.appendChild(editor);
+
+// keydown イベントが PopupMenu 側でキャンセルされずに突き抜けてきたことを確かめるための mock
+const keydownListener = jest.fn();
+document.addEventListener('keydown', keydownListener);
+beforeEach(() => {
+  keydownListener.mockClear();
+});
 
 describe('PopupMenu', () => {
   describe('ポップアップが閉じている時', () => {
@@ -49,6 +57,18 @@ describe('PopupMenu', () => {
       expect(onSelect).toBeCalledTimes(0);
       expect(onSelectNonexistent).toBeCalledTimes(0);
       expect(onClose).toBeCalledTimes(0);
+    });
+    test('いかなるキーを押下しても、PopupMenu 側でキャンセルされない', async () => {
+      render(<PopupMenu open={false} cursorPosition={cursorPosition} items={items} />);
+      await act(() => {
+        fireEvent(document, keydownEnterEvent);
+        fireEvent(document, keydownEscapeEvent);
+        fireEvent(document, keydownTabEvent);
+        fireEvent(document, keydownShiftTabEvent);
+        fireEvent(document, keydownEnterWithComposingEvent);
+        fireEvent(document, keydownAEvent);
+      });
+      expect(keydownListener).toBeCalledTimes(6);
     });
   });
   describe('ポップアップが開いている時', () => {
@@ -151,7 +171,18 @@ describe('PopupMenu', () => {
         });
         expect(onClose).toBeCalledTimes(1);
       });
-      test.todo('Tab / Shift+Tab / Enter / Escape 以外が押下されても、イベントはキャンセルされない');
+      test('Tab / Shift+Tab / Enter / Escape 以外が押下された時はイベントがキャンセルされるが、それ以外ではキャンセルされない', async () => {
+        render(<PopupMenu open={true} cursorPosition={cursorPosition} items={items} />);
+        await act(() => {
+          fireEvent(document, keydownEnterEvent);
+          fireEvent(document, keydownEscapeEvent);
+          fireEvent(document, keydownTabEvent);
+          fireEvent(document, keydownShiftTabEvent);
+          fireEvent(document, keydownEnterWithComposingEvent); // キャンセルされない
+          fireEvent(document, keydownAEvent); // キャンセルされない
+        });
+        expect(keydownListener).toBeCalledTimes(2);
+      });
     });
   });
 });
