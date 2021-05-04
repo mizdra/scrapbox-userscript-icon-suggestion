@@ -24,9 +24,7 @@ export function calcCursorPosition(cursor: HTMLElement): CursorPosition {
 // Thanks @takker99!
 export function insertText(textInput: HTMLTextAreaElement, text: string) {
   textInput.focus();
-  const start = textInput.selectionStart;
-  textInput.setRangeText(text);
-  textInput.selectionStart = textInput.selectionEnd = start + text.length;
+  textInput.value = text;
   const uiEvent = document.createEvent('UIEvent');
   uiEvent.initEvent('input', true, false);
   textInput.dispatchEvent(uiEvent);
