@@ -84,7 +84,7 @@ export function PopupMenu({
   return (
     <>
       {open && (
-        <div className="popup-menu" style={popupMenuStyle}>
+        <div className="popup-menu" style={popupMenuStyle} data-testid="popup-menu">
           <div ref={ref} className="button-container" style={buttonContainerStyle}>
             {items.length === 0 ? emptyMessage ?? 'アイテムは空です' : itemListElement}
           </div>
