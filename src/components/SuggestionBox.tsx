@@ -4,9 +4,9 @@ import { CursorPosition } from '../types';
 import { PopupMenu } from './PopupMenu';
 import { QueryInput } from './SuggestionBox/QueryInput';
 
-export type Item<T> = { element: ComponentChild; searchableText: string; value: T };
+export type Item = { element: ComponentChild; searchableText: string };
 
-function useMatchedItems<T>(query: string, items: Item<T>[]): Item<T>[] {
+function useMatchedItems(query: string, items: Item[]): Item[] {
   const matchedItems = useMemo(() => {
     return items.filter((item) => {
       const target = item.searchableText.toLowerCase();
@@ -16,17 +16,17 @@ function useMatchedItems<T>(query: string, items: Item<T>[]): Item<T>[] {
   return matchedItems;
 }
 
-type SuggestionBoxProps<T> = {
+type SuggestionBoxProps = {
   open: boolean;
   emptyMessage?: string;
-  items: Item<T>[];
+  items: Item[];
   cursorPosition: CursorPosition;
-  onSelect?: (item: Item<T>, query: string) => void;
+  onSelect?: (item: Item, index: number, query: string) => void;
   onSelectNonexistent?: (query: string) => void;
   onClose?: (query: string) => void;
 };
 
-export function SuggestionBox<T>({
+export function SuggestionBox({
   open,
   emptyMessage,
   items,
@@ -34,7 +34,7 @@ export function SuggestionBox<T>({
   onSelect,
   onSelectNonexistent,
   onClose,
-}: SuggestionBoxProps<T>) {
+}: SuggestionBoxProps) {
   const [query, setQuery] = useState('');
   const matchedItems = useMatchedItems(query, items);
   const matchedItemsForPopupMenu = useMemo(() => matchedItems.map((item) => item.element), [matchedItems]);
@@ -45,9 +45,11 @@ export function SuggestionBox<T>({
 
   const handleSelect = useCallback(
     (_item: ComponentChild, index: number) => {
-      onSelect?.(matchedItems[index], query);
+      const selectedItem = matchedItems[index];
+      const selectedIndex = items.indexOf(selectedItem);
+      onSelect?.(selectedItem, selectedIndex, query);
     },
-    [matchedItems, onSelect, query],
+    [items, matchedItems, onSelect, query],
   );
   const handleSelectNonexistent = useCallback(() => {
     onSelectNonexistent?.(query);
