@@ -1,4 +1,4 @@
-import { VNode } from 'preact';
+import { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
@@ -8,19 +8,19 @@ import { PopupMenuButton } from './PopupMenu/Button';
 
 const editor = document.querySelector<HTMLElement>('.editor')!;
 
-export type Item<T extends VNode, U> = { element: T; searchableText: string; value: U };
+export type Item = ComponentChild;
 
-type PopupMenuProps<T extends VNode, U> = {
+type PopupMenuProps = {
   open: boolean;
   emptyMessage?: string;
   cursorPosition: CursorPosition;
-  items: Item<T, U>[];
-  onSelect?: (item: Item<T, U>) => void;
+  items: Item[];
+  onSelect?: (item: Item, index: number) => void;
   onSelectNonexistent?: () => void;
   onClose?: () => void;
 };
 
-export function PopupMenu<T extends VNode, U>({
+export function PopupMenu({
   open,
   emptyMessage,
   cursorPosition,
@@ -28,7 +28,7 @@ export function PopupMenu<T extends VNode, U>({
   onSelect,
   onSelectNonexistent,
   onClose,
-}: PopupMenuProps<T, U>) {
+}: PopupMenuProps) {
   const { ref, width: buttonContainerWidth = 0 } = useResizeObserver<HTMLDivElement>();
   const isEmpty = useMemo(() => items.length === 0, [items.length]);
 
@@ -63,7 +63,7 @@ export function PopupMenu<T extends VNode, U>({
       } else {
         if (isTab) setSelectedIndex((selectedIndex + 1) % items.length);
         if (isShiftTab) setSelectedIndex((selectedIndex - 1 + items.length) % items.length);
-        if (isEnter) onSelect?.(items[selectedIndex]);
+        if (isEnter) onSelect?.(items[selectedIndex], selectedIndex);
         if (isEscape) onClose?.();
       }
     },
@@ -77,7 +77,7 @@ export function PopupMenu<T extends VNode, U>({
 
   const itemListElement = items.map((item, i) => (
     <PopupMenuButton key={i} selected={selectedIndex === i}>
-      {item.element}
+      {item}
     </PopupMenuButton>
   ));
 

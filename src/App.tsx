@@ -1,7 +1,6 @@
-import { FunctionComponent, VNode } from 'preact';
+import { FunctionComponent } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
-import { Item } from './components/PopupMenu';
-import { SuggestionBox } from './components/SuggestionBox';
+import { SuggestionBox, Item } from './components/SuggestionBox';
 import { useDocumentEventListener } from './hooks/useDocumentEventListener';
 import { uniqBy } from './lib/collection';
 import { calcCursorPosition, insertText, scanIconsFromEditor } from './lib/scrapbox';
@@ -37,11 +36,11 @@ type AppProps = {
 export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, presetIcons, editor, textInput }) => {
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
-  const [items, setItems] = useState<Item<VNode, Icon>[]>([]);
+  const [items, setItems] = useState<Item<Icon>[]>([]);
   const [presetAppended, setPresetAppended] = useState(false);
 
   const handleSelect = useCallback(
-    (item: Item<VNode, Icon>) => {
+    (item: Item<Icon>) => {
       setOpen(false);
       insertText(textInput, item.value.notation);
     },
