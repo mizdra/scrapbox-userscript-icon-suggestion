@@ -2,6 +2,7 @@ import { act, fireEvent, render } from '@testing-library/preact';
 import { PopupMenu } from '../../src/components/PopupMenu';
 import { CursorPosition } from '../../src/types';
 import { createEditor } from '../helpers/html';
+import '../mocks/resize-observer';
 
 // ダミーの プロパティ
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
