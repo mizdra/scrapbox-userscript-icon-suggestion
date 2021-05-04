@@ -18,12 +18,12 @@ function useMatchedItems<T>(query: string, items: Item<T>[]): Item<T>[] {
 
 type SuggestionBoxProps<T> = {
   open: boolean;
-  emptyMessage: string;
+  emptyMessage?: string;
   items: Item<T>[];
   cursorPosition: CursorPosition;
-  onSelect: (item: Item<T>, query: string) => void;
-  onSelectNonexistent: (query: string) => void;
-  onClose: (query: string) => void;
+  onSelect?: (item: Item<T>, query: string) => void;
+  onSelectNonexistent?: (query: string) => void;
+  onClose?: (query: string) => void;
 };
 
 export function SuggestionBox<T>({
@@ -45,15 +45,15 @@ export function SuggestionBox<T>({
 
   const handleSelect = useCallback(
     (_item: ComponentChild, index: number) => {
-      onSelect(matchedItems[index], query);
+      onSelect?.(matchedItems[index], query);
     },
     [matchedItems, onSelect, query],
   );
   const handleSelectNonexistent = useCallback(() => {
-    onSelectNonexistent(query);
+    onSelectNonexistent?.(query);
   }, [onSelectNonexistent, query]);
   const handleClose = useCallback(() => {
-    onClose(query);
+    onClose?.(query);
   }, [onClose, query]);
 
   return (
