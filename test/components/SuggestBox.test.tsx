@@ -56,3 +56,21 @@ describe('matchItems', () => {
     ]);
   });
 });
+
+describe('SuggestionBox', () => {
+  describe('open === false の時', () => {
+    test.todo('ポップアップも QueryInput も表示されない');
+  });
+  describe('open === true の時', () => {
+    test.todo('ポップアップと QueryInput が表示される');
+    test.todo('Esc 押下で onClose が呼び出される');
+    describe('ポップアップに表示されるアイテムが空の時', () => {
+      test.todo('emptyMessage でアイテムが空の時のメッセージを変更できる');
+      test.todo('Enter 押下で onSelectNonexistent が呼び出される');
+    });
+    describe('ポップアップに表示されるアイテムが空でない時', () => {
+      test.todo('QueryInput に文字を入力するとアイテムがフィルタされる');
+      test.todo('Enter 押下で onSelect が呼び出される');
+    });
+  });
+});
