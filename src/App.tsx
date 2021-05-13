@@ -72,9 +72,8 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
 
       const icons = scanIconsFromEditor(scrapbox.Project.name, editor);
 
-      if (open && !presetAppended) {
-        setPresetAppended(true);
-      } else {
+      if (!open) {
+        // ポップアップが閉じていたら開く
         setCursorPosition(calcCursorPosition(cursor));
 
         // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanIconsFromEditor` で
@@ -84,9 +83,12 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
         setIconsInEditor(icons);
         setOpen(true);
         setPresetAppended(false);
+      } else {
+        // ポップアップが開いていたら、preset icon の表示・非表示をトグルする
+        setPresetAppended((presetAppended) => !presetAppended);
       }
     },
-    [editor, isSuggestionOpenKeyDown, open, presetAppended, textInput],
+    [editor, isSuggestionOpenKeyDown, open, textInput],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
