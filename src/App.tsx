@@ -70,8 +70,6 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
       e.preventDefault();
       e.stopPropagation();
 
-      const icons = scanIconsFromEditor(scrapbox.Project.name, editor);
-
       if (!open) {
         // ポップアップが閉じていたら開く
         setCursorPosition(calcCursorPosition(cursor));
@@ -80,6 +78,9 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
         // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった
         // 行のアイコン記法が画像化されるようにしておく。
         textInput.blur();
+        // 画像化されたらエディタを走査してアイコンを収集
+        const icons = scanIconsFromEditor(scrapbox.Project.name, editor);
+
         setIconsInEditor(icons);
         setOpen(true);
         setPresetAppended(false);
