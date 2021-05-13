@@ -4,19 +4,19 @@ import { ComponentChild } from 'preact';
 import { PopupMenu } from '../../src/components/PopupMenu';
 import { CursorPosition } from '../../src/types';
 import { createEditor } from '../helpers/html';
+import {
+  keydownEnterEvent,
+  keydownEscapeEvent,
+  keydownTabEvent,
+  keydownShiftTabEvent,
+  keydownEnterWithComposingEvent,
+  keydownAEvent,
+} from '../helpers/key';
 import '../mocks/resize-observer';
 
 // ダミーの プロパティ
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
 const items = [<span key="1">item1</span>, <span key="2">item2</span>, <span key="3">item3</span>];
-
-// テストに利用するイベント
-const keydownEnterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
-const keydownEscapeEvent = new KeyboardEvent('keydown', { key: 'Escape' });
-const keydownTabEvent = new KeyboardEvent('keydown', { key: 'Tab' });
-const keydownShiftTabEvent = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true });
-const keydownEnterWithComposingEvent = new KeyboardEvent('keydown', { key: 'Enter', isComposing: true });
-const keydownAEvent = new KeyboardEvent('keydown', { key: 'a' });
 
 // .editor 要素が document にあることを前提にしているので、 document に .editor を埋め込んでおく
 const editor = createEditor();

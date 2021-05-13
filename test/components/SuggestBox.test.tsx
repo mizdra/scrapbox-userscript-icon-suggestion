@@ -1,15 +1,19 @@
 import '../mocks/resize-observer';
 import { act, fireEvent, render } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
+import { datatype } from 'faker';
 import { matchItems, SuggestionBox } from '../../src/components/SuggestionBox';
 import { CursorPosition } from '../../src/types';
 import { createEditor } from '../helpers/html';
+import { keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
 // ダミーの プロパティ
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
 const items = [
-  { element: <span key="1">item1</span>, searchableText: 'item1', value: 'item1' },
-  { element: <span key="2">item2</span>, searchableText: 'item2', value: 'item2' },
-  { element: <span key="3">item3</span>, searchableText: 'item3', value: 'item3' },
+  { element: <span key="1">a</span>, searchableText: 'a', value: 'a' },
+  { element: <span key="2">ab</span>, searchableText: 'ab', value: 'ab' },
+  { element: <span key="3">abc</span>, searchableText: 'abc', value: 'abc' },
+  { element: <span key="4">z</span>, searchableText: 'z', value: 'z' },
 ];
 
 // .editor 要素が document にあることを前提にしているので、 document に .editor を埋め込んでおく
@@ -87,14 +91,58 @@ describe('SuggestionBox', () => {
       expect(queryByRole('textbox')).not.toBeNull();
       expect(asFragment()).toMatchSnapshot();
     });
-    test.todo('Esc 押下で onClose が呼び出される');
+    test('Esc 押下で onClose が呼び出される', async () => {
+      const onClose = jest.fn();
+      render(<SuggestionBox open cursorPosition={cursorPosition} items={items} onClose={onClose} />);
+      expect(onClose).toBeCalledTimes(0);
+      await act(() => {
+        fireEvent(document, keydownEscapeEvent);
+      });
+      expect(onClose).toBeCalledTimes(1);
+    });
     describe('ポップアップに表示されるアイテムが空の時', () => {
-      test.todo('emptyMessage でアイテムが空の時のメッセージを変更できる');
-      test.todo('Enter 押下で onSelectNonexistent が呼び出される');
+      test('emptyMessage でアイテムが空の時のメッセージを変更できる', () => {
+        const emptyMessage = datatype.string();
+        const { getByText } = render(
+          <SuggestionBox open cursorPosition={cursorPosition} items={[]} emptyMessage={emptyMessage} />,
+        );
+        expect(getByText(emptyMessage)).toBeInTheDocument();
+      });
+      test('Enter 押下で onSelectNonexistent が呼び出される', async () => {
+        const onSelectNonexistent = jest.fn();
+        render(
+          <SuggestionBox open cursorPosition={cursorPosition} items={[]} onSelectNonexistent={onSelectNonexistent} />,
+        );
+        expect(onSelectNonexistent).toBeCalledTimes(0);
+        await act(() => {
+          fireEvent(document, keydownEnterEvent);
+        });
+        expect(onSelectNonexistent).toBeCalledTimes(1);
+      });
     });
     describe('ポップアップに表示されるアイテムが空でない時', () => {
-      test.todo('QueryInput に文字を入力するとアイテムがフィルタされる');
-      test.todo('Enter 押下で onSelect が呼び出される');
+      test('QueryInput に文字を入力するとアイテムがフィルタされる', () => {
+        const { getByTestId, getByRole } = render(<SuggestionBox open cursorPosition={cursorPosition} items={items} />);
+
+        expect(getByTestId('button-container').childElementCount).toEqual(4);
+        userEvent.type(getByRole('textbox'), 'a');
+        expect(getByTestId('button-container').childElementCount).toEqual(3);
+        userEvent.type(getByRole('textbox'), 'b');
+        expect(getByTestId('button-container').childElementCount).toEqual(2);
+        userEvent.type(getByRole('textbox'), 'c');
+        expect(getByTestId('button-container').childElementCount).toEqual(1);
+        userEvent.type(getByRole('textbox'), 'd');
+        expect(getByTestId('button-container').childElementCount).toEqual(0);
+      });
+      test('Enter 押下で onSelect が呼び出される', async () => {
+        const onSelect = jest.fn();
+        render(<SuggestionBox open cursorPosition={cursorPosition} items={items} onSelect={onSelect} />);
+        expect(onSelect).toBeCalledTimes(0);
+        await act(() => {
+          fireEvent(document, keydownEnterEvent);
+        });
+        expect(onSelect).toBeCalledTimes(1);
+      });
     });
   });
 });

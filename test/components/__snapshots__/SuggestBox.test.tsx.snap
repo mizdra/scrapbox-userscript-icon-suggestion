@@ -16,27 +16,35 @@ exports[`SuggestionBox open === true の時 ポップアップと QueryInput が
     >
       <div
         class="button-container"
+        data-testid="button-container"
         style="left: 0px; transform: translateX(-NaN%);"
       >
         <div
           class="button selected"
         >
           <span>
-            item1
+            a
           </span>
         </div>
         <div
           class="button"
         >
           <span>
-            item2
+            ab
           </span>
         </div>
         <div
           class="button"
         >
           <span>
-            item3
+            abc
+          </span>
+        </div>
+        <div
+          class="button"
+        >
+          <span>
+            z
           </span>
         </div>
       </div>
