@@ -12,8 +12,8 @@ function uniqueIcons(icons: Icon[]): Icon[] {
   return uniqBy(icons, (icon) => icon.pagePath);
 }
 
-function generateItem(icon: Icon): Item {
-  return {
+function generateItems(icons: Icon[]): Item[] {
+  return icons.map((icon) => ({
     element: (
       <span>
         <img
@@ -26,7 +26,7 @@ function generateItem(icon: Icon): Item {
       </span>
     ),
     searchableText: icon.pagePath,
-  };
+  }));
 }
 
 type AppProps = {
@@ -40,7 +40,7 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [suggestibleIcons, setSuggestibleIcons] = useState<Icon[]>([]);
-  const suggestBoxItems = useMemo(() => suggestibleIcons.map(generateItem), [suggestibleIcons]);
+  const suggestBoxItems = useMemo(() => generateItems(suggestibleIcons), [suggestibleIcons]);
   const [presetAppended, setPresetAppended] = useState(false);
 
   const handleSelect = useCallback(
