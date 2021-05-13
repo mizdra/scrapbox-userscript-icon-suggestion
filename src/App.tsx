@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { useCallback, useMemo, useState } from 'preact/hooks';
+import { useCallback, useState } from 'preact/hooks';
 import { SuggestionBox, Item } from './components/SuggestionBox';
 import { useDocumentEventListener } from './hooks/useDocumentEventListener';
 import { uniqBy } from './lib/collection';
@@ -8,12 +8,8 @@ import { CursorPosition, Icon } from './types';
 
 const cursor = document.querySelector<HTMLElement>('.cursor')!;
 
-function uniqueIcons(icons: Icon[]): Icon[] {
-  return uniqBy(icons, (icon) => icon.pagePath);
-}
-
-function generateItems(icons: Icon[]): Item[] {
-  return icons.map((icon) => ({
+function generateItems(icons: Icon[]) {
+  return uniqBy(icons, (icon) => icon.pagePath).map((icon) => ({
     element: (
       <span>
         <img
@@ -26,6 +22,7 @@ function generateItems(icons: Icon[]): Item[] {
       </span>
     ),
     searchableText: icon.pagePath,
+    value: icon,
   }));
 }
 
@@ -39,16 +36,15 @@ type AppProps = {
 export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, presetIcons, editor, textInput }) => {
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
-  const [suggestibleIcons, setSuggestibleIcons] = useState<Icon[]>([]);
-  const suggestBoxItems = useMemo(() => generateItems(suggestibleIcons), [suggestibleIcons]);
+  const [items, setItems] = useState<Item<Icon>[]>([]);
   const [presetAppended, setPresetAppended] = useState(false);
 
   const handleSelect = useCallback(
-    (_item: Item, index: number) => {
+    (item: Item<Icon>) => {
       setOpen(false);
-      insertText(textInput, suggestibleIcons[index].notation);
+      insertText(textInput, item.value.notation);
     },
-    [suggestibleIcons, textInput],
+    [textInput],
   );
 
   const handleSelectNonexistent = useCallback(
@@ -70,23 +66,24 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
       e.preventDefault();
       e.stopPropagation();
 
+      const icons = scanIconsFromEditor(scrapbox.Project.name, editor);
+
       if (open && !presetAppended) {
-        setSuggestibleIcons(uniqueIcons([...suggestibleIcons, ...presetIcons]));
+        setItems([...items, ...generateItems(presetIcons)]);
         setPresetAppended(true);
       } else {
-        const icons = scanIconsFromEditor(scrapbox.Project.name, editor);
         setCursorPosition(calcCursorPosition(cursor));
 
         // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanIconsFromEditor` で
         // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった
         // 行のアイコン記法が画像化されるようにしておく。
         textInput.blur();
-        setSuggestibleIcons(uniqueIcons(icons));
+        setItems(generateItems(icons));
         setOpen(true);
         setPresetAppended(false);
       }
     },
-    [editor, isSuggestionOpenKeyDown, open, presetAppended, presetIcons, suggestibleIcons, textInput],
+    [editor, isSuggestionOpenKeyDown, items, open, presetAppended, presetIcons, textInput],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
@@ -94,7 +91,7 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
     <SuggestionBox
       open={open}
       emptyMessage="キーワードにマッチするアイコンがありません"
-      items={suggestBoxItems}
+      items={items}
       cursorPosition={cursorPosition}
       onSelect={handleSelect}
       onSelectNonexistent={handleSelectNonexistent}
