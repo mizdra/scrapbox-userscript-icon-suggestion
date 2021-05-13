@@ -1,6 +1,16 @@
-import { matchItems } from '../../src/components/SuggestionBox';
-import { createEditor } from '../helpers/html';
 import '../mocks/resize-observer';
+import { act, fireEvent, render } from '@testing-library/preact';
+import { matchItems, SuggestionBox } from '../../src/components/SuggestionBox';
+import { CursorPosition } from '../../src/types';
+import { createEditor } from '../helpers/html';
+
+// ダミーの プロパティ
+const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
+const items = [
+  { element: <span key="1">item1</span>, searchableText: 'item1', value: 'item1' },
+  { element: <span key="2">item2</span>, searchableText: 'item2', value: 'item2' },
+  { element: <span key="3">item3</span>, searchableText: 'item3', value: 'item3' },
+];
 
 // .editor 要素が document にあることを前提にしているので、 document に .editor を埋め込んでおく
 const editor = createEditor();
@@ -59,10 +69,24 @@ describe('matchItems', () => {
 
 describe('SuggestionBox', () => {
   describe('open === false の時', () => {
-    test.todo('ポップアップも QueryInput も表示されない');
+    test('ポップアップも QueryInput も表示されない', () => {
+      const { asFragment, queryByRole, queryByTestId } = render(
+        <SuggestionBox open={false} cursorPosition={cursorPosition} items={items} />,
+      );
+      expect(queryByTestId('popup-menu')).toBeNull();
+      expect(queryByRole('textbox')).toBeNull();
+      expect(asFragment()).toMatchSnapshot();
+    });
   });
   describe('open === true の時', () => {
-    test.todo('ポップアップと QueryInput が表示される');
+    test('ポップアップと QueryInput が表示される', () => {
+      const { asFragment, queryByRole, queryByTestId } = render(
+        <SuggestionBox open cursorPosition={cursorPosition} items={items} />,
+      );
+      expect(queryByTestId('popup-menu')).not.toBeNull();
+      expect(queryByRole('textbox')).not.toBeNull();
+      expect(asFragment()).toMatchSnapshot();
+    });
     test.todo('Esc 押下で onClose が呼び出される');
     describe('ポップアップに表示されるアイテムが空の時', () => {
       test.todo('emptyMessage でアイテムが空の時のメッセージを変更できる');
