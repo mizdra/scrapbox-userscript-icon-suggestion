@@ -6,14 +6,11 @@ import { QueryInput } from './SuggestionBox/QueryInput';
 
 export type Item<T> = { element: ComponentChild; searchableText: string; value: T };
 
-function useMatchedItems<T>(query: string, items: Item<T>[]): Item<T>[] {
-  const matchedItems = useMemo(() => {
-    return items.filter((item) => {
-      const target = item.searchableText.toLowerCase();
-      return target.includes(query.toLowerCase());
-    });
-  }, [items, query]);
-  return matchedItems;
+export function matchItems<T>(query: string, items: Item<T>[]): Item<T>[] {
+  return items.filter((item) => {
+    const target = item.searchableText.toLowerCase();
+    return target.includes(query.toLowerCase());
+  });
 }
 
 type SuggestionBoxProps<T> = {
@@ -36,7 +33,7 @@ export function SuggestionBox<T>({
   onClose,
 }: SuggestionBoxProps<T>) {
   const [query, setQuery] = useState('');
-  const matchedItems = useMatchedItems(query, items);
+  const matchedItems = useMemo(() => matchItems(query, items), [items, query]);
   const matchedItemsForPopupMenu = useMemo(() => matchedItems.map((item) => item.element), [matchedItems]);
 
   useEffect(() => {
