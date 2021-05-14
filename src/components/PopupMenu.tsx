@@ -3,10 +3,9 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { calcButtonContainerStyle, calcPopupMenuStyle, calcTriangleStyle } from '../lib/calc-style';
+import { editor } from '../lib/scrapbox';
 import { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
-
-const editor = document.querySelector<HTMLElement>('.editor')!;
 
 export type Item = ComponentChild;
 

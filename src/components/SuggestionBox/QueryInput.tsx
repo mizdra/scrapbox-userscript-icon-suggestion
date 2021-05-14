@@ -2,9 +2,8 @@ import { FunctionComponent, JSX } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
 import { calcQueryInputStyle } from '../../lib/calc-style';
+import { editor } from '../../lib/scrapbox';
 import { CursorPosition } from '../../types';
-
-const editor = document.querySelector<HTMLElement>('.editor')!;
 
 export type QueryInputProps = {
   defaultQuery?: string;

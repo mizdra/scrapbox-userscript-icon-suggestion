@@ -1,9 +1,8 @@
 import { render } from 'preact';
 import { App } from './App';
 import { pagePathToIcon } from './lib/icon';
+import { editor } from './lib/scrapbox';
 import { Icon } from './types';
-
-const editor = document.querySelector<HTMLElement>('.editor')!;
 
 type Options = {
   isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;

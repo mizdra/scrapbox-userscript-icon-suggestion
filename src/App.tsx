@@ -3,12 +3,8 @@ import { useCallback, useMemo, useState } from 'preact/hooks';
 import { SuggestionBox, Item } from './components/SuggestionBox';
 import { useDocumentEventListener } from './hooks/useDocumentEventListener';
 import { uniqBy } from './lib/collection';
-import { calcCursorPosition, insertText, scanIconsFromEditor } from './lib/scrapbox';
+import { calcCursorPosition, cursor, editor, insertText, scanIconsFromEditor, textInput } from './lib/scrapbox';
 import { CursorPosition, Icon } from './types';
-
-const editor = document.querySelector<HTMLElement>('.editor')!;
-const textInput = document.querySelector<HTMLTextAreaElement>('#text-input')!;
-const cursor = document.querySelector<HTMLElement>('.cursor')!;
 
 function generateItems(icons: Icon[]) {
   return uniqBy(icons, (icon) => icon.pagePath).map((icon) => ({
