@@ -10,7 +10,7 @@ type Options = {
   presetIcons?: string[];
 };
 
-const DEFAULT_IS_SUGEGSTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
+const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
 };
 
@@ -26,7 +26,7 @@ export function registerIconSuggestion(options?: Options) {
 
   render(
     <App
-      isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown ?? DEFAULT_IS_SUGEGSTION_OPEN_KEY_DOWN}
+      isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown ?? DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN}
       presetIcons={presetIcons}
     />,
     container,
