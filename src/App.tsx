@@ -41,6 +41,7 @@ type AppProps = {
   editor?: HTMLElement;
   textInput?: HTMLTextAreaElement;
   cursor?: HTMLElement;
+  scrapbox?: Scrapbox;
 };
 
 export const App: FunctionComponent<AppProps> = ({
@@ -49,6 +50,7 @@ export const App: FunctionComponent<AppProps> = ({
   editor = getEditor(),
   textInput = getTextInput(),
   cursor = getCursor(),
+  scrapbox = window.scrapbox,
 }) => {
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
@@ -105,7 +107,7 @@ export const App: FunctionComponent<AppProps> = ({
         setPresetAppended((presetAppended) => !presetAppended);
       }
     },
-    [cursor, editor, isSuggestionOpenKeyDown, open, textInput],
+    [cursor, editor, isSuggestionOpenKeyDown, open, scrapbox.Project.name, textInput],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
