@@ -11,7 +11,7 @@ const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
 };
 
 function generateItems(icons: Icon[]) {
-  return uniqBy(icons, (icon) => icon.pagePath).map((icon) => ({
+  return icons.map((icon) => ({
     element: (
       <span>
         <img
@@ -42,8 +42,8 @@ export const App: FunctionComponent<AppProps> = ({
   const [iconsInEditor, setIconsInEditor] = useState<Icon[]>([]);
   const [presetAppended, setPresetAppended] = useState(false);
   const items = useMemo(() => {
-    if (presetAppended) return generateItems([...iconsInEditor, ...presetIcons]);
-    else return generateItems(iconsInEditor);
+    const icons = presetAppended ? [...iconsInEditor, ...presetIcons] : iconsInEditor;
+    return generateItems(uniqBy(icons, (icon) => icon.pagePath));
   }, [iconsInEditor, presetAppended, presetIcons]);
 
   const handleSelect = useCallback((item: Item<Icon>) => {
