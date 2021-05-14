@@ -6,6 +6,8 @@ import { uniqBy } from './lib/collection';
 import { calcCursorPosition, insertText, scanIconsFromEditor } from './lib/scrapbox';
 import { CursorPosition, Icon } from './types';
 
+const editor = document.querySelector<HTMLElement>('.editor')!;
+const textInput = document.querySelector<HTMLTextAreaElement>('#text-input')!;
 const cursor = document.querySelector<HTMLElement>('.cursor')!;
 
 function generateItems(icons: Icon[]) {
@@ -29,11 +31,9 @@ function generateItems(icons: Icon[]) {
 type AppProps = {
   isSuggestionOpenKeyDown: (e: KeyboardEvent) => boolean;
   presetIcons: Icon[];
-  editor: HTMLElement;
-  textInput: HTMLTextAreaElement;
 };
 
-export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, presetIcons, editor, textInput }) => {
+export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, presetIcons }) => {
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [iconsInEditor, setIconsInEditor] = useState<Icon[]>([]);
@@ -43,26 +43,20 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
     else return generateItems(iconsInEditor);
   }, [iconsInEditor, presetAppended, presetIcons]);
 
-  const handleSelect = useCallback(
-    (item: Item<Icon>) => {
-      setOpen(false);
-      insertText(textInput, item.value.notation);
-    },
-    [textInput],
-  );
+  const handleSelect = useCallback((item: Item<Icon>) => {
+    setOpen(false);
+    insertText(textInput, item.value.notation);
+  }, []);
 
-  const handleSelectNonexistent = useCallback(
-    (query: string) => {
-      setOpen(false);
-      insertText(textInput, `[${query}.icon]`);
-    },
-    [textInput],
-  );
+  const handleSelectNonexistent = useCallback((query: string) => {
+    setOpen(false);
+    insertText(textInput, `[${query}.icon]`);
+  }, []);
 
   const handleClose = useCallback(() => {
     setOpen(false);
     textInput.focus();
-  }, [textInput]);
+  }, []);
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
@@ -89,7 +83,7 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
         setPresetAppended((presetAppended) => !presetAppended);
       }
     },
-    [editor, isSuggestionOpenKeyDown, open, textInput],
+    [isSuggestionOpenKeyDown, open],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
