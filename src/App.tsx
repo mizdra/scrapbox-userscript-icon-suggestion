@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { useCallback, useState } from 'preact/hooks';
+import { useCallback, useMemo, useState } from 'preact/hooks';
 import { SuggestionBox, Item } from './components/SuggestionBox';
 import { useDocumentEventListener } from './hooks/useDocumentEventListener';
 import { uniqBy } from './lib/collection';
@@ -36,8 +36,12 @@ type AppProps = {
 export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, presetIcons, editor, textInput }) => {
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
-  const [items, setItems] = useState<Item<Icon>[]>([]);
+  const [iconsInEditor, setIconsInEditor] = useState<Icon[]>([]);
   const [presetAppended, setPresetAppended] = useState(false);
+  const items = useMemo(() => {
+    if (presetAppended) return generateItems([...iconsInEditor, ...presetIcons]);
+    else return generateItems(iconsInEditor);
+  }, [iconsInEditor, presetAppended, presetIcons]);
 
   const handleSelect = useCallback(
     (item: Item<Icon>) => {
@@ -66,24 +70,26 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
       e.preventDefault();
       e.stopPropagation();
 
-      const icons = scanIconsFromEditor(scrapbox.Project.name, editor);
-
-      if (open && !presetAppended) {
-        setItems([...items, ...generateItems(presetIcons)]);
-        setPresetAppended(true);
-      } else {
+      if (!open) {
+        // ポップアップが閉じていたら開く
         setCursorPosition(calcCursorPosition(cursor));
 
         // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanIconsFromEditor` で
         // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった
         // 行のアイコン記法が画像化されるようにしておく。
         textInput.blur();
-        setItems(generateItems(icons));
+        // 画像化されたらエディタを走査してアイコンを収集
+        const icons = scanIconsFromEditor(scrapbox.Project.name, editor);
+
+        setIconsInEditor(icons);
         setOpen(true);
         setPresetAppended(false);
+      } else {
+        // ポップアップが開いていたら、preset icon の表示・非表示をトグルする
+        setPresetAppended((presetAppended) => !presetAppended);
       }
     },
-    [editor, isSuggestionOpenKeyDown, items, open, presetAppended, presetIcons, textInput],
+    [editor, isSuggestionOpenKeyDown, open, textInput],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
