@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { calcButtonContainerStyle, calcPopupMenuStyle, calcTriangleStyle } from '../lib/calc-style';
-import { editor as defaultEditor } from '../lib/scrapbox';
+import { getEditor } from '../lib/scrapbox';
 import { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
@@ -28,7 +28,7 @@ export function PopupMenu({
   onSelect,
   onSelectNonexistent,
   onClose,
-  editor = defaultEditor,
+  editor = getEditor(),
 }: PopupMenuProps) {
   const { ref, width: buttonContainerWidth = 0 } = useResizeObserver<HTMLDivElement>();
   const isEmpty = useMemo(() => items.length === 0, [items.length]);

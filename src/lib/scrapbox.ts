@@ -25,14 +25,20 @@ export function insertText(textInput: HTMLTextAreaElement, text: string) {
   textInput.dispatchEvent(uiEvent);
 }
 
-const mayBeEditor = document.querySelector<HTMLElement>('.editor');
-const mayBeTextInput = document.querySelector<HTMLTextAreaElement>('#text-input');
-const mayBeCursor = document.querySelector<HTMLElement>('.cursor');
+export function getEditor(): HTMLElement {
+  const editor = document.querySelector<HTMLElement>('.editor');
+  if (editor) return editor;
+  throw new Error('.editor が存在しません');
+}
 
-if (!mayBeEditor) throw new Error('.editor が存在しません');
-if (!mayBeTextInput) throw new Error('#text-input が存在しません');
-if (!mayBeCursor) throw new Error('.cursor が存在しません');
+export function getTextInput(): HTMLTextAreaElement {
+  const textInput = document.querySelector<HTMLTextAreaElement>('#text-input');
+  if (textInput) return textInput;
+  throw new Error('#text-input が存在しません');
+}
 
-export const editor = mayBeEditor;
-export const textInput = mayBeTextInput;
-export const cursor = mayBeCursor;
+export function getCursor(): HTMLElement {
+  const cursor = document.querySelector<HTMLElement>('.cursor');
+  if (cursor) return cursor;
+  throw new Error('.cursor が存在しません');
+}
