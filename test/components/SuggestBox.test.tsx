@@ -123,16 +123,18 @@ describe('SuggestionBox', () => {
     describe('ポップアップに表示されるアイテムが空でない時', () => {
       test('QueryInput に文字を入力するとアイテムがフィルタされる', () => {
         const { getByTestId, getByRole } = render(<SuggestionBox open cursorPosition={cursorPosition} items={items} />);
+        const buttonContainer = getByTestId('button-container');
+        const queryInput = getByRole('textbox');
 
-        expect(getByTestId('button-container').childElementCount).toEqual(4);
-        userEvent.type(getByRole('textbox'), 'a');
-        expect(getByTestId('button-container').childElementCount).toEqual(3);
-        userEvent.type(getByRole('textbox'), 'b');
-        expect(getByTestId('button-container').childElementCount).toEqual(2);
-        userEvent.type(getByRole('textbox'), 'c');
-        expect(getByTestId('button-container').childElementCount).toEqual(1);
-        userEvent.type(getByRole('textbox'), 'd');
-        expect(getByTestId('button-container').childElementCount).toEqual(0);
+        expect(buttonContainer.childElementCount).toEqual(4);
+        userEvent.type(queryInput, 'a');
+        expect(buttonContainer.childElementCount).toEqual(3);
+        userEvent.type(queryInput, 'b');
+        expect(buttonContainer.childElementCount).toEqual(2);
+        userEvent.type(queryInput, 'c');
+        expect(buttonContainer.childElementCount).toEqual(1);
+        userEvent.type(queryInput, 'd');
+        expect(buttonContainer.childElementCount).toEqual(0);
       });
       test('Enter 押下で onSelect が呼び出される', async () => {
         const onSelect = jest.fn();
@@ -144,5 +146,17 @@ describe('SuggestionBox', () => {
         expect(onSelect).toBeCalledTimes(1);
       });
     });
+  });
+  test('open === true になった時に、 QueryInput に入力された文字がリセットされる', () => {
+    console.log('wei');
+    const { rerender, getByRole } = render(<SuggestionBox open cursorPosition={cursorPosition} items={items} />);
+
+    userEvent.type(getByRole('textbox'), 'a');
+    expect(getByRole('textbox')).toHaveValue('a');
+
+    rerender(<SuggestionBox open={false} cursorPosition={cursorPosition} items={items} />);
+    rerender(<SuggestionBox open cursorPosition={cursorPosition} items={items} />);
+
+    expect(getByRole('textbox')).toHaveValue('');
   });
 });
