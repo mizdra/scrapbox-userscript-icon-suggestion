@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App 初期状態 SuggestBox が表示されない 1`] = `
+<DocumentFragment>
+  <div />
+</DocumentFragment>
+`;
+
+exports[`App 初期状態 isSuggestionOpenKeyDown が真になるようなキーを押すと SuggestBox が表示される 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="popup-menu"
+      data-testid="popup-menu"
+      style="top: 0px;"
+    >
+      <div
+        class="button-container"
+        data-testid="button-container"
+        style="left: 0px; transform: translateX(-NaN%); color: rgb(238, 238, 238); font-size: 11px; display: inline-block; padding: 0px 5px; cursor: not-allowed; background-color: rgb(85, 85, 85);"
+      >
+        キーワードにマッチするアイコンがありません
+      </div>
+      <div
+        class="triangle"
+        style="left: 0px; border-top-color: #555;"
+      />
+    </div>
+    <form
+      class="form-inline"
+    >
+      <input
+        class="form-control"
+        default="true"
+        style="position: absolute; top: 0px; left: 0px; transform: translateX(-NaN%);"
+      />
+    </form>
+  </div>
+</DocumentFragment>
+`;
