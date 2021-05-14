@@ -3,9 +3,10 @@ import userEvent from '@testing-library/user-event';
 import { datatype } from 'faker';
 import { matchItems, SuggestionBox } from '../../src/components/SuggestionBox';
 import { CursorPosition } from '../../src/types';
+import { createEditor } from '../helpers/html';
 import { keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
-// ダミーの プロパティ
+// ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
 const items = [
   { element: <span key="1">a</span>, searchableText: 'a', value: 'a' },
@@ -13,6 +14,8 @@ const items = [
   { element: <span key="3">abc</span>, searchableText: 'abc', value: 'abc' },
   { element: <span key="4">z</span>, searchableText: 'z', value: 'z' },
 ];
+const editor = createEditor();
+const props = { cursorPosition, items, editor };
 
 describe('matchItems', () => {
   test('query に部分一致する items のみが返る', () => {
@@ -68,9 +71,7 @@ describe('matchItems', () => {
 describe('SuggestionBox', () => {
   describe('open === false の時', () => {
     test('ポップアップも QueryInput も表示されない', () => {
-      const { asFragment, queryByRole, queryByTestId } = render(
-        <SuggestionBox open={false} cursorPosition={cursorPosition} items={items} />,
-      );
+      const { asFragment, queryByRole, queryByTestId } = render(<SuggestionBox open={false} {...props} />);
       expect(queryByTestId('popup-menu')).toBeNull();
       expect(queryByRole('textbox')).toBeNull();
       expect(asFragment()).toMatchSnapshot();
@@ -78,16 +79,14 @@ describe('SuggestionBox', () => {
   });
   describe('open === true の時', () => {
     test('ポップアップと QueryInput が表示される', () => {
-      const { asFragment, queryByRole, queryByTestId } = render(
-        <SuggestionBox open cursorPosition={cursorPosition} items={items} />,
-      );
+      const { asFragment, queryByRole, queryByTestId } = render(<SuggestionBox open {...props} />);
       expect(queryByTestId('popup-menu')).not.toBeNull();
       expect(queryByRole('textbox')).not.toBeNull();
       expect(asFragment()).toMatchSnapshot();
     });
     test('Esc 押下で onClose が呼び出される', async () => {
       const onClose = jest.fn();
-      render(<SuggestionBox open cursorPosition={cursorPosition} items={items} onClose={onClose} />);
+      render(<SuggestionBox open {...props} onClose={onClose} />);
       expect(onClose).toBeCalledTimes(0);
       await act(() => {
         fireEvent(document, keydownEscapeEvent);
@@ -97,16 +96,12 @@ describe('SuggestionBox', () => {
     describe('ポップアップに表示されるアイテムが空の時', () => {
       test('emptyMessage でアイテムが空の時のメッセージを変更できる', () => {
         const emptyMessage = datatype.string();
-        const { getByText } = render(
-          <SuggestionBox open cursorPosition={cursorPosition} items={[]} emptyMessage={emptyMessage} />,
-        );
+        const { getByText } = render(<SuggestionBox open {...props} items={[]} emptyMessage={emptyMessage} />);
         expect(getByText(emptyMessage)).toBeInTheDocument();
       });
       test('Enter 押下で onSelectNonexistent が呼び出される', async () => {
         const onSelectNonexistent = jest.fn();
-        render(
-          <SuggestionBox open cursorPosition={cursorPosition} items={[]} onSelectNonexistent={onSelectNonexistent} />,
-        );
+        render(<SuggestionBox open {...props} items={[]} onSelectNonexistent={onSelectNonexistent} />);
         expect(onSelectNonexistent).toBeCalledTimes(0);
         await act(() => {
           fireEvent(document, keydownEnterEvent);
@@ -116,7 +111,7 @@ describe('SuggestionBox', () => {
     });
     describe('ポップアップに表示されるアイテムが空でない時', () => {
       test('QueryInput に文字を入力するとアイテムがフィルタされる', () => {
-        const { getByTestId, getByRole } = render(<SuggestionBox open cursorPosition={cursorPosition} items={items} />);
+        const { getByTestId, getByRole } = render(<SuggestionBox open {...props} />);
         const buttonContainer = getByTestId('button-container');
         const queryInput = getByRole('textbox');
 
@@ -132,7 +127,7 @@ describe('SuggestionBox', () => {
       });
       test('Enter 押下で onSelect が呼び出される', async () => {
         const onSelect = jest.fn();
-        render(<SuggestionBox open cursorPosition={cursorPosition} items={items} onSelect={onSelect} />);
+        render(<SuggestionBox open {...props} onSelect={onSelect} />);
         expect(onSelect).toBeCalledTimes(0);
         await act(() => {
           fireEvent(document, keydownEnterEvent);
@@ -143,13 +138,13 @@ describe('SuggestionBox', () => {
   });
   test('open === true になった時に、 QueryInput に入力された文字がリセットされる', () => {
     console.log('wei');
-    const { rerender, getByRole } = render(<SuggestionBox open cursorPosition={cursorPosition} items={items} />);
+    const { rerender, getByRole } = render(<SuggestionBox open {...props} />);
 
     userEvent.type(getByRole('textbox'), 'a');
     expect(getByRole('textbox')).toHaveValue('a');
 
-    rerender(<SuggestionBox open={false} cursorPosition={cursorPosition} items={items} />);
-    rerender(<SuggestionBox open cursorPosition={cursorPosition} items={items} />);
+    rerender(<SuggestionBox open={false} {...props} />);
+    rerender(<SuggestionBox open {...props} />);
 
     expect(getByRole('textbox')).toHaveValue('');
   });
