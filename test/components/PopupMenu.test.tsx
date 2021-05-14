@@ -3,7 +3,6 @@ import { datatype } from 'faker';
 import { ComponentChild } from 'preact';
 import { PopupMenu } from '../../src/components/PopupMenu';
 import { CursorPosition } from '../../src/types';
-import { createEditor } from '../helpers/html';
 import {
   keydownEnterEvent,
   keydownEscapeEvent,
@@ -12,15 +11,10 @@ import {
   keydownEnterWithComposingEvent,
   keydownAEvent,
 } from '../helpers/key';
-import '../mocks/resize-observer';
 
 // ダミーの プロパティ
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
 const items = [<span key="1">item1</span>, <span key="2">item2</span>, <span key="3">item3</span>];
-
-// .editor 要素が document にあることを前提にしているので、 document に .editor を埋め込んでおく
-const editor = createEditor();
-document.body.appendChild(editor);
 
 // keydown イベントが PopupMenu 側でキャンセルされずに突き抜けてきたことを確かめるための mock
 const keydownListener = jest.fn();

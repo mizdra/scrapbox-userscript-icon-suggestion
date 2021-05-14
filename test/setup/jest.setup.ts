@@ -1,6 +1,9 @@
 /* eslint-env node */
 
 import '@testing-library/jest-dom';
+import '../mocks/resize-observer';
+import '../mocks/scrapbox';
+
 import faker from 'faker';
 
 function getRandomInt(min: number, max: number) {

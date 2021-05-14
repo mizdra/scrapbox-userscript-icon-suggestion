@@ -30,3 +30,11 @@ export function createCursor(style: { styleTop: number; styleLeft: number }): HT
   editor.setAttribute('style', `top: ${style.styleTop}px; left: ${style.styleLeft}px; height: 28px; display: none;`);
   return editor;
 }
+
+// scrapbox の #text-input 要素を再現したものを返す関数
+export function createTextInput(): HTMLTextAreaElement {
+  const textInput = document.createElement('textarea');
+  textInput.setAttribute('class', 'text-input');
+  textInput.setAttribute('id', 'text-input');
+  return textInput;
+}

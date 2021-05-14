@@ -1,10 +1,8 @@
-import '../mocks/resize-observer';
 import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { datatype } from 'faker';
 import { matchItems, SuggestionBox } from '../../src/components/SuggestionBox';
 import { CursorPosition } from '../../src/types';
-import { createEditor } from '../helpers/html';
 import { keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
 // ダミーの プロパティ
@@ -15,10 +13,6 @@ const items = [
   { element: <span key="3">abc</span>, searchableText: 'abc', value: 'abc' },
   { element: <span key="4">z</span>, searchableText: 'z', value: 'z' },
 ];
-
-// .editor 要素が document にあることを前提にしているので、 document に .editor を埋め込んでおく
-const editor = createEditor();
-document.body.appendChild(editor);
 
 describe('matchItems', () => {
   test('query に部分一致する items のみが返る', () => {
