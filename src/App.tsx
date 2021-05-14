@@ -10,8 +10,8 @@ const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
 };
 
-function generateItems(icons: Icon[]) {
-  return icons.map((icon) => ({
+function toItem(icon: Icon): Item<Icon> {
+  return {
     element: (
       <span>
         <img
@@ -25,7 +25,7 @@ function generateItems(icons: Icon[]) {
     ),
     searchableText: icon.pagePath,
     value: icon,
-  }));
+  };
 }
 
 type AppProps = {
@@ -43,7 +43,7 @@ export const App: FunctionComponent<AppProps> = ({
   const [presetAppended, setPresetAppended] = useState(false);
   const items = useMemo(() => {
     const icons = presetAppended ? [...iconsInEditor, ...presetIcons] : iconsInEditor;
-    return generateItems(uniqBy(icons, (icon) => icon.pagePath));
+    return uniqBy(icons, (icon) => icon.pagePath).map(toItem);
   }, [iconsInEditor, presetAppended, presetIcons]);
 
   const handleSelect = useCallback((item: Item<Icon>) => {
