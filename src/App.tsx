@@ -6,6 +6,10 @@ import { uniqBy } from './lib/collection';
 import { calcCursorPosition, cursor, editor, insertText, scanIconsFromEditor, textInput } from './lib/scrapbox';
 import { CursorPosition, Icon } from './types';
 
+const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
+  return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
+};
+
 function generateItems(icons: Icon[]) {
   return uniqBy(icons, (icon) => icon.pagePath).map((icon) => ({
     element: (
@@ -25,11 +29,14 @@ function generateItems(icons: Icon[]) {
 }
 
 type AppProps = {
-  isSuggestionOpenKeyDown: (e: KeyboardEvent) => boolean;
-  presetIcons: Icon[];
+  isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
+  presetIcons?: Icon[];
 };
 
-export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, presetIcons }) => {
+export const App: FunctionComponent<AppProps> = ({
+  isSuggestionOpenKeyDown = DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN,
+  presetIcons = [],
+}) => {
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [iconsInEditor, setIconsInEditor] = useState<Icon[]>([]);
