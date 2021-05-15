@@ -9,6 +9,7 @@ describe('pagePathToIcon', () => {
       imgTitle: 'foo',
       imgSrc: `/api/pages/project/foo/icon`,
       notation: `[foo.icon]`,
+      projectName: 'project',
     });
   });
   describe('`pagePath` が絶対パスの時', () => {
@@ -20,6 +21,7 @@ describe('pagePathToIcon', () => {
         imgTitle: 'foo',
         imgSrc: `/api/pages/project/foo/icon`,
         notation: `[foo.icon]`,
+        projectName: 'project',
       });
     });
     test('カレントプロジェクト以外のアイコンが指定されている時', () => {
@@ -31,6 +33,7 @@ describe('pagePathToIcon', () => {
         imgTitle: 'foo',
         imgSrc: `/api/pages/other-project/foo/icon`,
         notation: `[/other-project/foo.icon]`,
+        projectName: 'other-project',
       });
     });
   });
@@ -41,6 +44,7 @@ describe('pagePathToIcon', () => {
       imgTitle: 'foo bar',
       imgSrc: `/api/pages/project/foo%20bar/icon`,
       notation: `[foo bar.icon]`,
+      projectName: 'project',
     });
   });
   test('`pagePath` にスラッシュが含まれている時', () => {
@@ -50,6 +54,7 @@ describe('pagePathToIcon', () => {
       imgTitle: 'foo/bar',
       imgSrc: `/api/pages/project/foo%2Fbar/icon`,
       notation: `[foo/bar.icon]`,
+      projectName: 'project',
     });
   });
   test('`pagePath` に日本語が含まれている時', () => {
@@ -59,6 +64,7 @@ describe('pagePathToIcon', () => {
       imgTitle: '日本語',
       imgSrc: `/api/pages/project/%E6%97%A5%E6%9C%AC%E8%AA%9E/icon`,
       notation: `[日本語.icon]`,
+      projectName: 'project',
     });
   });
 });
@@ -72,6 +78,7 @@ describe('iconLinkElementToIcon', () => {
       imgTitle: 'foo',
       imgSrc: `/api/pages/project/foo/icon`,
       notation: `[foo.icon]`,
+      projectName: 'project',
     });
   });
   test('カレントプロジェクト以外のアイコンを表す要素が与えられた時', () => {
@@ -82,6 +89,7 @@ describe('iconLinkElementToIcon', () => {
       imgTitle: 'foo',
       imgSrc: `/api/pages/other-project/foo/icon`,
       notation: `[/other-project/foo.icon]`,
+      projectName: 'other-project',
     });
   });
   test('空白を含む名前のアイコンを表す要素が与えられた時', () => {
@@ -92,6 +100,7 @@ describe('iconLinkElementToIcon', () => {
       imgTitle: 'foo bar',
       imgSrc: `/api/pages/project/foo%20bar/icon`,
       notation: `[foo bar.icon]`,
+      projectName: 'project',
     });
   });
   test('スラッシュを含む名前のアイコンを表す要素が与えられた時', () => {
@@ -102,6 +111,7 @@ describe('iconLinkElementToIcon', () => {
       imgTitle: 'foo/bar',
       imgSrc: `/api/pages/project/foo%2Fbar/icon`,
       notation: `[foo/bar.icon]`,
+      projectName: 'project',
     });
     expect(pagePathToIcon('project', 'foo/bar')).toStrictEqual({
       pagePath: 'foo/bar',
@@ -109,6 +119,7 @@ describe('iconLinkElementToIcon', () => {
       imgTitle: 'foo/bar',
       imgSrc: `/api/pages/project/foo%2Fbar/icon`,
       notation: `[foo/bar.icon]`,
+      projectName: 'project',
     });
   });
   test('日本語を含む名前のアイコンを表す要素が与えられた時', () => {
@@ -119,6 +130,7 @@ describe('iconLinkElementToIcon', () => {
       imgTitle: '日本語',
       imgSrc: `/api/pages/project/%E6%97%A5%E6%9C%AC%E8%AA%9E/icon`,
       notation: `[日本語.icon]`,
+      projectName: 'project',
     });
   });
 });

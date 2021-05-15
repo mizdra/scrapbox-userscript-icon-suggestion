@@ -45,6 +45,8 @@ export type Icon = {
   imgSrc: string;
   /** アイコン記法の文字列表現 */
   notation: string;
+  /** アイコンが管理されているプロジェクト名 */
+  projectName: string;
 };
 
 export type CursorPosition = {
