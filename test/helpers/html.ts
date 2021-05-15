@@ -1,3 +1,5 @@
+import { pagePathToIcon } from '../../src/lib/icon';
+
 // scrapbox のアイコンの a タグを再現したものを返す関数
 export function createIconLinkElement(projectName: string, pageName: string): HTMLAnchorElement {
   const anchor = document.createElement('a');
@@ -13,12 +15,37 @@ export function createIconLinkElement(projectName: string, pageName: string): HT
   return anchor;
 }
 
+function pagePathToIconLinkElement(currentProjectName: string, pagePath: string): HTMLAnchorElement {
+  const icon = pagePathToIcon(currentProjectName, pagePath);
+  const a = document.createElement('a');
+  a.setAttribute('class', 'link icon');
+  a.setAttribute('rel', 'route');
+  a.setAttribute('href', `/${icon.projectName}/${encodeURIComponent(icon.imgAlt)}`);
+  const img = document.createElement('img');
+  img.setAttribute('class', 'icon');
+  img.setAttribute('alt', icon.imgAlt);
+  img.setAttribute('title', icon.imgTitle);
+  img.setAttribute('src', icon.imgSrc);
+  a.appendChild(img);
+  return a;
+}
+
 // scrapbox の .editor 要素を再現したものを返す関数
-export function createEditor(): HTMLDivElement {
+type CreateEditorOptions = {
+  currentProjectName: string;
+  iconPagePaths: string[];
+};
+export function createEditor(options?: CreateEditorOptions): HTMLDivElement {
   const editor = document.createElement('div');
   editor.setAttribute('class', 'editor');
   editor.setAttribute('id', 'editor');
   editor.style.width = '1000px';
+  if (options) {
+    options.iconPagePaths.forEach((iconPagePath) => {
+      const iconLinkElement = pagePathToIconLinkElement(options.currentProjectName, iconPagePath);
+      editor.appendChild(iconLinkElement);
+    });
+  }
   return editor;
 }
 

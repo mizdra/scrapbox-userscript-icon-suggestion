@@ -17,13 +17,38 @@ exports[`App 初期状態 isSuggestionOpenKeyDown が真になるようなキー
       <div
         class="button-container"
         data-testid="button-container"
-        style="left: 0px; transform: translateX(-NaN%); color: rgb(238, 238, 238); font-size: 11px; display: inline-block; padding: 0px 5px; cursor: not-allowed; background-color: rgb(85, 85, 85);"
+        style="left: 0px; transform: translateX(-NaN%);"
       >
-        キーワードにマッチするアイコンがありません
+        <div
+          class="button selected"
+        >
+          <span>
+            <img
+              alt="a"
+              src="/api/pages/project/a/icon"
+              style="width: 1.3em; height: 1.3em; object-fit: contain;"
+              title="a"
+            />
+             a
+          </span>
+        </div>
+        <div
+          class="button"
+        >
+          <span>
+            <img
+              alt="b"
+              src="/api/pages/project/b/icon"
+              style="width: 1.3em; height: 1.3em; object-fit: contain;"
+              title="b"
+            />
+             b
+          </span>
+        </div>
       </div>
       <div
         class="triangle"
-        style="left: 0px; border-top-color: #555;"
+        style="left: 0px;"
       />
     </div>
     <form

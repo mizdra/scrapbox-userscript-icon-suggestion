@@ -5,6 +5,7 @@ const mockInsertText = jest.fn();
 import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { App, AppProps } from '../src/App';
+import { pagePathToIcon } from '../src/lib/icon';
 import { Icon } from './../src/types';
 import { createCursor, createEditor, createScrapboxAPI, createTextInput } from './helpers/html';
 import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from './helpers/key';
@@ -17,8 +18,8 @@ jest.mock('../src/lib/scrapbox', () => {
 });
 
 // ダミーの props
-const presetIcons: Icon[] = [];
-const editor = createEditor();
+const presetIcons: Icon[] = ['b', 'c', 'c'].map((pagePath) => pagePathToIcon('project', pagePath));
+const editor = createEditor({ currentProjectName: 'project', iconPagePaths: ['a', 'a', 'b'] });
 const textInput = createTextInput();
 const cursor = createCursor({ styleLeft: 0, styleTop: 0 });
 const scrapbox = createScrapboxAPI();
@@ -81,8 +82,29 @@ describe('App', () => {
         });
         expect(mockInsertText).toBeCalledWith(expect.anything(), '[foo.icon]');
       });
-      test.todo('アイテムがあれば QueryInput に入力した pagePath のアイコンが挿入される');
+      test('アイテムがあれば選択中のアイコンが挿入される', async () => {
+        const { getByTestId } = await renderApp({ ...props });
+        const buttonContainer = getByTestId('button-container');
+        const queryInput = getByTestId('query-input');
+
+        expect(buttonContainer.childElementCount).toEqual(2); // a, b の 2アイコンが表示される
+        userEvent.type(queryInput, 'b');
+        expect(buttonContainer.childElementCount).toEqual(1); // b だけ表示される
+        await act(() => {
+          fireEvent(document, keydownEnterEvent);
+        });
+        expect(mockInsertText).toBeCalledWith(expect.anything(), '[b.icon]');
+      });
     });
-    test.todo('isSuggestionOpenKeyDown が真になるようなキーを押下したら、presetIcons が suggest される');
+    test('isSuggestionOpenKeyDown が真になるようなキーを押下したら、presetIcons が suggest される', async () => {
+      const { getByTestId } = await renderApp({ ...props });
+      const buttonContainer = getByTestId('button-container');
+
+      expect(buttonContainer.childElementCount).toEqual(2); // a, b の 2アイコンが表示される
+      await act(() => {
+        fireEvent(document, keydownCtrlLEvent);
+      });
+      expect(buttonContainer.childElementCount).toEqual(3); // a, b, c の 3アイコンが表示される
+    });
   });
 });
