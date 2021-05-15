@@ -46,6 +46,7 @@ export const QueryInput: FunctionComponent<QueryInputProps> = ({
         default
         onInput={handleInput}
         onBlur={onBlur}
+        data-testid="query-input"
       />
     </form>
   );

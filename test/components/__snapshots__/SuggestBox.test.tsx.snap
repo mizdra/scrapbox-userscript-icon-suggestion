@@ -58,6 +58,7 @@ exports[`SuggestionBox open === true の時 ポップアップと QueryInput が
     >
       <input
         class="form-control"
+        data-testid="query-input"
         default="true"
         style="position: absolute; top: 0px; left: 0px; transform: translateX(-NaN%);"
       />
