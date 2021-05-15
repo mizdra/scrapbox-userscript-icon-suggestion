@@ -38,5 +38,12 @@ describe('App', () => {
       expect(asFragment()).toMatchSnapshot();
     });
   });
-  describe('open === true の時', () => {});
+  describe('SuggestBox が表示されている時', () => {
+    test.todo('Escape 押下で SuggestBox が閉じる');
+    describe('Enter を押下した時', () => {
+      test.todo('アイテムが1つもなければ QueryInput に入力した pagePath のアイコンが挿入される');
+      test.todo('アイテムがあれば QueryInput に入力した pagePath のアイコンが挿入される');
+    });
+    test.todo('isSuggestionOpenKeyDown が真になるようなキーを押下したら、presetIcons が suggest される');
+  });
 });
