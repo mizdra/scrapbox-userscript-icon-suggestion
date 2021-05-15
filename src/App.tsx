@@ -35,7 +35,7 @@ function toItem(icon: Icon): Item<Icon> {
   };
 }
 
-type AppProps = {
+export type AppProps = {
   isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
   editor?: HTMLElement;

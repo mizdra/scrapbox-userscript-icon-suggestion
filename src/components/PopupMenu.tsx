@@ -9,7 +9,7 @@ import { PopupMenuButton } from './PopupMenu/Button';
 
 export type Item = ComponentChild;
 
-type PopupMenuProps = {
+export type PopupMenuProps = {
   open: boolean;
   emptyMessage?: string;
   cursorPosition: CursorPosition;

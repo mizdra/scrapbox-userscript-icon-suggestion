@@ -14,7 +14,7 @@ export function matchItems<T>(query: string, items: Item<T>[]): Item<T>[] {
   });
 }
 
-type SuggestionBoxProps<T> = {
+export type SuggestionBoxProps<T> = {
   open: boolean;
   emptyMessage?: string;
   items: Item<T>[];
