@@ -31,6 +31,7 @@ exports[`App 初期状態 isSuggestionOpenKeyDown が真になるようなキー
     >
       <input
         class="form-control"
+        data-testid="query-input"
         default="true"
         style="position: absolute; top: 0px; left: 0px; transform: translateX(-NaN%);"
       />
