@@ -1,7 +1,10 @@
+// jest.mock より先に定義したいので先頭に書く
+// ref: https://github.com/facebook/jest/issues/11153#issuecomment-803639307
+const mockInsertText = jest.fn();
+
 import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { App, AppProps } from '../src/App';
-import { insertText } from '../src/lib/scrapbox';
 import { Icon } from './../src/types';
 import { createCursor, createEditor, createScrapboxAPI, createTextInput } from './helpers/html';
 import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from './helpers/key';
@@ -9,7 +12,7 @@ import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent
 jest.mock('../src/lib/scrapbox', () => {
   return {
     ...jest.requireActual('../src/lib/scrapbox'),
-    insertText: jest.fn(),
+    insertText: mockInsertText,
   };
 });
 
@@ -22,8 +25,7 @@ const scrapbox = createScrapboxAPI();
 const props = { presetIcons, editor, textInput, cursor, scrapbox };
 
 beforeEach(() => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (insertText as any).mockReset();
+  mockInsertText.mockReset();
 });
 
 describe('App', () => {
@@ -77,7 +79,7 @@ describe('App', () => {
         await act(() => {
           fireEvent(document, keydownEnterEvent);
         });
-        expect(insertText).toBeCalledWith(expect.anything(), '[foo.icon]');
+        expect(mockInsertText).toBeCalledWith(expect.anything(), '[foo.icon]');
       });
       test.todo('アイテムがあれば QueryInput に入力した pagePath のアイコンが挿入される');
     });
