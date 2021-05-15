@@ -7,3 +7,7 @@ interface Scrapbox {
 }
 
 declare const scrapbox: Scrapbox;
+
+interface Window {
+  scrapbox: Scrapbox;
+}

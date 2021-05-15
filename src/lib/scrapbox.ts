@@ -24,3 +24,21 @@ export function insertText(textInput: HTMLTextAreaElement, text: string) {
   uiEvent.initEvent('input', true, false);
   textInput.dispatchEvent(uiEvent);
 }
+
+export function getEditor(): HTMLElement {
+  const editor = document.querySelector<HTMLElement>('.editor');
+  if (editor) return editor;
+  throw new Error('.editor が存在しません');
+}
+
+export function getTextInput(): HTMLTextAreaElement {
+  const textInput = document.querySelector<HTMLTextAreaElement>('#text-input');
+  if (textInput) return textInput;
+  throw new Error('#text-input が存在しません');
+}
+
+export function getCursor(): HTMLElement {
+  const cursor = document.querySelector<HTMLElement>('.cursor');
+  if (cursor) return cursor;
+  throw new Error('.cursor が存在しません');
+}

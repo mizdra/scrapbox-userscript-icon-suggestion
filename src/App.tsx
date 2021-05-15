@@ -3,13 +3,22 @@ import { useCallback, useMemo, useState } from 'preact/hooks';
 import { SuggestionBox, Item } from './components/SuggestionBox';
 import { useDocumentEventListener } from './hooks/useDocumentEventListener';
 import { uniqBy } from './lib/collection';
-import { calcCursorPosition, insertText, scanIconsFromEditor } from './lib/scrapbox';
+import {
+  calcCursorPosition,
+  getCursor,
+  getEditor,
+  getTextInput,
+  insertText,
+  scanIconsFromEditor,
+} from './lib/scrapbox';
 import { CursorPosition, Icon } from './types';
 
-const cursor = document.querySelector<HTMLElement>('.cursor')!;
+const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
+  return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
+};
 
-function generateItems(icons: Icon[]) {
-  return uniqBy(icons, (icon) => icon.pagePath).map((icon) => ({
+function toItem(icon: Icon): Item<Icon> {
+  return {
     element: (
       <span>
         <img
@@ -23,24 +32,33 @@ function generateItems(icons: Icon[]) {
     ),
     searchableText: icon.pagePath,
     value: icon,
-  }));
+  };
 }
 
-type AppProps = {
-  isSuggestionOpenKeyDown: (e: KeyboardEvent) => boolean;
-  presetIcons: Icon[];
-  editor: HTMLElement;
-  textInput: HTMLTextAreaElement;
+export type AppProps = {
+  isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
+  presetIcons?: Icon[];
+  editor?: HTMLElement;
+  textInput?: HTMLTextAreaElement;
+  cursor?: HTMLElement;
+  scrapbox?: Scrapbox;
 };
 
-export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, presetIcons, editor, textInput }) => {
+export const App: FunctionComponent<AppProps> = ({
+  isSuggestionOpenKeyDown = DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN,
+  presetIcons = [],
+  editor = getEditor(),
+  textInput = getTextInput(),
+  cursor = getCursor(),
+  scrapbox = window.scrapbox,
+}) => {
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [iconsInEditor, setIconsInEditor] = useState<Icon[]>([]);
   const [presetAppended, setPresetAppended] = useState(false);
   const items = useMemo(() => {
-    if (presetAppended) return generateItems([...iconsInEditor, ...presetIcons]);
-    else return generateItems(iconsInEditor);
+    const icons = presetAppended ? [...iconsInEditor, ...presetIcons] : iconsInEditor;
+    return uniqBy(icons, (icon) => icon.pagePath).map(toItem);
   }, [iconsInEditor, presetAppended, presetIcons]);
 
   const handleSelect = useCallback(
@@ -89,7 +107,7 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
         setPresetAppended((presetAppended) => !presetAppended);
       }
     },
-    [editor, isSuggestionOpenKeyDown, open, textInput],
+    [cursor, editor, isSuggestionOpenKeyDown, open, scrapbox.Project.name, textInput],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
@@ -102,6 +120,7 @@ export const App: FunctionComponent<AppProps> = ({ isSuggestionOpenKeyDown, pres
       onSelect={handleSelect}
       onSelectNonexistent={handleSelectNonexistent}
       onClose={handleClose}
+      editor={editor}
     />
   );
 };

@@ -2,18 +2,24 @@ import { FunctionComponent, JSX } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
 import { calcQueryInputStyle } from '../../lib/calc-style';
+import { getEditor } from '../../lib/scrapbox';
 import { CursorPosition } from '../../types';
-
-const editor = document.querySelector<HTMLElement>('.editor')!;
 
 export type QueryInputProps = {
   defaultQuery?: string;
   cursorPosition: CursorPosition;
   onInput?: (newQuery: string) => void;
   onBlur?: () => void;
+  editor?: HTMLElement;
 };
 
-export const QueryInput: FunctionComponent<QueryInputProps> = ({ defaultQuery, cursorPosition, onInput, onBlur }) => {
+export const QueryInput: FunctionComponent<QueryInputProps> = ({
+  defaultQuery,
+  cursorPosition,
+  onInput,
+  onBlur,
+  editor = getEditor(),
+}) => {
   const ref = useRef<HTMLInputElement>();
   const { width: editorWidth = 0 } = useResizeObserver({ ref: editor });
   const queryInputStyle = calcQueryInputStyle(editorWidth, cursorPosition);
@@ -40,6 +46,7 @@ export const QueryInput: FunctionComponent<QueryInputProps> = ({ defaultQuery, c
         default
         onInput={handleInput}
         onBlur={onBlur}
+        data-testid="query-input"
       />
     </form>
   );

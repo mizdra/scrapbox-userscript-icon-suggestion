@@ -1,5 +1,6 @@
 import { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import { getEditor } from '../lib/scrapbox';
 import { CursorPosition } from '../types';
 import { PopupMenu } from './PopupMenu';
 import { QueryInput } from './SuggestionBox/QueryInput';
@@ -13,7 +14,7 @@ export function matchItems<T>(query: string, items: Item<T>[]): Item<T>[] {
   });
 }
 
-type SuggestionBoxProps<T> = {
+export type SuggestionBoxProps<T> = {
   open: boolean;
   emptyMessage?: string;
   items: Item<T>[];
@@ -21,6 +22,7 @@ type SuggestionBoxProps<T> = {
   onSelect?: (item: Item<T>, query: string) => void;
   onSelectNonexistent?: (query: string) => void;
   onClose?: (query: string) => void;
+  editor?: HTMLElement;
 };
 
 export function SuggestionBox<T>({
@@ -31,6 +33,7 @@ export function SuggestionBox<T>({
   onSelect,
   onSelectNonexistent,
   onClose,
+  editor = getEditor(),
 }: SuggestionBoxProps<T>) {
   const [query, setQuery] = useState('');
   const matchedItems = useMemo(() => matchItems(query, items), [items, query]);
@@ -63,9 +66,16 @@ export function SuggestionBox<T>({
         onSelect={handleSelect}
         onSelectNonexistent={handleSelectNonexistent}
         onClose={handleClose}
+        editor={editor}
       />
       {open && (
-        <QueryInput defaultQuery={query} cursorPosition={cursorPosition} onInput={setQuery} onBlur={handleClose} />
+        <QueryInput
+          defaultQuery={query}
+          cursorPosition={cursorPosition}
+          onInput={setQuery}
+          onBlur={handleClose}
+          editor={editor}
+        />
       )}
     </div>
   );

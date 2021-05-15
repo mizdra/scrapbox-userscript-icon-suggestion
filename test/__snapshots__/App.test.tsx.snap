@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SuggestionBox open === false の時 ポップアップも QueryInput も表示されない 1`] = `
+exports[`App 初期状態 SuggestBox が表示されない 1`] = `
 <DocumentFragment>
   <div />
 </DocumentFragment>
 `;
 
-exports[`SuggestionBox open === true の時 ポップアップと QueryInput が表示される 1`] = `
+exports[`App 初期状態 isSuggestionOpenKeyDown が真になるようなキーを押すと SuggestBox が表示される 1`] = `
 <DocumentFragment>
   <div>
     <div
@@ -23,28 +23,26 @@ exports[`SuggestionBox open === true の時 ポップアップと QueryInput が
           class="button selected"
         >
           <span>
-            a
+            <img
+              alt="a"
+              src="/api/pages/project/a/icon"
+              style="width: 1.3em; height: 1.3em; object-fit: contain;"
+              title="a"
+            />
+             a
           </span>
         </div>
         <div
           class="button"
         >
           <span>
-            ab
-          </span>
-        </div>
-        <div
-          class="button"
-        >
-          <span>
-            abc
-          </span>
-        </div>
-        <div
-          class="button"
-        >
-          <span>
-            z
+            <img
+              alt="b"
+              src="/api/pages/project/b/icon"
+              style="width: 1.3em; height: 1.3em; object-fit: contain;"
+              title="b"
+            />
+             b
           </span>
         </div>
       </div>

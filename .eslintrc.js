@@ -16,6 +16,8 @@ module.exports = {
     // error だと未定義関数を呼び出した際に、実引数の部分まで赤く線が引かれて煩すぎる。
     // callee だけ赤く染まれば十分なので、このルールは off にしておく。
     '@typescript-eslint/no-unsafe-assignment': 0,
+    // @typescript-eslint/no-explicit-any さえあれば十分なので off にしておく。
+    '@typescript-eslint/no-unsafe-member-access': 0,
     // 今の所有用な場面に遭遇したことがないので off にしておく。
     '@typescript-eslint/no-unsafe-call': 0,
     'react/react-in-jsx-scope': 0,

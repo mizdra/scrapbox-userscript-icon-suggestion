@@ -14,6 +14,7 @@ export function pagePathToIcon(currentProjectName: string, pagePath: string): Ic
     imgTitle: pageName,
     imgSrc: `/api/pages/${projectName}/${encodeURIComponent(pageName)}/icon`,
     notation: `[${normalizedPagePath}.icon]`,
+    projectName,
   };
 }
 
@@ -33,5 +34,6 @@ export function iconLinkElementToIcon(currentProjectName: string, iconLinkElemen
     // URL#pathname でパスだけ取り出してやる。
     imgSrc: new URL(imgElement.src, location.origin).pathname,
     notation: `[${pagePath}.icon]`,
+    projectName,
   };
 }
