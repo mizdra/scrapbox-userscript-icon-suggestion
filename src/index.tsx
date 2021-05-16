@@ -7,6 +7,7 @@ type Options = {
   isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
   // `string` is `pagePath`
   presetIcons?: string[];
+  scrapbox?: Scrapbox;
   editor?: HTMLElement;
 };
 
@@ -14,6 +15,8 @@ export function registerIconSuggestion(options?: Options) {
   // 直接 editor に mount すると scrapbox 側の react renderer と干渉して壊れるので、
   // editor 内に差し込んだ container に mount する
   const container = document.createElement('div');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const scrapbox = options?.scrapbox ?? (window as any).scrapbox;
   const editor = options?.editor ?? getEditor();
   editor.appendChild(container);
 
