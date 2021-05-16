@@ -19,7 +19,12 @@ export function pagePathToIcon(currentProjectName: string, pagePath: string): Ic
 }
 
 export function iconLinkElementToIcon(currentProjectName: string, iconLinkElement: HTMLAnchorElement): Icon {
-  const imgElement = iconLinkElement.querySelector<HTMLImageElement>('img.icon')!;
+  const imgElement = iconLinkElement.querySelector<HTMLImageElement>('img.icon');
+  if (!imgElement)
+    throw new Error(
+      `.icon.link の子要素 img.icon がありません。iconLinkElement.innnerHTML: ${iconLinkElement.innerHTML}`,
+    );
+
   const isCurrentProjectIcon = iconLinkElement.pathname.startsWith(`/${currentProjectName}/`);
   const projectName = isCurrentProjectIcon
     ? currentProjectName
