@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import { datatype } from 'faker';
 import { matchItems, SuggestionBox } from '../../src/components/SuggestionBox';
 import { CursorPosition } from '../../src/types';
-import { createEditor } from '../helpers/html';
 import { keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
 // ダミーの props
@@ -14,8 +13,7 @@ const items = [
   { element: <span key="3">abc</span>, searchableText: 'abc', value: 'abc' },
   { element: <span key="4">z</span>, searchableText: 'z', value: 'z' },
 ];
-const editor = createEditor();
-const props = { cursorPosition, items, editor };
+const props = { cursorPosition, items };
 
 describe('matchItems', () => {
   test('query に部分一致する items のみが返る', () => {
