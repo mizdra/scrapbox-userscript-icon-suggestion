@@ -61,7 +61,7 @@ function embedIcons(currentProjectName: string, editor: HTMLElement, iconPagePat
 }
 
 // scrapbox の .cursor 要素を再現したものを返す関数
-function createCursor(style: { styleTop: number; styleLeft: number }): HTMLDivElement {
+export function createCursor(style: { styleTop: number; styleLeft: number }): HTMLDivElement {
   const editor = document.createElement('div');
   editor.setAttribute('class', 'cursor');
   // top や height の値は実際の scrapbox からコピペしてきた適当なものを設定
