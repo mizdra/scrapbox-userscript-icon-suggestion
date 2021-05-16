@@ -18,8 +18,7 @@ jest.mock('../src/lib/scrapbox', () => {
   };
 });
 
-// ダミーの props
-
+// editor 上に埋め込まれるアイコンをカスタマイズしたいので、Context でラップする
 function App(props: AppProps) {
   const presetIcons: Icon[] = ['b', 'c', 'c'].map((pagePath) => pagePathToIcon('project', pagePath));
   const editor = createEditor({ currentProjectName: 'project', iconPagePaths: ['a', 'a', 'b'] });
