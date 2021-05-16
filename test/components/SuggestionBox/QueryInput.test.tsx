@@ -12,27 +12,27 @@ const props = { cursorPosition, editor };
 
 describe('QueryInput', () => {
   test('スタイル属性が表示される', () => {
-    const { getByRole } = render(<QueryInput {...props} />);
-    const input = getByRole('textbox');
+    const { getByTestId } = render(<QueryInput {...props} />);
+    const input = getByTestId('query-input');
     const expectedStyles = calcQueryInputStyle(editor.clientWidth, cursorPosition);
     expect(input).toHaveStyle(expectedStyles);
   });
   test('auto-focus される', () => {
-    const { getByRole } = render(<QueryInput {...props} />);
-    const input = getByRole('textbox');
+    const { getByTestId } = render(<QueryInput {...props} />);
+    const input = getByTestId('query-input');
     expect(input).toHaveFocus();
   });
   test('defaultQuery が設定できる', () => {
-    const { getByRole } = render(<QueryInput {...props} defaultQuery={'text'} />);
-    const input = getByRole('textbox');
+    const { getByTestId } = render(<QueryInput {...props} defaultQuery={'text'} />);
+    const input = getByTestId('query-input');
     expect(input).toHaveValue('text');
   });
   test('文字を入力すると onInput が発火する', async () => {
     const onInput = jest.fn();
     const query = faker.helpers.randomize(['', faker.datatype.string()]);
 
-    const { getByRole } = render(<QueryInput {...props} onInput={onInput} />);
-    const input = getByRole('textbox');
+    const { getByTestId } = render(<QueryInput {...props} onInput={onInput} />);
+    const input = getByTestId('query-input');
 
     expect(onInput).not.toHaveBeenCalled();
     fireEvent.input(input, { target: { value: query } });
@@ -44,8 +44,8 @@ describe('QueryInput', () => {
   });
   test('フォーカスを外すと onBlur が発火する', async () => {
     const onBlur = jest.fn();
-    const { getByRole } = render(<QueryInput {...props} onBlur={onBlur} />);
-    const input = getByRole('textbox');
+    const { getByTestId } = render(<QueryInput {...props} onBlur={onBlur} />);
+    const input = getByTestId('query-input');
 
     expect(onBlur).not.toHaveBeenCalled();
     fireEvent.blur(input);

@@ -38,26 +38,24 @@ beforeEach(() => {
 describe('App', () => {
   describe('初期状態', () => {
     test('SuggestBox が表示されない', () => {
-      const { asFragment, queryByRole, queryByTestId } = render(<App />);
+      const { asFragment, queryByTestId } = render(<App />);
       expect(queryByTestId('popup-menu')).toBeNull();
-      expect(queryByRole('textbox')).toBeNull();
+      expect(queryByTestId('query-input')).toBeNull();
       expect(asFragment()).toMatchSnapshot();
     });
     test('isSuggestionOpenKeyDown が真になるようなキーを押すと SuggestBox が表示される', async () => {
       const isSuggestionOpenKeyDown = (e: KeyboardEvent) => e.key === 'a';
-      const { asFragment, queryByRole, queryByTestId } = render(
-        <App isSuggestionOpenKeyDown={isSuggestionOpenKeyDown} />,
-      );
+      const { asFragment, queryByTestId } = render(<App isSuggestionOpenKeyDown={isSuggestionOpenKeyDown} />);
       await act(() => {
         fireEvent(document, keydownEscapeEvent);
       });
       expect(queryByTestId('popup-menu')).toBeNull();
-      expect(queryByRole('textbox')).toBeNull();
+      expect(queryByTestId('query-input')).toBeNull();
       await act(() => {
         fireEvent(document, keydownAEvent);
       });
       expect(queryByTestId('popup-menu')).toBeInTheDocument();
-      expect(queryByRole('textbox')).toBeInTheDocument();
+      expect(queryByTestId('query-input')).toBeInTheDocument();
       expect(asFragment()).toMatchSnapshot();
     });
   });

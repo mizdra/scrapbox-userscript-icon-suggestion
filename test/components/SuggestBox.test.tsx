@@ -71,17 +71,17 @@ describe('matchItems', () => {
 describe('SuggestionBox', () => {
   describe('open === false の時', () => {
     test('ポップアップも QueryInput も表示されない', () => {
-      const { asFragment, queryByRole, queryByTestId } = render(<SuggestionBox open={false} {...props} />);
+      const { asFragment, queryByTestId } = render(<SuggestionBox open={false} {...props} />);
       expect(queryByTestId('popup-menu')).toBeNull();
-      expect(queryByRole('textbox')).toBeNull();
+      expect(queryByTestId('query-input')).toBeNull();
       expect(asFragment()).toMatchSnapshot();
     });
   });
   describe('open === true の時', () => {
     test('ポップアップと QueryInput が表示される', () => {
-      const { asFragment, queryByRole, queryByTestId } = render(<SuggestionBox open {...props} />);
+      const { asFragment, queryByTestId } = render(<SuggestionBox open {...props} />);
       expect(queryByTestId('popup-menu')).not.toBeNull();
-      expect(queryByRole('textbox')).not.toBeNull();
+      expect(queryByTestId('query-input')).not.toBeNull();
       expect(asFragment()).toMatchSnapshot();
     });
     test('Esc 押下で onClose が呼び出される', async () => {
@@ -111,9 +111,9 @@ describe('SuggestionBox', () => {
     });
     describe('ポップアップに表示されるアイテムが空でない時', () => {
       test('QueryInput に文字を入力するとアイテムがフィルタされる', () => {
-        const { getByTestId, getByRole } = render(<SuggestionBox open {...props} />);
+        const { getByTestId } = render(<SuggestionBox open {...props} />);
         const buttonContainer = getByTestId('button-container');
-        const queryInput = getByRole('textbox');
+        const queryInput = getByTestId('query-input');
 
         expect(buttonContainer.childElementCount).toEqual(4);
         userEvent.type(queryInput, 'a');
@@ -138,14 +138,14 @@ describe('SuggestionBox', () => {
   });
   test('open === true になった時に、 QueryInput に入力された文字がリセットされる', () => {
     console.log('wei');
-    const { rerender, getByRole } = render(<SuggestionBox open {...props} />);
+    const { rerender, getByTestId } = render(<SuggestionBox open {...props} />);
 
-    userEvent.type(getByRole('textbox'), 'a');
-    expect(getByRole('textbox')).toHaveValue('a');
+    userEvent.type(getByTestId('query-input'), 'a');
+    expect(getByTestId('query-input')).toHaveValue('a');
 
     rerender(<SuggestionBox open={false} {...props} />);
     rerender(<SuggestionBox open {...props} />);
 
-    expect(getByRole('textbox')).toHaveValue('');
+    expect(getByTestId('query-input')).toHaveValue('');
   });
 });
