@@ -4,10 +4,11 @@ const mockInsertText = jest.fn();
 
 import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { App, AppProps } from '../src/App';
+import { App as NativeApp, AppProps } from '../src/App';
+import { ScrapboxContext } from '../src/contexts/ScrapboxContext';
 import { pagePathToIcon } from '../src/lib/icon';
 import { Icon } from './../src/types';
-import { createCursor, createEditor, createScrapboxAPI, createTextInput } from './helpers/html';
+import { createEditor, createScrapboxAPI } from './helpers/html';
 import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from './helpers/key';
 
 jest.mock('../src/lib/scrapbox', () => {
@@ -18,12 +19,17 @@ jest.mock('../src/lib/scrapbox', () => {
 });
 
 // ダミーの props
-const presetIcons: Icon[] = ['b', 'c', 'c'].map((pagePath) => pagePathToIcon('project', pagePath));
-const editor = createEditor({ currentProjectName: 'project', iconPagePaths: ['a', 'a', 'b'] });
-const textInput = createTextInput();
-const cursor = createCursor({ styleLeft: 0, styleTop: 0 });
-const scrapbox = createScrapboxAPI();
-const props = { presetIcons, editor, textInput, cursor, scrapbox };
+
+function App(props: AppProps) {
+  const presetIcons: Icon[] = ['b', 'c', 'c'].map((pagePath) => pagePathToIcon('project', pagePath));
+  const editor = createEditor({ currentProjectName: 'project', iconPagePaths: ['a', 'a', 'b'] });
+  const scrapbox = createScrapboxAPI();
+  return (
+    <ScrapboxContext.Provider value={{ editor, scrapbox }}>
+      <NativeApp presetIcons={presetIcons} {...props} />
+    </ScrapboxContext.Provider>
+  );
+}
 
 beforeEach(() => {
   mockInsertText.mockReset();
@@ -32,7 +38,7 @@ beforeEach(() => {
 describe('App', () => {
   describe('初期状態', () => {
     test('SuggestBox が表示されない', () => {
-      const { asFragment, queryByRole, queryByTestId } = render(<App {...props} />);
+      const { asFragment, queryByRole, queryByTestId } = render(<App />);
       expect(queryByTestId('popup-menu')).toBeNull();
       expect(queryByRole('textbox')).toBeNull();
       expect(asFragment()).toMatchSnapshot();
@@ -40,7 +46,7 @@ describe('App', () => {
     test('isSuggestionOpenKeyDown が真になるようなキーを押すと SuggestBox が表示される', async () => {
       const isSuggestionOpenKeyDown = (e: KeyboardEvent) => e.key === 'a';
       const { asFragment, queryByRole, queryByTestId } = render(
-        <App {...props} isSuggestionOpenKeyDown={isSuggestionOpenKeyDown} />,
+        <App isSuggestionOpenKeyDown={isSuggestionOpenKeyDown} />,
       );
       await act(() => {
         fireEvent(document, keydownEscapeEvent);
@@ -64,7 +70,7 @@ describe('App', () => {
       return renderResult;
     }
     test('Escape 押下で SuggestBox が閉じる', async () => {
-      const { queryByTestId } = await renderApp({ ...props });
+      const { queryByTestId } = await renderApp({});
       expect(queryByTestId('popup-menu')).toBeInTheDocument();
       await act(() => {
         fireEvent(document, keydownEscapeEvent);
@@ -73,7 +79,7 @@ describe('App', () => {
     });
     describe('Enter を押下した時', () => {
       test('アイテムが1つもなければ QueryInput に入力した pagePath のアイコンが挿入される', async () => {
-        const { getByTestId } = await renderApp({ ...props, editor: createEditor(), presetIcons: [] });
+        const { getByTestId } = await renderApp({ presetIcons: [] });
         const queryInput = getByTestId('query-input');
         userEvent.type(queryInput, 'foo');
         expect(queryInput).toHaveValue('foo');
@@ -83,7 +89,7 @@ describe('App', () => {
         expect(mockInsertText).toBeCalledWith(expect.anything(), '[foo.icon]');
       });
       test('アイテムがあれば選択中のアイコンが挿入される', async () => {
-        const { getByTestId } = await renderApp({ ...props });
+        const { getByTestId } = await renderApp({});
         const buttonContainer = getByTestId('button-container');
         const queryInput = getByTestId('query-input');
 
@@ -97,7 +103,7 @@ describe('App', () => {
       });
     });
     test('isSuggestionOpenKeyDown が真になるようなキーを押下したら、presetIcons が suggest される', async () => {
-      const { getByTestId } = await renderApp({ ...props });
+      const { getByTestId } = await renderApp({});
       const buttonContainer = getByTestId('button-container');
 
       expect(buttonContainer.childElementCount).toEqual(2); // a, b の 2アイコンが表示される
