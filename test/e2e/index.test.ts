@@ -1,7 +1,11 @@
+import { execSync } from 'child_process';
 import { resolve } from 'path';
 
+// dist/e2e.js が無いとテストできないので、yarn run build する
+console.log('Running `yarn run build`...');
+execSync('yarn run build');
+
 beforeEach(async () => {
-  page.on('console', (msg) => console.log(msg.text()));
   await jestPlaywright.resetContext({ bypassCSP: true }); // CSP を無効化しないと Page#addScriptTag が CSP 違反になってしまう
   await page.goto('https://scrapbox.io/mizdra/icon-suggestion', { waitUntil: 'networkidle' });
   await page.addScriptTag({ path: resolve(__dirname, '../../dist/e2e.js'), type: 'module' });
