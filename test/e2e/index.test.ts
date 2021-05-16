@@ -4,7 +4,7 @@ beforeEach(async () => {
   page.on('console', (msg) => console.log(msg.text()));
   await jestPlaywright.resetContext({ bypassCSP: true }); // CSP を無効化しないと Page#addScriptTag が CSP 違反になってしまう
   await page.goto('https://scrapbox.io/mizdra/icon-suggestion', { waitUntil: 'networkidle' });
-  await page.addScriptTag({ path: resolve(__dirname, '../../dist/index.js'), type: 'module' });
+  await page.addScriptTag({ path: resolve(__dirname, '../../dist/e2e.js'), type: 'module' });
 });
 
 test('エディタにフォーカスを合わせた状態で Ctrl+L を押下すると、icon-suggestion が開く', async () => {
