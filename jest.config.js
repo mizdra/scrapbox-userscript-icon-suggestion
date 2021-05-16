@@ -2,10 +2,9 @@
 /* eslint-env node */
 
 /** @type import('@jest/types').Config.InitialOptions */
-module.exports = {
+const SHARED_CONFIG = {
   roots: ['<rootDir>/test'],
-  testMatch: ['**/*.test.(ts|tsx)'],
-  setupFilesAfterEnv: ['./test/setup/jest.setup.ts'],
+
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
@@ -18,4 +17,23 @@ module.exports = {
       tsconfig: '<rootDir>/tsconfig.test.json',
     },
   },
+};
+
+/** @type import('@jest/types').Config.InitialOptions */
+module.exports = {
+  projects: [
+    {
+      ...SHARED_CONFIG,
+      displayName: 'unit-test',
+      testEnvironment: 'jsdom',
+      testMatch: ['**/*.test.(ts|tsx)', '!**/e2e/**'],
+      setupFilesAfterEnv: ['./test/setup/jest.setup.ts'],
+    },
+    {
+      ...SHARED_CONFIG,
+      displayName: 'e2e-test',
+      preset: 'jest-playwright-preset',
+      testMatch: ['**/e2e/*.test.(ts|tsx)'],
+    },
+  ],
 };
