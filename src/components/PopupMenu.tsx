@@ -2,8 +2,8 @@ import { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
+import { useScrapbox } from '../hooks/useScrapbox';
 import { calcButtonContainerStyle, calcPopupMenuStyle, calcTriangleStyle } from '../lib/calc-style';
-import { getEditor } from '../lib/scrapbox';
 import { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
@@ -17,7 +17,6 @@ export type PopupMenuProps = {
   onSelect?: (item: Item, index: number) => void;
   onSelectNonexistent?: () => void;
   onClose?: () => void;
-  editor?: HTMLElement;
 };
 
 export function PopupMenu({
@@ -28,8 +27,8 @@ export function PopupMenu({
   onSelect,
   onSelectNonexistent,
   onClose,
-  editor = getEditor(),
 }: PopupMenuProps) {
+  const { editor } = useScrapbox();
   const { ref, width: buttonContainerWidth = 0 } = useResizeObserver<HTMLDivElement>();
   const isEmpty = useMemo(() => items.length === 0, [items.length]);
 

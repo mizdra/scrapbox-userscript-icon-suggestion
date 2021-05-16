@@ -8,9 +8,6 @@ type Options = {
   // `string` is `pagePath`
   presetIcons?: string[];
   editor?: HTMLElement;
-  textInput?: HTMLTextAreaElement;
-  cursor?: HTMLElement;
-  scrapbox?: Scrapbox;
 };
 
 export function registerIconSuggestion(options?: Options) {
@@ -22,15 +19,5 @@ export function registerIconSuggestion(options?: Options) {
 
   const presetIcons = options?.presetIcons?.map((pagePath) => pagePathToIcon(scrapbox.Project.name, pagePath));
 
-  render(
-    <App
-      isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown}
-      presetIcons={presetIcons}
-      editor={editor}
-      textInput={options?.textInput}
-      cursor={options?.cursor}
-      scrapbox={options?.scrapbox}
-    />,
-    container,
-  );
+  render(<App isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown} presetIcons={presetIcons} />, container);
 }
