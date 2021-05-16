@@ -8,6 +8,7 @@ export type ScrapboxContextValue = {
 
 /** icon-suggestion から参照する Scrapbox のインターフェイスを詰め込んだコンテキスト */
 export const ScrapboxContext = createContext<ScrapboxContextValue>({
-  scrapbox: window.scrapbox,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  scrapbox: (window as any).scrapbox,
   editor: getEditor(),
 });
