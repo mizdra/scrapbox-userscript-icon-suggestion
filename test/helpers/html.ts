@@ -65,7 +65,7 @@ export function createCursor(style: { styleTop: number; styleLeft: number }): HT
   const editor = document.createElement('div');
   editor.setAttribute('class', 'cursor');
   // top や height の値は実際の scrapbox からコピペしてきた適当なものを設定
-  editor.setAttribute('style', `top: ${style.styleTop}px; left: ${style.styleLeft}px; height: 28px; display: none;`);
+  editor.setAttribute('style', `top: ${style.styleTop}px; left: ${style.styleLeft}px; height: 28px;`);
   return editor;
 }
 
