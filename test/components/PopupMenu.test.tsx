@@ -3,7 +3,6 @@ import { datatype } from 'faker';
 import { ComponentChild } from 'preact';
 import { PopupMenu } from '../../src/components/PopupMenu';
 import { CursorPosition } from '../../src/types';
-import { createEditor } from '../helpers/html';
 import {
   keydownEnterEvent,
   keydownEscapeEvent,
@@ -16,8 +15,7 @@ import {
 // ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
 const items = [<span key="1">item1</span>, <span key="2">item2</span>, <span key="3">item3</span>];
-const editor = createEditor();
-const props = { cursorPosition, items, editor };
+const props = { cursorPosition, items };
 
 // keydown イベントが PopupMenu 側でキャンセルされずに突き抜けてきたことを確かめるための mock
 const keydownListener = jest.fn();

@@ -2,15 +2,9 @@ import { FunctionComponent } from 'preact';
 import { useCallback, useMemo, useState } from 'preact/hooks';
 import { SuggestionBox, Item } from './components/SuggestionBox';
 import { useDocumentEventListener } from './hooks/useDocumentEventListener';
+import { useScrapbox } from './hooks/useScrapbox';
 import { uniqBy } from './lib/collection';
-import {
-  calcCursorPosition,
-  getCursor,
-  getEditor,
-  getTextInput,
-  insertText,
-  scanIconsFromEditor,
-} from './lib/scrapbox';
+import { calcCursorPosition, insertText, scanIconsFromEditor } from './lib/scrapbox';
 import { CursorPosition, Icon } from './types';
 
 const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
@@ -38,20 +32,13 @@ function toItem(icon: Icon): Item<Icon> {
 export type AppProps = {
   isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
-  editor?: HTMLElement;
-  textInput?: HTMLTextAreaElement;
-  cursor?: HTMLElement;
-  scrapbox?: Scrapbox;
 };
 
 export const App: FunctionComponent<AppProps> = ({
   isSuggestionOpenKeyDown = DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN,
   presetIcons = [],
-  editor = getEditor(),
-  textInput = getTextInput(),
-  cursor = getCursor(),
-  scrapbox = window.scrapbox,
 }) => {
+  const { textInput, cursor, editor, scrapbox } = useScrapbox();
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [iconsInEditor, setIconsInEditor] = useState<Icon[]>([]);
@@ -120,7 +107,6 @@ export const App: FunctionComponent<AppProps> = ({
       onSelect={handleSelect}
       onSelectNonexistent={handleSelectNonexistent}
       onClose={handleClose}
-      editor={editor}
     />
   );
 };

@@ -1,4 +1,5 @@
 import { pagePathToIcon } from '../../src/lib/icon';
+import { CursorPosition } from '../../src/types';
 
 // scrapbox のアイコンの a タグを再現したものを返す関数
 export function createIconLinkElement(projectName: string, pageName: string): HTMLAnchorElement {
@@ -32,21 +33,31 @@ function pagePathToIconLinkElement(currentProjectName: string, pagePath: string)
 
 // scrapbox の .editor 要素を再現したものを返す関数
 type CreateEditorOptions = {
-  currentProjectName: string;
-  iconPagePaths: string[];
+  currentProjectName?: string;
+  iconPagePaths?: string[];
+  cursorPosition?: CursorPosition;
 };
+
 export function createEditor(options?: CreateEditorOptions): HTMLDivElement {
+  const currentProjectName = options?.currentProjectName ?? 'project';
+
   const editor = document.createElement('div');
   editor.setAttribute('class', 'editor');
   editor.setAttribute('id', 'editor');
   editor.style.width = '1000px';
-  if (options) {
-    options.iconPagePaths.forEach((iconPagePath) => {
-      const iconLinkElement = pagePathToIconLinkElement(options.currentProjectName, iconPagePath);
-      editor.appendChild(iconLinkElement);
-    });
-  }
+
+  editor.appendChild(createCursor(options?.cursorPosition ?? { styleTop: 0, styleLeft: 0 }));
+  editor.appendChild(createTextInput());
+  if (options?.iconPagePaths) embedIcons(currentProjectName, editor, options.iconPagePaths);
+
   return editor;
+}
+
+function embedIcons(currentProjectName: string, editor: HTMLElement, iconPagePaths: string[]) {
+  iconPagePaths.forEach((iconPagePath) => {
+    const iconLinkElement = pagePathToIconLinkElement(currentProjectName, iconPagePath);
+    editor.appendChild(iconLinkElement);
+  });
 }
 
 // scrapbox の .cursor 要素を再現したものを返す関数
@@ -59,7 +70,7 @@ export function createCursor(style: { styleTop: number; styleLeft: number }): HT
 }
 
 // scrapbox の #text-input 要素を再現したものを返す関数
-export function createTextInput(): HTMLTextAreaElement {
+function createTextInput(): HTMLTextAreaElement {
   const textInput = document.createElement('textarea');
   textInput.setAttribute('class', 'text-input');
   textInput.setAttribute('id', 'text-input');
