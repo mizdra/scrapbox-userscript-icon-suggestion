@@ -135,7 +135,6 @@ describe('SuggestionBox', () => {
     });
   });
   test('open === true になった時に、 QueryInput に入力された文字がリセットされる', () => {
-    console.log('wei');
     const { rerender, getByTestId } = render(<SuggestionBox open {...props} />);
 
     userEvent.type(getByTestId('query-input'), 'a');
