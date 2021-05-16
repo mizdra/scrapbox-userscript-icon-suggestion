@@ -2,7 +2,7 @@ import { execSync } from 'child_process';
 import { resolve } from 'path';
 
 // dist/e2e.js が無いとテストできないので、yarn run build する
-console.log('Running `yarn run build`...');
+process.stdout.write('Running `yarn run build`...');
 execSync('yarn run build');
 
 beforeEach(async () => {
