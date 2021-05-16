@@ -15,7 +15,8 @@ test('エディタにフォーカスを合わせた状態で Ctrl+L を押下す
   const visible1 = await page.isVisible('.popup-menu');
   expect(visible1).toBeFalsy();
 
-  // エディタにフォーカスするために Tab キー移動していく
+  // Tab キーでエディタに移動してエディタにカーソルが置かれた状況を再現する。
+  // エディタ上をクリックだと何故かカーソルが表示されなかったので、こうしたハックを利用している…
   await page.keyboard.press('Tab');
   await page.keyboard.press('Tab');
   await page.keyboard.press('Tab');
