@@ -11,7 +11,9 @@
     "lint:tsc:test": "tsc -p tsconfig.test.json --noEmit",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier --check .",
-    "test": "jest"
+    "test": "jest",
+    "test:unit-test": "jest --selectProjects unit-test",
+    "test:e2e-test": "jest --selectProjects e2e-test"
   },
   "repository": {
     "type": "git",
