@@ -71,6 +71,8 @@ export const App: FunctionComponent<AppProps> = ({
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
+      if (scrapbox.Layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
+      if (cursor.style.display === 'none') return; // エディタのあるページでも、エディタにフォーカスが無ければキー入力を無視する
       if (!isSuggestionOpenKeyDown(e)) return;
       e.preventDefault();
       e.stopPropagation();
@@ -94,7 +96,7 @@ export const App: FunctionComponent<AppProps> = ({
         setPresetAppended((presetAppended) => !presetAppended);
       }
     },
-    [cursor, editor, isSuggestionOpenKeyDown, open, scrapbox.Project.name, textInput],
+    [cursor, editor, isSuggestionOpenKeyDown, open, scrapbox.Layout, scrapbox.Project.name, textInput],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 

@@ -3,6 +3,7 @@ interface Project {
 }
 
 interface Scrapbox {
+  Layout: string;
   Project: Project;
 }
 
