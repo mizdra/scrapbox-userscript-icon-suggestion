@@ -2,7 +2,7 @@ on:
   push:
   schedule:
     # JST で毎週土曜 12:00 (UTC で毎週土曜 3:00) に実行
-    - cron: '*/10 * * * *'
+    - cron: '0 3 * * SAT'
 
 jobs:
   build:
@@ -38,4 +38,4 @@ jobs:
           fields: repo,message,commit,job,took
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: always()
+        if: ${{ failure() || (github.event_name == 'schedule' && always()) }}
