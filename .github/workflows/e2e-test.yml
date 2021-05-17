@@ -27,3 +27,11 @@ jobs:
 
       - name: yarn run test:e2e-test
         run: yarn run test:e2e-test
+
+      - uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
