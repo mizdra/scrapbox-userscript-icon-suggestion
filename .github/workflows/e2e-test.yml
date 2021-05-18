@@ -33,6 +33,12 @@ jobs:
       - name: yarn run test:e2e-test
         run: yarn run test:e2e-test
 
+      - uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: e2e-dist
+          path: e2e-dist
+
       - uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
