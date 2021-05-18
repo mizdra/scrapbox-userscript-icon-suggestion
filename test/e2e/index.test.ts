@@ -9,14 +9,15 @@ execSync('yarn run build');
 
 beforeEach(async () => {
   await jestPlaywright.resetContext({
-    recordVideo: { dir: dist }, // recordVideo.dir を指定しないと動画が取れないので指定する
+    recordVideo: { dir: dist }, // recordVideo.dir を指定しないと録画できないので指定する
     bypassCSP: true, // CSP を無効化しないと Page#addScriptTag が CSP 違反になってしまう
   });
 });
 
 afterEach(async () => {
   const testName = expect.getState().currentTestName;
-  // ファイル名を指定して動画を保存
+  await context.close(); // close して録画を終了
+  // ファイル名を指定して録画を保存
   // NOTE: 何故か `recordVideo.dir` で dist を指定しているのに dist を付けないと期待する場所に保存されなかったので、付けている。
   await page.video()?.saveAs(resolve(dist, `${testName.replaceAll(sep, '')}.webm`));
 });
