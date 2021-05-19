@@ -24,14 +24,14 @@ module.exports = {
   projects: [
     {
       ...SHARED_CONFIG,
-      displayName: 'unit-test',
+      displayName: 'unit',
       testEnvironment: 'jsdom',
       testMatch: ['**/*.test.(ts|tsx)', '!**/e2e/**'],
       setupFilesAfterEnv: ['./test/setup/jest.setup.ts'],
     },
     {
       ...SHARED_CONFIG,
-      displayName: 'e2e-test',
+      displayName: 'e2e',
       preset: 'jest-playwright-preset',
       testEnvironmentOptions: {
         'jest-playwright': {

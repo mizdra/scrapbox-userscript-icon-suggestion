@@ -29,5 +29,5 @@ jobs:
       - name: yarn run build
         run: yarn run build
 
-      - name: yarn run test:unit-test
-        run: yarn run test:unit-test
+      - name: yarn run test:unit
+        run: yarn run test:unit
