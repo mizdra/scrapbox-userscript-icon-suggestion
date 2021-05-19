@@ -33,12 +33,13 @@ module.exports = {
       ...SHARED_CONFIG,
       displayName: 'e2e-test',
       preset: 'jest-playwright-preset',
-      // testEnvironmentOptions: {
-      //   'jest-playwright': {
-      //     launchType: 'LAUNCH',
-      //     launchOptions: { headless: false, slowMo: 1000 },
-      //   },
-      // },
+      testEnvironmentOptions: {
+        'jest-playwright': {
+          // launchType: 'LAUNCH',
+          // launchOptions: { headless: false, slowMo: 1000 },
+          launchOptions: { slowMo: 500 },
+        },
+      },
       testMatch: ['**/e2e/*.test.(ts|tsx)'],
     },
   ],

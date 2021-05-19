@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: '15.x'
       - uses: microsoft/playwright-github-action@v1
 
       - name: Get yarn cache directory path
@@ -32,6 +32,12 @@ jobs:
 
       - name: yarn run test:e2e-test
         run: yarn run test:e2e-test
+
+      - uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: e2e-dist
+          path: e2e-dist
 
       - uses: 8398a7/action-slack@v3
         with:
