@@ -109,5 +109,10 @@ describe('App', () => {
       });
       expect(buttonContainer.childElementCount).toEqual(3); // a, b, c の 3アイコンが表示される
     });
+    test('defaultSuggestPresetIcons が真なら最初からプリセットアイコンが suggest される', async () => {
+      const { getByTestId } = await renderApp({ defaultSuggestPresetIcons: true });
+      const buttonContainer = getByTestId('button-container');
+      expect(buttonContainer.childElementCount).toEqual(3); // a, b, c の 3アイコンが表示される
+    });
   });
 });
