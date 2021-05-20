@@ -32,17 +32,19 @@ function toItem(icon: Icon): Item<Icon> {
 export type AppProps = {
   isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
+  defaultSuggestPresetIcons?: boolean;
 };
 
 export const App: FunctionComponent<AppProps> = ({
   isSuggestionOpenKeyDown = DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN,
   presetIcons = [],
+  defaultSuggestPresetIcons = false,
 }) => {
   const { textInput, cursor, editor, scrapbox } = useScrapbox();
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [editorIcons, setEditorIcons] = useState<Icon[]>([]);
-  const [suggestPresetIcons, setSuggestPresetIcons] = useState(false);
+  const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
   const items = useMemo(() => {
     const icons = suggestPresetIcons ? [...editorIcons, ...presetIcons] : editorIcons;
     return uniqBy(icons, (icon) => icon.pagePath).map(toItem);
@@ -90,13 +92,22 @@ export const App: FunctionComponent<AppProps> = ({
 
         setEditorIcons(newEditorIcons);
         setOpen(true);
-        setSuggestPresetIcons(false);
+        setSuggestPresetIcons(defaultSuggestPresetIcons);
       } else {
         // ポップアップが開いていたら、preset icon の表示・非表示をトグルする
         setSuggestPresetIcons((presetAppended) => !presetAppended);
       }
     },
-    [cursor, editor, isSuggestionOpenKeyDown, open, scrapbox.Layout, scrapbox.Project.name, textInput],
+    [
+      cursor,
+      defaultSuggestPresetIcons,
+      editor,
+      isSuggestionOpenKeyDown,
+      open,
+      scrapbox.Layout,
+      scrapbox.Project.name,
+      textInput,
+    ],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
