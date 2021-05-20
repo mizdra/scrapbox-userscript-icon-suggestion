@@ -42,11 +42,11 @@ export const App: FunctionComponent<AppProps> = ({
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [iconsInEditor, setIconsInEditor] = useState<Icon[]>([]);
-  const [presetAppended, setPresetAppended] = useState(false);
+  const [suggestPresetIcons, setSuggestPresetIcons] = useState(false);
   const items = useMemo(() => {
-    const icons = presetAppended ? [...iconsInEditor, ...presetIcons] : iconsInEditor;
+    const icons = suggestPresetIcons ? [...iconsInEditor, ...presetIcons] : iconsInEditor;
     return uniqBy(icons, (icon) => icon.pagePath).map(toItem);
-  }, [iconsInEditor, presetAppended, presetIcons]);
+  }, [iconsInEditor, suggestPresetIcons, presetIcons]);
 
   const handleSelect = useCallback(
     (item: Item<Icon>) => {
@@ -90,10 +90,10 @@ export const App: FunctionComponent<AppProps> = ({
 
         setIconsInEditor(icons);
         setOpen(true);
-        setPresetAppended(false);
+        setSuggestPresetIcons(false);
       } else {
         // ポップアップが開いていたら、preset icon の表示・非表示をトグルする
-        setPresetAppended((presetAppended) => !presetAppended);
+        setSuggestPresetIcons((presetAppended) => !presetAppended);
       }
     },
     [cursor, editor, isSuggestionOpenKeyDown, open, scrapbox.Layout, scrapbox.Project.name, textInput],
