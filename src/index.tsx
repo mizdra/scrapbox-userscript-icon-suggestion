@@ -4,10 +4,14 @@ import { pagePathToIcon } from './lib/icon';
 import { getEditor } from './lib/scrapbox';
 
 type Options = {
+  /**
+   * ポップアップを開くキーかどうかを判定するコールバック。キーが押下される度に呼び出される。
+   * `true` ならポップアップを開くキーだと判定される。
+   * */
   isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
   /** @deprecated */
   isSuggestionReloadKeyDown?: (e: KeyboardEvent) => boolean;
-  // `string` is `pagePath`
+  /** suggest に含めたいプリセットアイコンの `pagePath` のリスト */
   presetIcons?: string[];
   /**
    * ポップアップを開いた直後にプリセットアイコンを候補として表示するか。
