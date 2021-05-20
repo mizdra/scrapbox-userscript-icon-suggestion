@@ -41,12 +41,12 @@ export const App: FunctionComponent<AppProps> = ({
   const { textInput, cursor, editor, scrapbox } = useScrapbox();
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
-  const [iconsInEditor, setIconsInEditor] = useState<Icon[]>([]);
+  const [editorIcons, setEditorIcons] = useState<Icon[]>([]);
   const [suggestPresetIcons, setSuggestPresetIcons] = useState(false);
   const items = useMemo(() => {
-    const icons = suggestPresetIcons ? [...iconsInEditor, ...presetIcons] : iconsInEditor;
+    const icons = suggestPresetIcons ? [...editorIcons, ...presetIcons] : editorIcons;
     return uniqBy(icons, (icon) => icon.pagePath).map(toItem);
-  }, [iconsInEditor, suggestPresetIcons, presetIcons]);
+  }, [editorIcons, suggestPresetIcons, presetIcons]);
 
   const handleSelect = useCallback(
     (item: Item<Icon>) => {
@@ -86,9 +86,9 @@ export const App: FunctionComponent<AppProps> = ({
         // 行のアイコン記法が画像化されるようにしておく。
         textInput.blur();
         // 画像化されたらエディタを走査してアイコンを収集
-        const icons = scanIconsFromEditor(scrapbox.Project.name, editor);
+        const newEditorIcons = scanIconsFromEditor(scrapbox.Project.name, editor);
 
-        setIconsInEditor(icons);
+        setEditorIcons(newEditorIcons);
         setOpen(true);
         setSuggestPresetIcons(false);
       } else {
