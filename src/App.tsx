@@ -32,21 +32,23 @@ function toItem(icon: Icon): Item<Icon> {
 export type AppProps = {
   isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
+  defaultSuggestPresetIcons?: boolean;
 };
 
 export const App: FunctionComponent<AppProps> = ({
   isSuggestionOpenKeyDown = DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN,
   presetIcons = [],
+  defaultSuggestPresetIcons = false,
 }) => {
   const { textInput, cursor, editor, scrapbox } = useScrapbox();
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
-  const [iconsInEditor, setIconsInEditor] = useState<Icon[]>([]);
-  const [presetAppended, setPresetAppended] = useState(false);
+  const [editorIcons, setEditorIcons] = useState<Icon[]>([]);
+  const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
   const items = useMemo(() => {
-    const icons = presetAppended ? [...iconsInEditor, ...presetIcons] : iconsInEditor;
+    const icons = suggestPresetIcons ? [...editorIcons, ...presetIcons] : editorIcons;
     return uniqBy(icons, (icon) => icon.pagePath).map(toItem);
-  }, [iconsInEditor, presetAppended, presetIcons]);
+  }, [editorIcons, suggestPresetIcons, presetIcons]);
 
   const handleSelect = useCallback(
     (item: Item<Icon>) => {
@@ -86,17 +88,26 @@ export const App: FunctionComponent<AppProps> = ({
         // 行のアイコン記法が画像化されるようにしておく。
         textInput.blur();
         // 画像化されたらエディタを走査してアイコンを収集
-        const icons = scanIconsFromEditor(scrapbox.Project.name, editor);
+        const newEditorIcons = scanIconsFromEditor(scrapbox.Project.name, editor);
 
-        setIconsInEditor(icons);
+        setEditorIcons(newEditorIcons);
         setOpen(true);
-        setPresetAppended(false);
+        setSuggestPresetIcons(defaultSuggestPresetIcons);
       } else {
         // ポップアップが開いていたら、preset icon の表示・非表示をトグルする
-        setPresetAppended((presetAppended) => !presetAppended);
+        setSuggestPresetIcons((presetAppended) => !presetAppended);
       }
     },
-    [cursor, editor, isSuggestionOpenKeyDown, open, scrapbox.Layout, scrapbox.Project.name, textInput],
+    [
+      cursor,
+      defaultSuggestPresetIcons,
+      editor,
+      isSuggestionOpenKeyDown,
+      open,
+      scrapbox.Layout,
+      scrapbox.Project.name,
+      textInput,
+    ],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 

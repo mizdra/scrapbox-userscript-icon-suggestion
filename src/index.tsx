@@ -4,11 +4,21 @@ import { pagePathToIcon } from './lib/icon';
 import { getEditor } from './lib/scrapbox';
 
 type Options = {
+  /**
+   * ポップアップを開くキーかどうかを判定するコールバック。キーが押下される度に呼び出される。
+   * `true` ならポップアップを開くキーだと判定される。
+   * */
   isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
   /** @deprecated */
   isSuggestionReloadKeyDown?: (e: KeyboardEvent) => boolean;
-  // `string` is `pagePath`
+  /** suggest に含めたいプリセットアイコンの `pagePath` のリスト */
   presetIcons?: string[];
+  /**
+   * ポップアップを開いた直後にプリセットアイコンを候補として表示するか。
+   * `true` なら表示、`false` なら非表示。
+   * @default `false`
+   * */
+  defaultSuggestPresetIcons?: boolean;
   scrapbox?: Scrapbox;
   editor?: HTMLElement;
 };
@@ -54,5 +64,12 @@ export function registerIconSuggestion(options?: Options) {
 
   const presetIcons = options?.presetIcons?.map((pagePath) => pagePathToIcon(scrapbox.Project.name, pagePath));
 
-  render(<App isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown} presetIcons={presetIcons} />, container);
+  render(
+    <App
+      isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown}
+      presetIcons={presetIcons}
+      defaultSuggestPresetIcons={options?.defaultSuggestPresetIcons}
+    />,
+    container,
+  );
 }
