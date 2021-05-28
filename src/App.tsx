@@ -95,7 +95,7 @@ export const App: FunctionComponent<AppProps> = ({
         setSuggestPresetIcons(defaultSuggestPresetIcons);
       } else {
         // ポップアップが開いていたら、preset icon の表示・非表示をトグルする
-        setSuggestPresetIcons((presetAppended) => !presetAppended);
+        setSuggestPresetIcons((suggestPresetIcons) => !suggestPresetIcons);
       }
     },
     [
