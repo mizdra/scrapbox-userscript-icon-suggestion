@@ -1,7 +1,8 @@
 import { render } from 'preact';
 import { App } from './App';
-import { pagePathToIcon } from './lib/icon';
+import { evaluatePresetIconItemsToIcons } from './lib/options';
 import { getEditor } from './lib/scrapbox';
+import { PresetIconsItem } from './types';
 
 type Options = {
   /**
@@ -16,8 +17,8 @@ type Options = {
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
   /** @deprecated */
   isSuggestionReloadKeyDown?: (e: KeyboardEvent) => boolean;
-  /** suggest に含めたいプリセットアイコンの `pagePath` のリスト */
-  presetIcons?: string[];
+  /** suggest に含めたいプリセットアイコンのリスト */
+  presetIcons?: PresetIconsItem[];
   /**
    * ポップアップを開いた直後にプリセットアイコンを候補として表示するか。
    * `true` なら表示、`false` なら非表示。
@@ -51,7 +52,7 @@ function WarningMessage() {
   );
 }
 
-export function registerIconSuggestion(options?: Options) {
+export async function registerIconSuggestion(options?: Options) {
   // 直接 editor に mount すると scrapbox 側の react renderer と干渉して壊れるので、
   // editor 内に差し込んだ container に mount する
   const container = document.createElement('div');
@@ -67,7 +68,10 @@ export function registerIconSuggestion(options?: Options) {
     render(<WarningMessage />, warningMessageContainer);
   }
 
-  const presetIcons = options?.presetIcons?.map((pagePath) => pagePathToIcon(scrapbox.Project.name, pagePath));
+  // const presetIcons = options?.presetIcons?.map((pagePath) => pagePathToIcon(scrapbox.Project.name, pagePath));
+  const presetIcons = options?.presetIcons
+    ? await evaluatePresetIconItemsToIcons(scrapbox.Project.name, options.presetIcons)
+    : undefined;
 
   render(
     <App
