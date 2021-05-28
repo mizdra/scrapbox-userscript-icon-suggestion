@@ -10,6 +10,7 @@ import {
   keydownShiftTabEvent,
   keydownEnterWithComposingEvent,
   keydownAEvent,
+  keydownCtrlGEvent,
 } from '../helpers/key';
 
 // ダミーの props
@@ -158,6 +159,19 @@ describe('PopupMenu', () => {
         expect(onClose).toBeCalledTimes(0);
         await act(() => {
           fireEvent(document, keydownEscapeEvent);
+        });
+        expect(onClose).toBeCalledTimes(1);
+      });
+      test('ポップアップを閉じるキーは isPopupCloseKeyDown でカスタマイズできる', async () => {
+        const isPopupCloseKeyDown = (e: KeyboardEvent) => {
+          return e.key === 'g' && e.ctrlKey && !e.shiftKey && !e.altKey;
+        };
+        const onClose = jest.fn();
+        render(<PopupMenu open {...props} onClose={onClose} isPopupCloseKeyDown={isPopupCloseKeyDown} />);
+
+        expect(onClose).toBeCalledTimes(0);
+        await act(() => {
+          fireEvent(document, keydownCtrlGEvent);
         });
         expect(onClose).toBeCalledTimes(1);
       });

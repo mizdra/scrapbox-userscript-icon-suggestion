@@ -31,12 +31,14 @@ function toItem(icon: Icon): Item<Icon> {
 
 export type AppProps = {
   isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
+  isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
   defaultSuggestPresetIcons?: boolean;
 };
 
 export const App: FunctionComponent<AppProps> = ({
   isSuggestionOpenKeyDown = DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN,
+  isSuggestionCloseKeyDown,
   presetIcons = [],
   defaultSuggestPresetIcons = false,
 }) => {
@@ -119,6 +121,7 @@ export const App: FunctionComponent<AppProps> = ({
       onSelect={handleSelect}
       onSelectNonexistent={handleSelectNonexistent}
       onClose={handleClose}
+      isSuggestionCloseKeyDown={isSuggestionCloseKeyDown}
     />
   );
 };

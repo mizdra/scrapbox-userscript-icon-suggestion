@@ -5,3 +5,4 @@ export const keydownShiftTabEvent = new KeyboardEvent('keydown', { key: 'Tab', s
 export const keydownEnterWithComposingEvent = new KeyboardEvent('keydown', { key: 'Enter', isComposing: true });
 export const keydownAEvent = new KeyboardEvent('keydown', { key: 'a' });
 export const keydownCtrlLEvent = new KeyboardEvent('keydown', { key: 'l', ctrlKey: true });
+export const keydownCtrlGEvent = new KeyboardEvent('keydown', { key: 'g', ctrlKey: true });
