@@ -74,7 +74,6 @@ export const App: FunctionComponent<AppProps> = ({
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
       if (scrapbox.Layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
-      if (cursor.style.display === 'none') return; // エディタのあるページでも、エディタにフォーカスが無ければキー入力を無視する
       if (!isSuggestionOpenKeyDown(e)) return;
       e.preventDefault();
       e.stopPropagation();
@@ -95,7 +94,7 @@ export const App: FunctionComponent<AppProps> = ({
         setSuggestPresetIcons(defaultSuggestPresetIcons);
       } else {
         // ポップアップが開いていたら、preset icon の表示・非表示をトグルする
-        setSuggestPresetIcons((presetAppended) => !presetAppended);
+        setSuggestPresetIcons((suggestPresetIcons) => !suggestPresetIcons);
       }
     },
     [
