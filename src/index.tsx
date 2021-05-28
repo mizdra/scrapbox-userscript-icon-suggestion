@@ -9,6 +9,11 @@ type Options = {
    * `true` ならポップアップを開くキーだと判定される。
    * */
   isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
+  /**
+   * ポップアップを閉じるキーかどうかを判定するコールバック。キーが押下される度に呼び出される。
+   * `true` ならポップアップを閉じるキーだと判定される。
+   * */
+  isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
   /** @deprecated */
   isSuggestionReloadKeyDown?: (e: KeyboardEvent) => boolean;
   /** suggest に含めたいプリセットアイコンの `pagePath` のリスト */
@@ -67,6 +72,7 @@ export function registerIconSuggestion(options?: Options) {
   render(
     <App
       isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown}
+      isSuggestionCloseKeyDown={options?.isSuggestionCloseKeyDown}
       presetIcons={presetIcons}
       defaultSuggestPresetIcons={options?.defaultSuggestPresetIcons}
     />,
