@@ -78,6 +78,7 @@ export async function registerIconSuggestion(options?: Options) {
   // TODO: 十分時間が経過したら警告をやめる
   if (options?.isSuggestionReloadKeyDown) {
     render(<IsSuggestionReloadKeyDownWarning />, warningMessageContainer);
+    return;
   }
 
   try {
