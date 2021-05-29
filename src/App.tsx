@@ -43,24 +43,32 @@ export const App: FunctionComponent<AppProps> = ({
   presetIcons = [],
   defaultSuggestPresetIcons = false,
 }) => {
-  const { textInput, cursor, editor, scrapbox } = useScrapbox();
+  const {
+    textInput,
+    cursor,
+    editor,
+    scrapbox: {
+      Layout: layoutName,
+      Project: { name: currentProjectName },
+    },
+  } = useScrapbox();
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [editorIcons, setEditorIcons] = useState<Icon[]>([]);
   const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
   const items = useMemo(() => {
     const icons = suggestPresetIcons ? [...editorIcons, ...presetIcons] : editorIcons;
-    return uniqBy(icons, (icon) => icon.getShortPagePath(scrapbox.Project.name)).map((icon) =>
-      toItem(scrapbox.Project.name, icon),
+    return uniqBy(icons, (icon) => icon.getShortPagePath(currentProjectName)).map((icon) =>
+      toItem(currentProjectName, icon),
     );
-  }, [suggestPresetIcons, editorIcons, presetIcons, scrapbox.Project.name]);
+  }, [suggestPresetIcons, editorIcons, presetIcons, currentProjectName]);
 
   const handleSelect = useCallback(
     (item: Item<Icon>) => {
       setOpen(false);
-      insertText(textInput, item.value.getNotation(scrapbox.Project.name));
+      insertText(textInput, item.value.getNotation(currentProjectName));
     },
-    [scrapbox.Project.name, textInput],
+    [currentProjectName, textInput],
   );
 
   const handleSelectNonexistent = useCallback(
@@ -78,7 +86,7 @@ export const App: FunctionComponent<AppProps> = ({
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
-      if (scrapbox.Layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
+      if (layoutName !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
       if (!isSuggestionOpenKeyDown(e)) return;
       e.preventDefault();
       e.stopPropagation();
@@ -92,7 +100,7 @@ export const App: FunctionComponent<AppProps> = ({
         // 行のアイコン記法が画像化されるようにしておく。
         textInput.blur();
         // 画像化されたらエディタを走査してアイコンを収集
-        const newEditorIcons = scanIconsFromEditor(scrapbox.Project.name, editor);
+        const newEditorIcons = scanIconsFromEditor(currentProjectName, editor);
 
         setEditorIcons(newEditorIcons);
         setOpen(true);
@@ -108,8 +116,8 @@ export const App: FunctionComponent<AppProps> = ({
       editor,
       isSuggestionOpenKeyDown,
       open,
-      scrapbox.Layout,
-      scrapbox.Project.name,
+      layoutName,
+      currentProjectName,
       textInput,
     ],
   );
