@@ -93,7 +93,11 @@ export async function registerIconSuggestion(options?: Options) {
       />,
       container,
     );
-  } catch (e) {
-    render(<PresetIconsWarning />, warningMessageContainer);
+  } catch (e: unknown) {
+    if (e instanceof Error && e.message === '`string` type is deprecated.') {
+      render(<PresetIconsWarning />, warningMessageContainer);
+    } else {
+      throw e;
+    }
   }
 }
