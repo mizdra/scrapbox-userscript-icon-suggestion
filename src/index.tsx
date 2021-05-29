@@ -56,8 +56,6 @@ export async function registerIconSuggestion(options?: Options) {
   // 直接 editor に mount すると scrapbox 側の react renderer と干渉して壊れるので、
   // editor 内に差し込んだ container に mount する
   const container = document.createElement('div');
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const scrapbox = options?.scrapbox ?? (window as any).scrapbox;
   const editor = options?.editor ?? getEditor();
   editor.appendChild(container);
 
@@ -68,10 +66,7 @@ export async function registerIconSuggestion(options?: Options) {
     render(<WarningMessage />, warningMessageContainer);
   }
 
-  // const presetIcons = options?.presetIcons?.map((pagePath) => pagePathToIcon(scrapbox.Project.name, pagePath));
-  const presetIcons = options?.presetIcons
-    ? await evaluatePresetIconItemsToIcons(scrapbox.Project.name, options.presetIcons)
-    : undefined;
+  const presetIcons = options?.presetIcons ? await evaluatePresetIconItemsToIcons(options.presetIcons) : undefined;
 
   render(
     <App
