@@ -1,5 +1,5 @@
 import { render } from 'preact';
-import { App } from './App';
+import { App } from './components/App';
 import { Warning } from './components/Warning';
 import { evaluatePresetIconItemsToIcons } from './lib/options';
 import { getEditor } from './lib/scrapbox';
