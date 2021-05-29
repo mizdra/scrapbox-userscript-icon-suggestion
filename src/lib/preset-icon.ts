@@ -11,13 +11,15 @@ import { Icon } from './icon';
 export async function getMemberIcons(projectName: string): Promise<Icon[]> {
   const { origin } = window.location;
 
-  // プロジェクトに所属するユーザの名前一覧を取得
-  const userNames = await fetch(`${origin}/api/projects/${projectName}`)
-    .then(async (res) => res.json())
-    .then((json: ProjectJson) => (json.users ?? []).map((user) => user.name));
+  const [projectJson, pagesJson]: [ProjectJson, PageJson] = await Promise.all([
+    // プロジェクトに関する情報を取得
+    fetch(`${origin}/api/projects/${projectName}`).then(async (res) => res.json()),
+    // member ハッシュタグに関する情報を取得
+    fetch(`${origin}/api/pages/${projectName}/member`).then(async (res) => res.json()),
+  ]);
 
-  // member ハッシュタグに関する情報を取得
-  const pagesJson: PageJson = await fetch(`${origin}/api/pages/${projectName}/member`).then(async (res) => res.json());
+  // プロジェクトに所属するユーザの名前一覧を取得
+  const userNames = (projectJson.users ?? []).map((user) => user.name);
 
   // userNames の内、ユーザページにアイコンがあるものを抽出
   const userNamesWithIcon = userNames.filter((userName) => {
