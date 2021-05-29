@@ -4,14 +4,15 @@ import { SuggestionBox, Item } from './components/SuggestionBox';
 import { useDocumentEventListener } from './hooks/useDocumentEventListener';
 import { useScrapbox } from './hooks/useScrapbox';
 import { uniqBy } from './lib/collection';
+import { Icon } from './lib/icon';
 import { calcCursorPosition, insertText, scanIconsFromEditor } from './lib/scrapbox';
-import { CursorPosition, Icon } from './types';
+import { CursorPosition } from './types';
 
 const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
 };
 
-function toItem(icon: Icon): Item<Icon> {
+function toItem(currentProjectName: string, icon: Icon): Item<Icon> {
   return {
     element: (
       <span>
@@ -21,10 +22,10 @@ function toItem(icon: Icon): Item<Icon> {
           style="width: 1.3em; height: 1.3em; object-fit: contain;"
           src={icon.imgSrc}
         />
-        {' ' + icon.pagePath}
+        {' ' + icon.getShortPagePath(currentProjectName)}
       </span>
     ),
-    searchableText: icon.pagePath,
+    searchableText: icon.getShortPagePath(currentProjectName),
     value: icon,
   };
 }
@@ -42,22 +43,32 @@ export const App: FunctionComponent<AppProps> = ({
   presetIcons = [],
   defaultSuggestPresetIcons = false,
 }) => {
-  const { textInput, cursor, editor, scrapbox } = useScrapbox();
+  const {
+    textInput,
+    cursor,
+    editor,
+    scrapbox: {
+      Layout: layoutName,
+      Project: { name: currentProjectName },
+    },
+  } = useScrapbox();
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [editorIcons, setEditorIcons] = useState<Icon[]>([]);
   const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
   const items = useMemo(() => {
     const icons = suggestPresetIcons ? [...editorIcons, ...presetIcons] : editorIcons;
-    return uniqBy(icons, (icon) => icon.pagePath).map(toItem);
-  }, [editorIcons, suggestPresetIcons, presetIcons]);
+    return uniqBy(icons, (icon) => icon.getShortPagePath(currentProjectName)).map((icon) =>
+      toItem(currentProjectName, icon),
+    );
+  }, [suggestPresetIcons, editorIcons, presetIcons, currentProjectName]);
 
   const handleSelect = useCallback(
     (item: Item<Icon>) => {
       setOpen(false);
-      insertText(textInput, item.value.notation);
+      insertText(textInput, item.value.getNotation(currentProjectName));
     },
-    [textInput],
+    [currentProjectName, textInput],
   );
 
   const handleSelectNonexistent = useCallback(
@@ -75,7 +86,7 @@ export const App: FunctionComponent<AppProps> = ({
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
-      if (scrapbox.Layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
+      if (layoutName !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
       if (!isSuggestionOpenKeyDown(e)) return;
       e.preventDefault();
       e.stopPropagation();
@@ -89,7 +100,7 @@ export const App: FunctionComponent<AppProps> = ({
         // 行のアイコン記法が画像化されるようにしておく。
         textInput.blur();
         // 画像化されたらエディタを走査してアイコンを収集
-        const newEditorIcons = scanIconsFromEditor(scrapbox.Project.name, editor);
+        const newEditorIcons = scanIconsFromEditor(currentProjectName, editor);
 
         setEditorIcons(newEditorIcons);
         setOpen(true);
@@ -105,8 +116,8 @@ export const App: FunctionComponent<AppProps> = ({
       editor,
       isSuggestionOpenKeyDown,
       open,
-      scrapbox.Layout,
-      scrapbox.Project.name,
+      layoutName,
+      currentProjectName,
       textInput,
     ],
   );

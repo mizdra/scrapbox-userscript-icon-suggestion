@@ -1,5 +1,5 @@
-import { Icon, PresetIconsItem } from '../types';
-import { pagePathToIcon } from './icon';
+import { PresetIconsItem } from '../types';
+import { Icon, pagePathToIcon } from './icon';
 
 async function evaluatePresetIconItemToPagePaths(presetIconItem: PresetIconsItem): Promise<string[]> {
   if (typeof presetIconItem === 'string') return [presetIconItem];
