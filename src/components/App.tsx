@@ -1,12 +1,12 @@
 import { FunctionComponent } from 'preact';
 import { useCallback, useMemo, useState } from 'preact/hooks';
-import { SuggestionBox, Item } from './components/SuggestionBox';
-import { useDocumentEventListener } from './hooks/useDocumentEventListener';
-import { useScrapbox } from './hooks/useScrapbox';
-import { uniqBy } from './lib/collection';
-import { Icon } from './lib/icon';
-import { calcCursorPosition, insertText, scanIconsFromEditor } from './lib/scrapbox';
-import { CursorPosition } from './types';
+import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
+import { useScrapbox } from '../hooks/useScrapbox';
+import { uniqBy } from '../lib/collection';
+import { Icon } from '../lib/icon';
+import { calcCursorPosition, insertText, scanIconsFromEditor } from '../lib/scrapbox';
+import { CursorPosition } from '../types';
+import { SuggestionBox, Item } from './SuggestionBox';
 
 const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;

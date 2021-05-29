@@ -1,9 +1,9 @@
 import { render } from 'preact';
-import { App } from './App';
-import { Warning } from './components/Warning';
-import { evaluatePresetIconItemsToIcons } from './lib/options';
-import { getEditor } from './lib/scrapbox';
-import { PresetIconsItem } from './types';
+import { App } from '../components/App';
+import { Warning } from '../components/Warning';
+import { evaluatePresetIconItemsToIcons } from '../lib/options';
+import { getEditor } from '../lib/scrapbox';
+import { PresetIconsItem } from '../types';
 
 function IsSuggestionReloadKeyDownWarning() {
   return (

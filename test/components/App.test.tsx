@@ -4,15 +4,15 @@ const mockInsertText = jest.fn();
 
 import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { App as NativeApp, AppProps } from '../src/App';
-import { ScrapboxContext } from '../src/contexts/ScrapboxContext';
-import { Icon, pagePathToIcon } from '../src/lib/icon';
-import { createEditor, createScrapboxAPI } from './helpers/html';
-import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from './helpers/key';
+import { App as NativeApp, AppProps } from '../../src/components/App';
+import { ScrapboxContext } from '../../src/contexts/ScrapboxContext';
+import { Icon, pagePathToIcon } from '../../src/lib/icon';
+import { createEditor, createScrapboxAPI } from '../helpers/html';
+import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
-jest.mock('../src/lib/scrapbox', () => {
+jest.mock('../../src/lib/scrapbox', () => {
   return {
-    ...jest.requireActual('../src/lib/scrapbox'),
+    ...jest.requireActual('../../src/lib/scrapbox'),
     insertText: mockInsertText,
   };
 });
