@@ -22,6 +22,7 @@ export type CursorPosition = {
  *   - `() => PresetIconsItem[]` の非同期版
  * */
 export type PresetIconsItem =
+  // TODO: 十分時間が経過したら string / string[] 型自体を PresetIconsItem に含めないようにする
   | string // @deprecated
   | string[] // @deprecated
   | Icon

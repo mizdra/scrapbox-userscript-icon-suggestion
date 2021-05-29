@@ -60,6 +60,7 @@ export async function registerIconSuggestion(options?: Options) {
   editor.appendChild(container);
 
   // 廃止されたオプションを使用している場合は警告する
+  // TODO: 十分時間が経過したら警告をやめる
   if (options?.isSuggestionReloadKeyDown) {
     const warningMessageContainer = document.createElement('div');
     document.querySelector('.app')?.prepend(warningMessageContainer);
