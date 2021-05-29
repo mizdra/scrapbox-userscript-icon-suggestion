@@ -23,6 +23,22 @@ function IsSuggestionReloadKeyDownWarning() {
   );
 }
 
+function PresetIconsWarning() {
+  return (
+    <Warning>
+      <p>
+        icon-suggestion のアップデートにより、<code>presetIcons</code> オプションの要素に <code>{`'done'`}</code>{' '}
+        形式の値が渡せなくなりました。 今後は <code>{`new Icon('your-project-name', 'done')`}</code>{' '}
+        形式の値をご利用下さい。この警告は形式の値の利用がされなくなるまで表示され続けます。
+      </p>
+      <p>
+        アップデートの詳細については <a href="https://scrapbox.io/mizdra/icon-suggestion">icon-suggestion</a>{' '}
+        を参照して下さい。
+      </p>
+    </Warning>
+  );
+}
+
 type Options = {
   /**
    * ポップアップを開くキーかどうかを判定するコールバック。キーが押下される度に呼び出される。
@@ -55,23 +71,28 @@ export async function registerIconSuggestion(options?: Options) {
   const editor = options?.editor ?? getEditor();
   editor.appendChild(container);
 
+  const warningMessageContainer = document.createElement('div');
+  document.querySelector('.app')?.prepend(warningMessageContainer);
+
   // 廃止されたオプションを使用している場合は警告する
   // TODO: 十分時間が経過したら警告をやめる
   if (options?.isSuggestionReloadKeyDown) {
-    const warningMessageContainer = document.createElement('div');
-    document.querySelector('.app')?.prepend(warningMessageContainer);
     render(<IsSuggestionReloadKeyDownWarning />, warningMessageContainer);
   }
 
-  const presetIcons = options?.presetIcons ? await evaluatePresetIconItemsToIcons(options.presetIcons) : undefined;
+  try {
+    const presetIcons = options?.presetIcons ? await evaluatePresetIconItemsToIcons(options.presetIcons) : undefined;
 
-  render(
-    <App
-      isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown}
-      isSuggestionCloseKeyDown={options?.isSuggestionCloseKeyDown}
-      presetIcons={presetIcons}
-      defaultSuggestPresetIcons={options?.defaultSuggestPresetIcons}
-    />,
-    container,
-  );
+    render(
+      <App
+        isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown}
+        isSuggestionCloseKeyDown={options?.isSuggestionCloseKeyDown}
+        presetIcons={presetIcons}
+        defaultSuggestPresetIcons={options?.defaultSuggestPresetIcons}
+      />,
+      container,
+    );
+  } catch (e) {
+    render(<PresetIconsWarning />, warningMessageContainer);
+  }
 }
