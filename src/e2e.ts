@@ -1,2 +1,2 @@
 import { registerIconSuggestion } from './';
-registerIconSuggestion();
+void registerIconSuggestion();
