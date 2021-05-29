@@ -1,2 +1,2 @@
-import { registerIconSuggestion } from './index';
+import { registerIconSuggestion } from './';
 registerIconSuggestion();
