@@ -1,8 +1,27 @@
 import { render } from 'preact';
 import { App } from './App';
+import { Warning } from './components/Warning';
 import { evaluatePresetIconItemsToIcons } from './lib/options';
 import { getEditor } from './lib/scrapbox';
 import { PresetIconsItem } from './types';
+
+function IsSuggestionReloadKeyDownWarning() {
+  return (
+    <Warning>
+      <p>
+        icon-suggestion
+        のアップデートにより、ポップアップを開く度に、その時点でページに埋め込まれているアイコンがアイコンリストに表示されるようになりました。
+        それに伴い、ユーザ様がお使いの <code>isSuggestionReloadKeyDown</code>{' '}
+        オプションが廃止されました。今後当該オプションはご利用頂けませんので、 ご利用の UserScript
+        から当該オプションを削除して下さい。この警告は当該オプションを削除するまで表示され続けます。
+      </p>
+      <p>
+        アップデートの詳細については <a href="https://scrapbox.io/mizdra/icon-suggestion">icon-suggestion</a>{' '}
+        を参照して下さい。
+      </p>
+    </Warning>
+  );
+}
 
 type Options = {
   /**
@@ -29,29 +48,6 @@ type Options = {
   editor?: HTMLElement;
 };
 
-function WarningMessage() {
-  return (
-    <div style={{ background: 'black', padding: '2em' }}>
-      <h2 style={{ fontSize: 'xx-large', color: 'yellow' }}>
-        ⚠️ <a href="https://scrapbox.io/mizdra/icon-suggestion">icon-suggestion</a> による警告
-      </h2>
-      <section style={{ fontSize: 'large', color: 'white' }}>
-        <p>
-          icon-suggestion
-          のアップデートにより、ポップアップを開く度に、その時点でページに埋め込まれているアイコンがアイコンリストに表示されるようになりました。
-          それに伴い、ユーザ様がお使いの <code>isSuggestionReloadKeyDown</code>{' '}
-          オプションが廃止されました。今後当該オプションはご利用頂けませんので、 ご利用の UserScript
-          から当該オプションを削除して下さい。この警告は当該オプションを削除するまで表示され続けます。
-        </p>
-        <p>
-          アップデートの詳細については <a href="https://scrapbox.io/mizdra/icon-suggestion">icon-suggestion</a>{' '}
-          を参照して下さい。
-        </p>
-      </section>
-    </div>
-  );
-}
-
 export async function registerIconSuggestion(options?: Options) {
   // 直接 editor に mount すると scrapbox 側の react renderer と干渉して壊れるので、
   // editor 内に差し込んだ container に mount する
@@ -64,7 +60,7 @@ export async function registerIconSuggestion(options?: Options) {
   if (options?.isSuggestionReloadKeyDown) {
     const warningMessageContainer = document.createElement('div');
     document.querySelector('.app')?.prepend(warningMessageContainer);
-    render(<WarningMessage />, warningMessageContainer);
+    render(<IsSuggestionReloadKeyDownWarning />, warningMessageContainer);
   }
 
   const presetIcons = options?.presetIcons ? await evaluatePresetIconItemsToIcons(options.presetIcons) : undefined;
