@@ -1,5 +1,5 @@
-import { CursorPosition, Icon } from '../types';
-import { iconLinkElementToIcon } from './icon';
+import { CursorPosition } from '../types';
+import { Icon, iconLinkElementToIcon } from './icon';
 
 export function scanIconsFromEditor(projectName: string, editor: HTMLElement): Icon[] {
   const iconLinkElements = Array.from(editor.querySelectorAll<HTMLAnchorElement>('a.link.icon'));

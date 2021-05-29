@@ -6,8 +6,7 @@ import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { App as NativeApp, AppProps } from '../src/App';
 import { ScrapboxContext } from '../src/contexts/ScrapboxContext';
-import { pagePathToIcon } from '../src/lib/icon';
-import { Icon } from './../src/types';
+import { Icon, pagePathToIcon } from '../src/lib/icon';
 import { createEditor, createScrapboxAPI } from './helpers/html';
 import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from './helpers/key';
 

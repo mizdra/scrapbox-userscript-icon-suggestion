@@ -4,14 +4,15 @@ import { SuggestionBox, Item } from './components/SuggestionBox';
 import { useDocumentEventListener } from './hooks/useDocumentEventListener';
 import { useScrapbox } from './hooks/useScrapbox';
 import { uniqBy } from './lib/collection';
+import { Icon } from './lib/icon';
 import { calcCursorPosition, insertText, scanIconsFromEditor } from './lib/scrapbox';
-import { CursorPosition, Icon } from './types';
+import { CursorPosition } from './types';
 
 const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
 };
 
-function toItem(icon: Icon): Item<Icon> {
+function toItem(currentProjectName: string, icon: Icon): Item<Icon> {
   return {
     element: (
       <span>
@@ -21,10 +22,10 @@ function toItem(icon: Icon): Item<Icon> {
           style="width: 1.3em; height: 1.3em; object-fit: contain;"
           src={icon.imgSrc}
         />
-        {' ' + icon.pagePath}
+        {' ' + icon.getShortPagePath(currentProjectName)}
       </span>
     ),
-    searchableText: icon.pagePath,
+    searchableText: icon.getShortPagePath(currentProjectName),
     value: icon,
   };
 }
@@ -49,15 +50,17 @@ export const App: FunctionComponent<AppProps> = ({
   const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
   const items = useMemo(() => {
     const icons = suggestPresetIcons ? [...editorIcons, ...presetIcons] : editorIcons;
-    return uniqBy(icons, (icon) => icon.pagePath).map(toItem);
-  }, [editorIcons, suggestPresetIcons, presetIcons]);
+    return uniqBy(icons, (icon) => icon.getShortPagePath(scrapbox.Project.name)).map((icon) =>
+      toItem(scrapbox.Project.name, icon),
+    );
+  }, [suggestPresetIcons, editorIcons, presetIcons, scrapbox.Project.name]);
 
   const handleSelect = useCallback(
     (item: Item<Icon>) => {
       setOpen(false);
-      insertText(textInput, item.value.notation);
+      insertText(textInput, item.value.getNotation(scrapbox.Project.name));
     },
-    [textInput],
+    [scrapbox.Project.name, textInput],
   );
 
   const handleSelectNonexistent = useCallback(
