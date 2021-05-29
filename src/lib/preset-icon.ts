@@ -9,20 +9,20 @@ import { Icon } from './icon';
  * @returns 指定されたプロジェクトに所属するメンバーのアイコンのリスト
  */
 export async function getMemberIcons(projectName: string): Promise<Icon[]> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const scrapbox = (window as any).scrapbox as Scrapbox;
-
   const { origin } = window.location;
 
   // プロジェクトに所属するユーザの名前一覧を取得
-  const userNames = await fetch(`${origin}/api/projects/${projectName}/`)
+  const userNames = await fetch(`${origin}/api/projects/${projectName}`)
     .then(async (res) => res.json())
     .then((json: ProjectJson) => (json.users ?? []).map((user) => user.name));
 
+  // member ハッシュタグに関する情報を取得
+  const pagesJson: PageJson = await fetch(`${origin}/api/pages/${projectName}/member`).then(async (res) => res.json());
+
   // userNames の内、ユーザページにアイコンがあるものを抽出
   const userNamesWithIcon = userNames.filter((userName) => {
-    const page = scrapbox.Project.pages.find((page) => page.title === userName);
-    return page && page.hasIcon;
+    const link = pagesJson.relatedPages.links1hop.find((link) => link.title === userName);
+    return link && link.image !== null;
   });
   return userNamesWithIcon.map((userName) => new Icon(projectName, userName));
 }

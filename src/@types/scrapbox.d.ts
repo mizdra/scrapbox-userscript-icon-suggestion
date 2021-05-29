@@ -30,3 +30,18 @@ interface ProjectJson {
 interface ProjectJsonUser {
   name: string;
 }
+/** https://scrapbox.io/api/pages/<project-name>/<page-title> を叩くと返ってくる JSON の型 */
+interface PageJson {
+  // プロジェクトのメンバーでないなど、所属ユーザ情報にアクセスできない
+  // ユーザからのリクエスト場合はそもそもプロパティが存在しない。
+  relatedPages: RelatedPages;
+}
+
+interface RelatedPages {
+  links1hop: Link[];
+}
+
+interface Link {
+  title: string;
+  image: string | null;
+}
