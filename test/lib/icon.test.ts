@@ -47,3 +47,64 @@ describe('iconLinkElementToIcon', () => {
     expect(iconLinkElementToIcon('project', iconLinkElement).equals(new Icon('project', '日本語'))).toEqual(true);
   });
 });
+
+describe('Icon', () => {
+  test('ページタイトルに特殊な文字が含まれていない時', () => {
+    const icon = new Icon('project', 'foo');
+    expect(icon.projectName).toEqual('project');
+    expect(icon.pageTitle).toEqual('foo');
+    expect(icon.getShortPagePath('project')).toEqual('foo');
+    expect(icon.getShortPagePath('other-project')).toEqual('/project/foo');
+    expect(icon.fullPagePath).toEqual('/project/foo');
+    expect(icon.imgAlt).toEqual('foo');
+    expect(icon.imgTitle).toEqual('foo');
+    expect(icon.imgSrc).toEqual('/api/pages/project/foo/icon');
+    expect(icon.getNotation('project')).toEqual('[foo.icon]');
+    expect(icon.getNotation('other-project')).toEqual('[/project/foo.icon]');
+    expect(icon.equals(new Icon('project', 'foo'))).toEqual(true);
+    expect(icon.equals(new Icon('project', 'bar'))).toEqual(false);
+    expect(icon.equals(new Icon('other-project', 'foo'))).toEqual(false);
+  });
+  test('ページタイトルに空白が含まれている時', () => {
+    const icon = new Icon('project', 'foo bar');
+    expect(icon.projectName).toEqual('project');
+    expect(icon.pageTitle).toEqual('foo bar');
+    expect(icon.getShortPagePath('project')).toEqual('foo bar');
+    expect(icon.getShortPagePath('other-project')).toEqual('/project/foo bar');
+    expect(icon.fullPagePath).toEqual('/project/foo bar');
+    expect(icon.imgAlt).toEqual('foo bar');
+    expect(icon.imgTitle).toEqual('foo bar');
+    expect(icon.imgSrc).toEqual('/api/pages/project/foo%20bar/icon');
+    expect(icon.getNotation('project')).toEqual('[foo bar.icon]');
+    expect(icon.getNotation('other-project')).toEqual('[/project/foo bar.icon]');
+    expect(icon.equals(new Icon('project', 'foo bar'))).toEqual(true);
+  });
+  test('ページタイトルにスラッシュが含まれている時', () => {
+    const icon = new Icon('project', 'foo/bar');
+    expect(icon.projectName).toEqual('project');
+    expect(icon.pageTitle).toEqual('foo/bar');
+    expect(icon.getShortPagePath('project')).toEqual('foo/bar');
+    expect(icon.getShortPagePath('other-project')).toEqual('/project/foo/bar');
+    expect(icon.fullPagePath).toEqual('/project/foo/bar');
+    expect(icon.imgAlt).toEqual('foo/bar');
+    expect(icon.imgTitle).toEqual('foo/bar');
+    expect(icon.imgSrc).toEqual('/api/pages/project/foo%2Fbar/icon');
+    expect(icon.getNotation('project')).toEqual('[foo/bar.icon]');
+    expect(icon.getNotation('other-project')).toEqual('[/project/foo/bar.icon]');
+    expect(icon.equals(new Icon('project', 'foo/bar'))).toEqual(true);
+  });
+  test('ページタイトルに日本語が含まれている時', () => {
+    const icon = new Icon('project', '日本語');
+    expect(icon.projectName).toEqual('project');
+    expect(icon.pageTitle).toEqual('日本語');
+    expect(icon.getShortPagePath('project')).toEqual('日本語');
+    expect(icon.getShortPagePath('other-project')).toEqual('/project/日本語');
+    expect(icon.fullPagePath).toEqual('/project/日本語');
+    expect(icon.imgAlt).toEqual('日本語');
+    expect(icon.imgTitle).toEqual('日本語');
+    expect(icon.imgSrc).toEqual('/api/pages/project/%E6%97%A5%E6%9C%AC%E8%AA%9E/icon');
+    expect(icon.getNotation('project')).toEqual('[日本語.icon]');
+    expect(icon.getNotation('other-project')).toEqual('[/project/日本語.icon]');
+    expect(icon.equals(new Icon('project', '日本語'))).toEqual(true);
+  });
+});
