@@ -1,11 +1,5 @@
-interface Page {
-  title: string;
-  hasIcon?: boolean;
-}
-
 interface Project {
   name: string;
-  pages: Page[];
 }
 
 interface Scrapbox {
