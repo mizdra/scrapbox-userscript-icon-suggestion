@@ -2,9 +2,7 @@ on:
   push:
   schedule:
     # JST で毎週土曜 12:00 (UTC で毎週土曜 3:00) に実行
-    # - cron: '0 3 * * SAT'
-    # 試験的に毎日2回実行する
-    - cron: '0 3,10 * * *'
+    - cron: '0 3 * * SAT'
 
 jobs:
   build:
