@@ -19,9 +19,9 @@ export async function fetchMemberPageIcons(projectName: string): Promise<Icon[]>
     fetch(`${origin}/api/pages/${projectName}/member`).then(async (res) => res.json()),
   ]);
 
-  // プロジェクトのメンバーでない場合など、各種情報にアクセスできない場合は早期 return する
+  // プロジェクトのメンバーでない場合など、各種情報にアクセスできない場合は例外を投げる
   const relatedPages = pageJson.relatedPages;
-  if (!projectJson.users || !relatedPages) return [];
+  if (!projectJson.users || !relatedPages) throw new Error(`You are not a member of \`${projectName}\` project.`);
 
   // プロジェクトに所属するユーザの名前一覧を取得
   const userNames = projectJson.users.map((user) => user.name);
@@ -48,8 +48,8 @@ export async function fetchRelatedPageIconsByHashTag(projectName: string, hashTa
     `${origin}/api/pages/${projectName}/${encodeURIComponent(hashTag)}`,
   ).then(async (res) => res.json());
 
-  // プロジェクトのメンバーでない場合など、各種情報にアクセスできない場合は早期 return する
-  if (!pageJson.relatedPages) return [];
+  // プロジェクトのメンバーでない場合など、各種情報にアクセスできない場合は例外を投げる
+  if (!pageJson.relatedPages) throw new Error(`You are not a member of \`${projectName}\` project.`);
 
   const pagesWithIcon = pageJson.relatedPages.links1hop.filter((page) => page.image !== null);
 
