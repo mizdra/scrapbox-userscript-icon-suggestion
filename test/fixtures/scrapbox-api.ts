@@ -1,4 +1,7 @@
-export const dummyProjectJsonForPublicAndGuest = JSON.stringify({
+export const PROJECT_JSON_URL_RE = /\/api\/projects\/project$/;
+export const MEMBER_PAGE_JSON_URL_RE = /\/api\/pages\/project\/member$/;
+
+export const DUMMY_PROJECT_JSON_FOR_PUBLIC_AND_GUEST = JSON.stringify({
   id: '60b26b8d86e09c001fe52364',
   name: 'icon-suggestion-example',
   displayName: 'icon-suggestion-example',
@@ -13,7 +16,7 @@ export const dummyProjectJsonForPublicAndGuest = JSON.stringify({
   isMember: false,
 });
 
-export const dummyMemberPageJsonForPublicAndGuest = JSON.stringify({
+export const DUMMY_MEMBER_PAGE_JSON_FOR_PUBLIC_AND_GUEST = JSON.stringify({
   id: '60b30f936e87a6001c3dc210',
   title: 'member',
   image: null,
