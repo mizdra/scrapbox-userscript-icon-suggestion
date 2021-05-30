@@ -1,6 +1,26 @@
 export const PROJECT_JSON_URL_RE = /\/api\/projects\/project$/;
 export const MEMBER_PAGE_JSON_URL_RE = /\/api\/pages\/project\/member$/;
 
+export const DUMMY_PROJECT_JSON_FOR_NOT_EXISTS = JSON.stringify({
+  name: 'NotFoundError',
+  message: 'Project is not found',
+});
+
+export const DUMMY_MEMBER_PAGE_JSON_FOR_NOT_EXISTS = JSON.stringify({
+  name: 'NotFoundError',
+  message: 'Project is not found',
+});
+
+export const DUMMY_PROJECT_JSON_FOR_PRIVATE_AND_GUEST = JSON.stringify({
+  name: 'NotMemberError',
+  message: 'You are not a member.',
+});
+
+export const DUMMY_MEMBER_PAGE_JSON_FOR_PRIVATE_AND_GUEST = JSON.stringify({
+  name: 'NotMemberError',
+  message: 'You are not a member.',
+});
+
 export const DUMMY_PROJECT_JSON_FOR_PUBLIC_AND_GUEST = JSON.stringify({
   id: '60b26b8d86e09c001fe52364',
   name: 'icon-suggestion-example',
