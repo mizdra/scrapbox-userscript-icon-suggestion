@@ -5,7 +5,7 @@ import { Icon } from './icon';
  * ただしユーザページがないユーザや、ユーザページにアイコンが埋め込まれていないユーザ、
  * ユーザページに member ハッシュタグが付いていないユーザは対象外とする。
  * また、この関数を実行するユーザがそのプロジェクトのメンバーではない場合など、
- * プロジェクトのメンバー情報にアクセスする権限を持っていない場合は、空配列が返る。
+ * プロジェクトの情報にアクセスする権限を持っていない場合は、例外が投げられる。
  * @param projectName メンバーの所属するプロジェクト
  * @returns 指定されたプロジェクトに所属するメンバーのアイコンのリスト
  */
@@ -20,6 +20,8 @@ export async function fetchMemberPageIcons(projectName: string): Promise<Icon[]>
   ]);
 
   // プロジェクトのメンバーでない場合など、各種情報にアクセスできない場合は例外を投げる
+  // NOTE: 本当はプロジェクトが無い場合は `Project not found.` のようなエラーメッセージを出してほしいけど、
+  //       手間なので雑に `You are not a member...` で統一している
   const relatedPages = pageJson.relatedPages;
   if (!projectJson.users || !relatedPages) throw new Error(`You are not a member of \`${projectName}\` project.`);
 
@@ -37,6 +39,8 @@ export async function fetchMemberPageIcons(projectName: string): Promise<Icon[]>
 /**
  * 指定されたプロジェクトのハッシュタグにリンクされている全てのページのアイコンを取得する。
  * ただしハッシュタグからリンクされているページであっても、アイコンを持たないページは対象外とする。
+ * また、この関数を実行するユーザがそのプロジェクトのメンバーではない場合など、
+ * プロジェクトの情報にアクセスする権限を持っていない場合は、例外が投げられる。
  * @param projectName ハッシュタグのあるプロジェクト
  * @param hashTag ハッシュタグ名
  * @returns 指定されたプロジェクトのハッシュタグにリンクされている全てのページのアイコン
@@ -49,6 +53,8 @@ export async function fetchRelatedPageIconsByHashTag(projectName: string, hashTa
   ).then(async (res) => res.json());
 
   // プロジェクトのメンバーでない場合など、各種情報にアクセスできない場合は例外を投げる
+  // NOTE: 本当はプロジェクトが無い場合は `Project not found.` のようなエラーメッセージを出してほしいけど、
+  //       手間なので雑に `You are not a member...` で統一している
   if (!pageJson.relatedPages) throw new Error(`You are not a member of \`${projectName}\` project.`);
 
   const pagesWithIcon = pageJson.relatedPages.links1hop.filter((page) => page.image !== null);
