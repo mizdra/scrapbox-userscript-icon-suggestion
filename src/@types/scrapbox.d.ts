@@ -26,9 +26,8 @@ interface ProjectJsonUser {
 }
 /** https://scrapbox.io/api/pages/<project-name>/<page-title> を叩くと返ってくる JSON の型 */
 interface PageJson {
-  // プロジェクトのメンバーでないなど、所属ユーザ情報にアクセスできない
-  // ユーザからのリクエスト場合はそもそもプロパティが存在しない。
-  relatedPages: RelatedPages;
+  // NOTE: プロジェクトのメンバーでない場合など、プロパティが存在しないことがある
+  relatedPages?: RelatedPages;
 }
 
 interface RelatedPages {

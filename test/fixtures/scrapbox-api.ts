@@ -1,5 +1,6 @@
 export const PROJECT_JSON_URL_RE = /\/api\/projects\/project$/;
 export const MEMBER_PAGE_JSON_URL_RE = /\/api\/pages\/project\/member$/;
+export const NON_EXIST_PAGE_JSON_URL_RE = /\/api\/pages\/project\/non-exist$/;
 
 export const DUMMY_PROJECT_JSON_FOR_NOT_EXISTS = JSON.stringify({
   name: 'NotFoundError',
@@ -248,38 +249,6 @@ export const DUMMY_MEMBER_PAGE_JSON_FOR_PUBLIC_AND_GUEST = JSON.stringify({
         updated: 1622305860,
         accessed: 1622305900,
       },
-      {
-        id: '60b26c74d6abdc0022d38acf',
-        title: '元号を発表する人',
-        titleLc: '元号を発表する人',
-        image:
-          'https://2.bp.blogspot.com/-c-Ws8qkxBq4/XKF92e4mmBI/AAAAAAABSHQ/YHiJQq1xOQwpQFXKHhrvZmPa4EhW6xCUQCLcBGAs/s800/gengou_happyou_reiwa.png',
-        descriptions: [
-          '#member',
-          '[https://2.bp.blogspot.com/-c-Ws8qkxBq4/XKF92e4mmBI/AAAAAAABSHQ/YHiJQq1xOQwpQFXKHhrvZmPa4EhW6xCUQCLcBGAs/s800/gengou_happyou_reiwa.png]',
-          '[https://www.irasutoya.com/2019/04/blog-post_34.html 元号を発表する人のイラスト（令和） | かわいいフリー素材集 いらすとや]',
-        ],
-        linksLc: ['member'],
-        linked: 0,
-        updated: 1622305924,
-        accessed: 1622305916,
-      },
-      {
-        id: '60b26c87e189b1001e5cd4e9',
-        title: 'ショゴス',
-        titleLc: 'ショゴス',
-        image:
-          'https://2.bp.blogspot.com/-jJSpcK3A7dU/WD_cNXY45bI/AAAAAAABAAU/RGRcIBv_m5sBj75VYInpNztHKKBZ0-vzQCLcB/s800/character_cthulhu_shoggoth.png',
-        descriptions: [
-          '#member',
-          '[https://2.bp.blogspot.com/-jJSpcK3A7dU/WD_cNXY45bI/AAAAAAABAAU/RGRcIBv_m5sBj75VYInpNztHKKBZ0-vzQCLcB/s800/character_cthulhu_shoggoth.png]',
-          '[https://www.irasutoya.com/2016/12/blog-post_840.html ショゴスのイラスト | かわいいフリー素材集 いらすとや]',
-        ],
-        linksLc: ['member'],
-        linked: 0,
-        updated: 1622305940,
-        accessed: 1622305933,
-      },
     ],
     links2hop: [],
     hasBackLinksOrIcons: true,
@@ -402,6 +371,44 @@ export const DUMMY_MEMBER_PAGE_JSON_FOR_PUBLIC_AND_MEMBER = JSON.stringify({
     links2hop: [],
     hasBackLinksOrIcons: true,
   },
+  collaborators: [],
+  lastAccessed: null,
+});
+
+export const DUMMY_NON_EXIST_PAGE_JSON = JSON.stringify({
+  id: '60b3387547e899001c5e44f1',
+  title: 'non-exist',
+  image: null,
+  descriptions: [],
+  user: {
+    id: '599eb1bd0ce6b50011c75fd3',
+    name: 'mizdra',
+    displayName: 'mizdra',
+    photo: 'https://lh3.googleusercontent.com/a-/AOh14GiDMA0MnvY98mtr_7XSAHgNwg2h7TJ734l3n6OtHg=s96-c',
+  },
+  pin: 0,
+  views: 0,
+  linked: 0,
+  created: 1622358133,
+  updated: 1622358133,
+  accessed: 1622358133,
+  snapshotCreated: null,
+  snapshotCount: 0,
+  pageRank: 0,
+  persistent: false,
+  lines: [
+    {
+      id: '60b3387547e899001c5e44f1',
+      text: 'non-exist',
+      userId: '599eb1bd0ce6b50011c75fd3',
+      created: 1622358133,
+      updated: 1622358133,
+    },
+  ],
+  links: [],
+  icons: [],
+  files: [],
+  relatedPages: { links1hop: [], links2hop: [], hasBackLinksOrIcons: false },
   collaborators: [],
   lastAccessed: null,
 });
