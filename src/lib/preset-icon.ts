@@ -19,8 +19,12 @@ export async function getMemberIcons(projectName: string): Promise<Icon[]> {
     fetch(`${origin}/api/pages/${projectName}/member`).then(async (res) => res.json()),
   ]);
 
+  // プロジェクトのメンバーでないなど、所属ユーザ情報にアクセスできない
+  // ユーザからのリクエスト場合はそもそもプロパティが存在しない。
+  if (!projectJson.users) return [];
+
   // プロジェクトに所属するユーザの名前一覧を取得
-  const userNames = (projectJson.users ?? []).map((user) => user.name);
+  const userNames = projectJson.users.map((user) => user.name);
 
   // userNames の内、ユーザページにアイコンがあるものを抽出
   const userNamesWithIcon = userNames.filter((userName) => {
