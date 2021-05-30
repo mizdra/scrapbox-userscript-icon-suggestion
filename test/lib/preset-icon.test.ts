@@ -1,4 +1,4 @@
-import { getMemberIcons, Icon } from '../../src';
+import { fetchMemberPageIcons, Icon } from '../../src';
 import { fetchRelatedPageIconsByHashTag } from '../../src/lib/preset-icon';
 import {
   DUMMY_PROJECT_JSON_FOR_PUBLIC_AND_GUEST,
@@ -17,25 +17,25 @@ import {
   NON_EXIST_PAGE_JSON_URL_RE,
 } from '../fixtures/scrapbox-api';
 
-describe('getMemberIcons', () => {
+describe('fetchMemberPageIcons', () => {
   test('プロジェクトが存在しない時', async () => {
     fetchMock
       .doMockOnceIf(PROJECT_JSON_URL_RE, DUMMY_PROJECT_JSON_FOR_NOT_EXISTS)
       .doMockOnceIf(MEMBER_PAGE_JSON_URL_RE, DUMMY_MEMBER_PAGE_JSON_FOR_NOT_EXISTS);
-    expect(await getMemberIcons('project')).toStrictEqual([]);
+    expect(await fetchMemberPageIcons('project')).toStrictEqual([]);
   });
   describe('プロジェクトが private', () => {
     test('そのプロジェクトのメンバーでない時', async () => {
       fetchMock
         .doMockOnceIf(PROJECT_JSON_URL_RE, DUMMY_PROJECT_JSON_FOR_PRIVATE_AND_GUEST)
         .doMockOnceIf(MEMBER_PAGE_JSON_URL_RE, DUMMY_MEMBER_PAGE_JSON_FOR_PRIVATE_AND_GUEST);
-      expect(await getMemberIcons('project')).toStrictEqual([]);
+      expect(await fetchMemberPageIcons('project')).toStrictEqual([]);
     });
     test('そのプロジェクトのメンバーである時', async () => {
       fetchMock
         .doMockOnceIf(PROJECT_JSON_URL_RE, DUMMY_PROJECT_JSON_FOR_PRIVATE_AND_MEMBER)
         .doMockOnceIf(MEMBER_PAGE_JSON_URL_RE, DUMMY_MEMBER_PAGE_JSON_FOR_PRIVATE_AND_MEMBER);
-      expect(await getMemberIcons('project')).toStrictEqual([new Icon('project', 'mizdra')]);
+      expect(await fetchMemberPageIcons('project')).toStrictEqual([new Icon('project', 'mizdra')]);
     });
   });
   describe('プロジェクトが public', () => {
@@ -43,13 +43,13 @@ describe('getMemberIcons', () => {
       fetchMock
         .doMockOnceIf(PROJECT_JSON_URL_RE, DUMMY_PROJECT_JSON_FOR_PUBLIC_AND_GUEST)
         .doMockOnceIf(MEMBER_PAGE_JSON_URL_RE, DUMMY_MEMBER_PAGE_JSON_FOR_PUBLIC_AND_GUEST);
-      expect(await getMemberIcons('project')).toStrictEqual([]);
+      expect(await fetchMemberPageIcons('project')).toStrictEqual([]);
     });
     test('そのプロジェクトのメンバーである時', async () => {
       fetchMock
         .doMockOnceIf(PROJECT_JSON_URL_RE, DUMMY_PROJECT_JSON_FOR_PUBLIC_AND_MEMBER)
         .doMockOnceIf(MEMBER_PAGE_JSON_URL_RE, DUMMY_MEMBER_PAGE_JSON_FOR_PUBLIC_AND_MEMBER);
-      expect(await getMemberIcons('project')).toStrictEqual([new Icon('project', 'mizdra')]);
+      expect(await fetchMemberPageIcons('project')).toStrictEqual([new Icon('project', 'mizdra')]);
     });
   });
 });

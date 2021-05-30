@@ -9,7 +9,7 @@ import { Icon } from './icon';
  * @param projectName メンバーの所属するプロジェクト
  * @returns 指定されたプロジェクトに所属するメンバーのアイコンのリスト
  */
-export async function getMemberIcons(projectName: string): Promise<Icon[]> {
+export async function fetchMemberPageIcons(projectName: string): Promise<Icon[]> {
   const { origin } = window.location;
 
   const [projectJson, pageJson]: [ProjectJson, PageJson] = await Promise.all([
