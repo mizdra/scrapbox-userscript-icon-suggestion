@@ -22,14 +22,14 @@ describe('fetchMemberPageIcons', () => {
     fetchMock
       .doMockOnceIf(PROJECT_JSON_URL_RE, DUMMY_PROJECT_JSON_FOR_NOT_EXISTS)
       .doMockOnceIf(MEMBER_PAGE_JSON_URL_RE, DUMMY_MEMBER_PAGE_JSON_FOR_NOT_EXISTS);
-    expect(await fetchMemberPageIcons('project')).toStrictEqual([]);
+    await expect(fetchMemberPageIcons('project')).rejects.toThrow();
   });
   describe('プロジェクトが private', () => {
     test('そのプロジェクトのメンバーでない時', async () => {
       fetchMock
         .doMockOnceIf(PROJECT_JSON_URL_RE, DUMMY_PROJECT_JSON_FOR_PRIVATE_AND_GUEST)
         .doMockOnceIf(MEMBER_PAGE_JSON_URL_RE, DUMMY_MEMBER_PAGE_JSON_FOR_PRIVATE_AND_GUEST);
-      expect(await fetchMemberPageIcons('project')).toStrictEqual([]);
+      await expect(fetchMemberPageIcons('project')).rejects.toThrow();
     });
     test('そのプロジェクトのメンバーである時', async () => {
       fetchMock
@@ -43,7 +43,7 @@ describe('fetchMemberPageIcons', () => {
       fetchMock
         .doMockOnceIf(PROJECT_JSON_URL_RE, DUMMY_PROJECT_JSON_FOR_PUBLIC_AND_GUEST)
         .doMockOnceIf(MEMBER_PAGE_JSON_URL_RE, DUMMY_MEMBER_PAGE_JSON_FOR_PUBLIC_AND_GUEST);
-      expect(await fetchMemberPageIcons('project')).toStrictEqual([]);
+      await expect(fetchMemberPageIcons('project')).rejects.toThrow();
     });
     test('そのプロジェクトのメンバーである時', async () => {
       fetchMock
@@ -57,12 +57,12 @@ describe('fetchMemberPageIcons', () => {
 describe('fetchRelatedPageIconsByHashTag', () => {
   test('プロジェクトが存在しない時', async () => {
     fetchMock.doMockOnceIf(MEMBER_PAGE_JSON_URL_RE, DUMMY_MEMBER_PAGE_JSON_FOR_NOT_EXISTS);
-    expect(await fetchRelatedPageIconsByHashTag('project', 'member')).toStrictEqual([]);
+    await expect(fetchRelatedPageIconsByHashTag('project', 'member')).rejects.toThrow();
   });
   describe('プロジェクトが存在する時', () => {
     test('プロジェクトが private && そのプロジェクトのメンバーでない時', async () => {
       fetchMock.doMockOnceIf(MEMBER_PAGE_JSON_URL_RE, DUMMY_MEMBER_PAGE_JSON_FOR_PRIVATE_AND_GUEST);
-      expect(await fetchRelatedPageIconsByHashTag('project', 'member')).toStrictEqual([]);
+      await expect(fetchRelatedPageIconsByHashTag('project', 'member')).rejects.toThrow();
     });
     test('プロジェクトが public && そのプロジェクトのメンバーでない時', async () => {
       fetchMock.doMockOnceIf(MEMBER_PAGE_JSON_URL_RE, DUMMY_MEMBER_PAGE_JSON_FOR_PUBLIC_AND_GUEST);
