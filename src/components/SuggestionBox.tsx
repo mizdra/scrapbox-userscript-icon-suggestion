@@ -7,13 +7,10 @@ import { QueryInput } from './SuggestionBox/QueryInput';
 
 export type Item<T> = { element: ComponentChild; searchableText: string; value: T };
 
-function useMatchedItems<T>(query: string, items: Item<T>[]): Item<T>[] {
-  const matchedItems = useMemo(() => {
-    const ambig = Math.min(Math.floor(query.length / 4) + 1, 3);
-    const match = Asearch(query);
-    items.filter((item) => match(item.searchableText, ambig));
-  }, [items, query]);
-  return matchedItems;
+export function matchItems<T>(query: string, items: Item<T>[]): Item<T>[] {
+  const ambig = Math.min(Math.floor(query.length / 4) + 1, 3);
+  const match = Asearch(query);
+  return items.filter((item) => match(item.searchableText, ambig));
 }
 
 export type SuggestionBoxProps<T> = {
