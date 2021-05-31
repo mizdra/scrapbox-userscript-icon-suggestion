@@ -8,9 +8,21 @@ import { QueryInput } from './SuggestionBox/QueryInput';
 export type Item<T> = { element: ComponentChild; searchableText: string; value: T };
 
 export function matchItems<T>(query: string, items: Item<T>[]): Item<T>[] {
-  const ambig = Math.min(Math.floor(query.length / 4) + 1, 3);
-  const match = Asearch(query);
-  return items.filter((item) => match(item.searchableText, ambig));
+  const maxAambig = Math.min(Math.floor(query.length / 4) + 1, 3);
+  const match = Asearch(` ${query} `); // 部分一致できるように、両端をスペースで囲む
+  // あいまい度の少ない項目から順に並べる
+  // 重複は除く
+  const indice: Set<number> = new Set();
+  const result: Item<T>[] = [];
+  for (let ambig = 0; ambig <= maxAambig; ambig++) {
+    items.forEach((item, index) => {
+      if (!match(item.searchableText, ambig)) return;
+      if (indice.has(index)) return;
+      indice.add(index);
+      result.push(item);
+    });
+  }
+  return result;
 }
 
 export type SuggestionBoxProps<T> = {
