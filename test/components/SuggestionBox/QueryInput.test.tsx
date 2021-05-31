@@ -1,40 +1,46 @@
 import { fireEvent, render, waitFor } from '@testing-library/preact';
 import faker from 'faker';
 import { QueryInput } from '../../../src/components/SuggestionBox/QueryInput';
+import { ScrapboxContext } from '../../../src/contexts/ScrapboxContext';
 import { calcQueryInputStyle } from '../../../src/lib/calc-style';
 import { CursorPosition } from '../../../src/types';
-import { createEditor } from '../../helpers/html';
+import { createEditor, createScrapboxAPI } from '../../helpers/html';
 
-// ダミーの cursorPosition
+// ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
-
-// <QueryInput> は .editor 要素が document にあることを前提にしているので、 document に .editor を埋め込んでおく
-const editor = createEditor();
-document.body.appendChild(editor);
+const props = { cursorPosition };
 
 describe('QueryInput', () => {
   test('スタイル属性が表示される', () => {
-    const { getByRole } = render(<QueryInput cursorPosition={cursorPosition} />);
-    const input = getByRole('textbox');
+    // テストケース側で作成した editor を使ってレンダリングしたいので、Context を使う
+    const editor = createEditor();
+    const scrapbox = createScrapboxAPI();
+    const { getByTestId } = render(
+      <ScrapboxContext.Provider value={{ editor, scrapbox }}>
+        <QueryInput {...props} />
+      </ScrapboxContext.Provider>,
+    );
+
+    const input = getByTestId('query-input');
     const expectedStyles = calcQueryInputStyle(editor.clientWidth, cursorPosition);
     expect(input).toHaveStyle(expectedStyles);
   });
   test('auto-focus される', () => {
-    const { getByRole } = render(<QueryInput cursorPosition={cursorPosition} />);
-    const input = getByRole('textbox');
+    const { getByTestId } = render(<QueryInput {...props} />);
+    const input = getByTestId('query-input');
     expect(input).toHaveFocus();
   });
   test('defaultQuery が設定できる', () => {
-    const { getByRole } = render(<QueryInput cursorPosition={cursorPosition} defaultQuery={'text'} />);
-    const input = getByRole('textbox');
+    const { getByTestId } = render(<QueryInput {...props} defaultQuery={'text'} />);
+    const input = getByTestId('query-input');
     expect(input).toHaveValue('text');
   });
   test('文字を入力すると onInput が発火する', async () => {
     const onInput = jest.fn();
     const query = faker.helpers.randomize(['', faker.datatype.string()]);
 
-    const { getByRole } = render(<QueryInput cursorPosition={cursorPosition} onInput={onInput} />);
-    const input = getByRole('textbox');
+    const { getByTestId } = render(<QueryInput {...props} onInput={onInput} />);
+    const input = getByTestId('query-input');
 
     expect(onInput).not.toHaveBeenCalled();
     fireEvent.input(input, { target: { value: query } });
@@ -46,8 +52,8 @@ describe('QueryInput', () => {
   });
   test('フォーカスを外すと onBlur が発火する', async () => {
     const onBlur = jest.fn();
-    const { getByRole } = render(<QueryInput cursorPosition={cursorPosition} onBlur={onBlur} />);
-    const input = getByRole('textbox');
+    const { getByTestId } = render(<QueryInput {...props} onBlur={onBlur} />);
+    const input = getByTestId('query-input');
 
     expect(onBlur).not.toHaveBeenCalled();
     fireEvent.blur(input);

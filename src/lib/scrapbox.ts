@@ -1,10 +1,5 @@
-import { CursorPosition, Icon } from '../types';
-import { uniqBy } from './collection';
-import { iconLinkElementToIcon } from './icon';
-
-export function scanUniqueIconsFromEditor(projectName: string, editor: HTMLElement): Icon[] {
-  return uniqBy(scanIconsFromEditor(projectName, editor), (icon) => icon.pagePath);
-}
+import { CursorPosition } from '../types';
+import { Icon, iconLinkElementToIcon } from './icon';
 
 export function scanIconsFromEditor(projectName: string, editor: HTMLElement): Icon[] {
   const iconLinkElements = Array.from(editor.querySelectorAll<HTMLAnchorElement>('a.link.icon'));
@@ -28,4 +23,10 @@ export function insertText(textInput: HTMLTextAreaElement, text: string) {
   const uiEvent = document.createEvent('UIEvent');
   uiEvent.initEvent('input', true, false);
   textInput.dispatchEvent(uiEvent);
+}
+
+export function getEditor(): HTMLElement {
+  const editor = document.querySelector<HTMLElement>('.editor');
+  if (editor) return editor;
+  throw new Error('.editor が存在しません');
 }

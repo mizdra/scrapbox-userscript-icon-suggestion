@@ -2,15 +2,18 @@ import { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
+import { useScrapbox } from '../hooks/useScrapbox';
 import { calcButtonContainerStyle, calcPopupMenuStyle, calcTriangleStyle } from '../lib/calc-style';
 import { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
-const editor = document.querySelector<HTMLElement>('.editor')!;
+const DEFAULT_IS_POPUP_CLOSE_KEY_DOWN = (e: KeyboardEvent) => {
+  return e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+};
 
 export type Item = ComponentChild;
 
-type PopupMenuProps = {
+export type PopupMenuProps = {
   open: boolean;
   emptyMessage?: string;
   cursorPosition: CursorPosition;
@@ -18,6 +21,7 @@ type PopupMenuProps = {
   onSelect?: (item: Item, index: number) => void;
   onSelectNonexistent?: () => void;
   onClose?: () => void;
+  isPopupCloseKeyDown?: (e: KeyboardEvent) => boolean;
 };
 
 export function PopupMenu({
@@ -28,7 +32,9 @@ export function PopupMenu({
   onSelect,
   onSelectNonexistent,
   onClose,
+  isPopupCloseKeyDown = DEFAULT_IS_POPUP_CLOSE_KEY_DOWN,
 }: PopupMenuProps) {
+  const { editor } = useScrapbox();
   const { ref, width: buttonContainerWidth = 0 } = useResizeObserver<HTMLDivElement>();
   const isEmpty = useMemo(() => items.length === 0, [items.length]);
 
@@ -50,24 +56,24 @@ export function PopupMenu({
       const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
       const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
       const isEnter = e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-      const isEscape = e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+      const isClose = isPopupCloseKeyDown(e);
 
-      if (isTab || isShiftTab || isEnter || isEscape) {
+      if (isTab || isShiftTab || isEnter || isClose) {
         e.preventDefault();
         e.stopPropagation();
       }
 
       if (isEmpty || selectedIndex === null) {
         if (isEnter) onSelectNonexistent?.();
-        if (isEscape) onClose?.();
+        if (isClose) onClose?.();
       } else {
         if (isTab) setSelectedIndex((selectedIndex + 1) % items.length);
         if (isShiftTab) setSelectedIndex((selectedIndex - 1 + items.length) % items.length);
         if (isEnter) onSelect?.(items[selectedIndex], selectedIndex);
-        if (isEscape) onClose?.();
+        if (isClose) onClose?.();
       }
     },
-    [isEmpty, items, onClose, onSelect, onSelectNonexistent, open, selectedIndex],
+    [isEmpty, isPopupCloseKeyDown, items, onClose, onSelect, onSelectNonexistent, open, selectedIndex],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
@@ -85,7 +91,7 @@ export function PopupMenu({
     <>
       {open && (
         <div className="popup-menu" style={popupMenuStyle} data-testid="popup-menu">
-          <div ref={ref} className="button-container" style={buttonContainerStyle}>
+          <div ref={ref} className="button-container" style={buttonContainerStyle} data-testid="button-container">
             {items.length === 0 ? emptyMessage ?? 'アイテムは空です' : itemListElement}
           </div>
           <div className="triangle" style={triangleStyle} />

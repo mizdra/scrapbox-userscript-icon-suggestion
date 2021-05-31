@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SuggestionBox open === false の時 ポップアップも QueryInput も表示されない 1`] = `
+<DocumentFragment>
+  <div />
+</DocumentFragment>
+`;
+
+exports[`SuggestionBox open === true の時 ポップアップと QueryInput が表示される 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="popup-menu"
+      data-testid="popup-menu"
+      style="top: 0px;"
+    >
+      <div
+        class="button-container"
+        data-testid="button-container"
+        style="left: 0px; transform: translateX(-NaN%);"
+      >
+        <div
+          class="button selected"
+        >
+          <span>
+            a
+          </span>
+        </div>
+        <div
+          class="button"
+        >
+          <span>
+            ab
+          </span>
+        </div>
+        <div
+          class="button"
+        >
+          <span>
+            abc
+          </span>
+        </div>
+        <div
+          class="button"
+        >
+          <span>
+            z
+          </span>
+        </div>
+      </div>
+      <div
+        class="triangle"
+        style="left: 0px;"
+      />
+    </div>
+    <form
+      class="form-inline"
+    >
+      <input
+        class="form-control"
+        data-testid="query-input"
+        default="true"
+        style="position: absolute; top: 0px; left: 0px; transform: translateX(-NaN%);"
+      />
+    </form>
+  </div>
+</DocumentFragment>
+`;

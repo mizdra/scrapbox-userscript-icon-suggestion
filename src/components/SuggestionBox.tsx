@@ -16,14 +16,15 @@ function useMatchedItems<T>(query: string, items: Item<T>[]): Item<T>[] {
   return matchedItems;
 }
 
-type SuggestionBoxProps<T> = {
+export type SuggestionBoxProps<T> = {
   open: boolean;
-  emptyMessage: string;
+  emptyMessage?: string;
   items: Item<T>[];
   cursorPosition: CursorPosition;
-  onSelect: (item: Item<T>, query: string) => void;
-  onSelectNonexistent: (query: string) => void;
-  onClose: (query: string) => void;
+  onSelect?: (item: Item<T>, query: string) => void;
+  onSelectNonexistent?: (query: string) => void;
+  onClose?: (query: string) => void;
+  isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
 };
 
 export function SuggestionBox<T>({
@@ -34,9 +35,10 @@ export function SuggestionBox<T>({
   onSelect,
   onSelectNonexistent,
   onClose,
+  isSuggestionCloseKeyDown,
 }: SuggestionBoxProps<T>) {
   const [query, setQuery] = useState('');
-  const matchedItems = useMatchedItems(query, items);
+  const matchedItems = useMemo(() => matchItems(query, items), [items, query]);
   const matchedItemsForPopupMenu = useMemo(() => matchedItems.map((item) => item.element), [matchedItems]);
 
   useEffect(() => {
@@ -45,15 +47,15 @@ export function SuggestionBox<T>({
 
   const handleSelect = useCallback(
     (_item: ComponentChild, index: number) => {
-      onSelect(matchedItems[index], query);
+      onSelect?.(matchedItems[index], query);
     },
     [matchedItems, onSelect, query],
   );
   const handleSelectNonexistent = useCallback(() => {
-    onSelectNonexistent(query);
+    onSelectNonexistent?.(query);
   }, [onSelectNonexistent, query]);
   const handleClose = useCallback(() => {
-    onClose(query);
+    onClose?.(query);
   }, [onClose, query]);
 
   return (
@@ -66,6 +68,7 @@ export function SuggestionBox<T>({
         onSelect={handleSelect}
         onSelectNonexistent={handleSelectNonexistent}
         onClose={handleClose}
+        isPopupCloseKeyDown={isSuggestionCloseKeyDown}
       />
       {open && (
         <QueryInput defaultQuery={query} cursorPosition={cursorPosition} onInput={setQuery} onBlur={handleClose} />
