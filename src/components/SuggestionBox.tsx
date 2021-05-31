@@ -1,3 +1,4 @@
+import Asearch from 'asearch';
 import { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { CursorPosition } from '../types';
@@ -8,10 +9,9 @@ export type Item<T> = { element: ComponentChild; searchableText: string; value: 
 
 function useMatchedItems<T>(query: string, items: Item<T>[]): Item<T>[] {
   const matchedItems = useMemo(() => {
-    return items.filter((item) => {
-      const target = item.searchableText.toLowerCase();
-      return target.includes(query.toLowerCase());
-    });
+    const ambig = Math.min(Math.floor(query.length / 4) + 1, 3);
+    const match = Asearch(query);
+    items.filter((item) => match(item.searchableText, ambig));
   }, [items, query]);
   return matchedItems;
 }
