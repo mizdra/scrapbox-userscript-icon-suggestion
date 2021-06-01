@@ -16,7 +16,7 @@ const items = [
 const props = { cursorPosition, items };
 
 describe('matchItems', () => {
-  test('query に部分一致する items のみが返る', () => {
+  test('query にあいまい一致する items のみが返る', () => {
     expect(
       matchItems('foo', [
         // マッチする
