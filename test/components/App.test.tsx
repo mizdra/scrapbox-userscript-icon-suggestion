@@ -19,8 +19,8 @@ jest.mock('../../src/lib/scrapbox', () => {
 
 // editor 上に埋め込まれるアイコンをカスタマイズしたいので、Context でラップする
 function App(props: AppProps) {
-  const presetIcons: Icon[] = ['b', 'c', 'c'].map((pagePath) => pagePathToIcon('project', pagePath));
-  const editor = createEditor({ currentProjectName: 'project', iconPagePaths: ['a', 'a', 'b'] });
+  const presetIcons: Icon[] = ['bbbbb', 'ccccc', 'ccccc'].map((pagePath) => pagePathToIcon('project', pagePath));
+  const editor = createEditor({ currentProjectName: 'project', iconPagePaths: ['aaaaa', 'aaaaa', 'bbbbb'] });
   const scrapbox = createScrapboxAPI();
   return (
     <ScrapboxContext.Provider value={{ editor, scrapbox }}>
@@ -89,29 +89,29 @@ describe('App', () => {
         const buttonContainer = getByTestId('button-container');
         const queryInput = getByTestId('query-input');
 
-        expect(buttonContainer.childElementCount).toEqual(2); // a, b の 2アイコンが表示される
-        userEvent.type(queryInput, 'b');
-        expect(buttonContainer.childElementCount).toEqual(1); // b だけ表示される
+        expect(buttonContainer.childElementCount).toEqual(2); // aaaaa, bbbbb の 2アイコンが表示される
+        userEvent.type(queryInput, 'bbbbb');
+        expect(buttonContainer.childElementCount).toEqual(1); // bbbbb だけ表示される
         await act(() => {
           fireEvent(document, keydownEnterEvent);
         });
-        expect(mockInsertText).toBeCalledWith(expect.anything(), '[b.icon]');
+        expect(mockInsertText).toBeCalledWith(expect.anything(), '[bbbbb.icon]');
       });
     });
     test('isSuggestionOpenKeyDown が真になるようなキーを押下したら、presetIcons が suggest される', async () => {
       const { getByTestId } = await renderApp({});
       const buttonContainer = getByTestId('button-container');
 
-      expect(buttonContainer.childElementCount).toEqual(2); // a, b の 2アイコンが表示される
+      expect(buttonContainer.childElementCount).toEqual(2); // aaaaa, bbbbb の 2アイコンが表示される
       await act(() => {
         fireEvent(document, keydownCtrlLEvent);
       });
-      expect(buttonContainer.childElementCount).toEqual(3); // a, b, c の 3アイコンが表示される
+      expect(buttonContainer.childElementCount).toEqual(3); // aaaaa, bbbbb, cccc の 3アイコンが表示される
     });
     test('defaultSuggestPresetIcons が真なら最初からプリセットアイコンが suggest される', async () => {
       const { getByTestId } = await renderApp({ defaultSuggestPresetIcons: true });
       const buttonContainer = getByTestId('button-container');
-      expect(buttonContainer.childElementCount).toEqual(3); // a, b, c の 3アイコンが表示される
+      expect(buttonContainer.childElementCount).toEqual(3); // aaaaa, bbbbb, ccccc の 3アイコンが表示される
     });
   });
 });

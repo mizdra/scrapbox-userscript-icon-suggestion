@@ -16,7 +16,7 @@ const items = [
 const props = { cursorPosition, items };
 
 describe('matchItems', () => {
-  test('query に部分一致する items のみが返る', () => {
+  test('query にあいまい一致する items のみが返る', () => {
     expect(
       matchItems('foo', [
         // マッチする
@@ -26,10 +26,11 @@ describe('matchItems', () => {
         { element: '', searchableText: 'bar foo baz', value: '' },
         { element: '', searchableText: 'bar baz foo', value: '' },
         { element: '', searchableText: 'foo foo foo', value: '' },
-        // マッチしない
-        { element: '', searchableText: 'bar', value: '' },
         { element: '', searchableText: 'fo bar', value: '' },
         { element: '', searchableText: 'fo o bar', value: '' },
+        // マッチしない
+        { element: '', searchableText: 'fee', value: '' },
+        { element: '', searchableText: 'bar', value: '' },
       ]),
     ).toStrictEqual([
       { element: '', searchableText: 'foo', value: '' },
@@ -38,6 +39,8 @@ describe('matchItems', () => {
       { element: '', searchableText: 'bar foo baz', value: '' },
       { element: '', searchableText: 'bar baz foo', value: '' },
       { element: '', searchableText: 'foo foo foo', value: '' },
+      { element: '', searchableText: 'fo bar', value: '' },
+      { element: '', searchableText: 'fo o bar', value: '' },
     ]);
   });
   test('マッチは capital-insensitive', () => {
@@ -115,13 +118,13 @@ describe('SuggestionBox', () => {
 
         expect(buttonContainer.childElementCount).toEqual(4);
         userEvent.type(queryInput, 'a');
-        expect(buttonContainer.childElementCount).toEqual(3);
+        expect(buttonContainer.childElementCount).toEqual(4);
         userEvent.type(queryInput, 'b');
-        expect(buttonContainer.childElementCount).toEqual(2);
+        expect(buttonContainer.childElementCount).toEqual(3);
         userEvent.type(queryInput, 'c');
-        expect(buttonContainer.childElementCount).toEqual(1);
+        expect(buttonContainer.childElementCount).toEqual(2);
         userEvent.type(queryInput, 'd');
-        expect(buttonContainer.childElementCount).toEqual(0);
+        expect(buttonContainer.childElementCount).toEqual(2);
       });
       test('Enter 押下で onSelect が呼び出される', async () => {
         const onSelect = jest.fn();

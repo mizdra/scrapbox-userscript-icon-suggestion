@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/mizdra/scrapbox-userscript-icon-suggestion#readme",
   "dependencies": {
+    "asearch": "^1.0.1",
     "preact": "^10.5.13",
     "use-resize-observer": "^7.0.0"
   },
