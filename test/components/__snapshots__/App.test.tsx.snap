@@ -24,12 +24,12 @@ exports[`App 初期状態 isSuggestionOpenKeyDown が真になるようなキー
         >
           <span>
             <img
-              alt="a"
-              src="/api/pages/project/a/icon"
+              alt="aaaaa"
+              src="/api/pages/project/aaaaa/icon"
               style="width: 1.3em; height: 1.3em; object-fit: contain;"
-              title="a"
+              title="aaaaa"
             />
-             a
+             aaaaa
           </span>
         </div>
         <div
@@ -37,12 +37,12 @@ exports[`App 初期状態 isSuggestionOpenKeyDown が真になるようなキー
         >
           <span>
             <img
-              alt="b"
-              src="/api/pages/project/b/icon"
+              alt="bbbbb"
+              src="/api/pages/project/bbbbb/icon"
               style="width: 1.3em; height: 1.3em; object-fit: contain;"
-              title="b"
+              title="bbbbb"
             />
-             b
+             bbbbb
           </span>
         </div>
       </div>
