@@ -12,7 +12,7 @@ export function matchItems<T>(query: string, items: Item<T>[]): Item<T>[] {
   const match = Asearch(` ${query} `); // 部分一致できるように、両端をスペースで囲む
   // あいまい度の少ない項目から順に並べる
   // 重複は除く
-  const pushedItems: Set<Item> = new Set();
+  const pushedItems: Set<Item<T>> = new Set();
   const result: Item<T>[] = [];
   for (let ambig = 0; ambig <= maxAambig; ambig++) {
     items.forEach((item) => {
