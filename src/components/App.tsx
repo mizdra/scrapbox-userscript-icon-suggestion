@@ -19,6 +19,7 @@ function toItem(icon: Icon, suggestedIcons: Icon[]): Item<Icon> {
     ? `${icon.pageTitle} (${icon.projectName})`
     : icon.pageTitle;
   return {
+    key: icon.fullPagePath,
     element: (
       <span>
         <img
