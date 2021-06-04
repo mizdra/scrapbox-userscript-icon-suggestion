@@ -12,7 +12,7 @@ const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
 };
 
-function toItem(currentProjectName: string, icon: Icon, suggestedIcons: Icon[]): Item<Icon> {
+function toItem(icon: Icon, suggestedIcons: Icon[]): Item<Icon> {
   // 基本的にプロジェクト名は省略して表示。
   // 同名のページタイトルのアイコンが他にある場合は、プロジェクト名も括弧付きで表示。
   const label = hasDuplicatedPageTitle(icon, suggestedIcons)
@@ -65,7 +65,7 @@ export const App: FunctionComponent<AppProps> = ({
     const icons = suggestPresetIcons ? [...editorIcons, ...presetIcons] : editorIcons;
     const suggestedIcons = uniqBy(icons, (icon) => icon.getShortPagePath(currentProjectName));
 
-    return suggestedIcons.map((icon) => toItem(currentProjectName, icon, suggestedIcons));
+    return suggestedIcons.map((icon) => toItem(icon, suggestedIcons));
   }, [suggestPresetIcons, editorIcons, presetIcons, currentProjectName]);
 
   const handleSelect = useCallback(
