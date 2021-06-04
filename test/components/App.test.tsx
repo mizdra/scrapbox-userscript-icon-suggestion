@@ -6,7 +6,7 @@ import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { App as NativeApp, AppProps } from '../../src/components/App';
 import { ScrapboxContext } from '../../src/contexts/ScrapboxContext';
-import { Icon, pagePathToIcon } from '../../src/lib/icon';
+import { Icon } from '../../src/lib/icon';
 import { createEditor, createScrapboxAPI } from '../helpers/html';
 import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
@@ -19,7 +19,11 @@ jest.mock('../../src/lib/scrapbox', () => {
 
 // editor 上に埋め込まれるアイコンをカスタマイズしたいので、Context でラップする
 function App(props: AppProps) {
-  const presetIcons: Icon[] = ['bbbbb', 'ccccc', 'ccccc'].map((pagePath) => pagePathToIcon('project', pagePath));
+  const presetIcons: Icon[] = [
+    new Icon('project', 'bbbbb'),
+    new Icon('project', 'ccccc'),
+    new Icon('project', 'ccccc'),
+  ];
   const editor = createEditor({
     embeddedIcons: [new Icon('project', 'aaaaa'), new Icon('project', 'aaaaa'), new Icon('project', 'bbbbb')],
   });
