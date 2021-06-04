@@ -30,7 +30,7 @@ function toItem(currentProjectName: string, icon: Icon, suggestedIcons: Icon[]):
         <span data-testid="suggested-icon-label">{label}</span>
       </span>
     ),
-    searchableText: icon.getShortPagePath(currentProjectName),
+    searchableText: label,
     value: icon,
   };
 }
