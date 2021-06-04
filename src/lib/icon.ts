@@ -48,13 +48,6 @@ export class Icon {
   }
 }
 
-export function pagePathToIcon(currentProjectName: string, pagePath: string): Icon {
-  const isRoot = pagePath.startsWith(`/`);
-  const projectName = isRoot ? pagePath.slice(1, pagePath.indexOf('/', 1)) : currentProjectName;
-  const pageTitle = isRoot ? pagePath.slice(1 + projectName.length + 1) : pagePath;
-  return new Icon(projectName, pageTitle);
-}
-
 export function iconLinkElementToIcon(currentProjectName: string, iconLinkElement: HTMLAnchorElement): Icon {
   const imgElement = iconLinkElement.querySelector<HTMLImageElement>('img.icon');
   if (!imgElement)
