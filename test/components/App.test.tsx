@@ -20,7 +20,9 @@ jest.mock('../../src/lib/scrapbox', () => {
 // editor 上に埋め込まれるアイコンをカスタマイズしたいので、Context でラップする
 function App(props: AppProps) {
   const presetIcons: Icon[] = ['bbbbb', 'ccccc', 'ccccc'].map((pagePath) => pagePathToIcon('project', pagePath));
-  const editor = createEditor({ currentProjectName: 'project', iconPagePaths: ['aaaaa', 'aaaaa', 'bbbbb'] });
+  const editor = createEditor({
+    embeddedIcons: [new Icon('project', 'aaaaa'), new Icon('project', 'aaaaa'), new Icon('project', 'bbbbb')],
+  });
   const scrapbox = createScrapboxAPI();
   return (
     <ScrapboxContext.Provider value={{ editor, scrapbox }}>
