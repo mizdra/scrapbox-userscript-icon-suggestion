@@ -1,29 +1,5 @@
-import { Icon, iconLinkElementToIcon, pagePathToIcon } from '../../src/lib/icon';
+import { hasDuplicatedPageTitle, Icon, iconLinkElementToIcon } from '../../src/lib/icon';
 import { createIconLinkElement } from '../helpers/html';
-
-describe('pagePathToIcon', () => {
-  test('`pagePath` が相対パスの時', () => {
-    expect(pagePathToIcon('project', 'foo').equals(new Icon('project', 'foo'))).toEqual(true);
-  });
-  describe('`pagePath` が絶対パスの時', () => {
-    test('カレントプロジェクトのアイコンが指定されている時', () => {
-      // `/project/` がトリミングされたものと等価
-      expect(pagePathToIcon('project', '/project/foo').equals(new Icon('project', 'foo'))).toEqual(true);
-    });
-    test('カレントプロジェクト以外のアイコンが指定されている時', () => {
-      expect(pagePathToIcon('project', '/other-project/foo').equals(new Icon('other-project', 'foo'))).toEqual(true);
-    });
-  });
-  test('`pagePath` に空白が含まれている時', () => {
-    expect(pagePathToIcon('project', 'foo bar').equals(new Icon('project', 'foo bar'))).toEqual(true);
-  });
-  test('`pagePath` にスラッシュが含まれている時', () => {
-    expect(pagePathToIcon('project', 'foo/bar').equals(new Icon('project', 'foo/bar'))).toEqual(true);
-  });
-  test('`pagePath` に日本語が含まれている時', () => {
-    expect(pagePathToIcon('project', '日本語').equals(new Icon('project', '日本語'))).toEqual(true);
-  });
-});
 
 describe('iconLinkElementToIcon', () => {
   test('カレントプロジェクトのアイコンを表す要素が与えられた時', () => {
@@ -107,4 +83,17 @@ describe('Icon', () => {
     expect(icon.getNotation('other-project')).toEqual('[/project/日本語.icon]');
     expect(icon.equals(new Icon('project', '日本語'))).toEqual(true);
   });
+});
+
+test('hasDuplicatedPageTitle', () => {
+  const suggestedIcons: Icon[] = [
+    new Icon('project', 'a'),
+    new Icon('project', 'b'),
+    new Icon('other-project', 'b'),
+    new Icon('other-project', 'c'),
+  ];
+  expect(hasDuplicatedPageTitle(suggestedIcons[0], suggestedIcons)).toEqual(false);
+  expect(hasDuplicatedPageTitle(suggestedIcons[1], suggestedIcons)).toEqual(true);
+  expect(hasDuplicatedPageTitle(suggestedIcons[2], suggestedIcons)).toEqual(true);
+  expect(hasDuplicatedPageTitle(suggestedIcons[3], suggestedIcons)).toEqual(false);
 });

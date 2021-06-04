@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'preact/hooks';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqBy } from '../lib/collection';
-import { Icon } from '../lib/icon';
+import { hasDuplicatedPageTitle, Icon } from '../lib/icon';
 import { calcCursorPosition, insertText, scanIconsFromEditor } from '../lib/scrapbox';
 import { CursorPosition } from '../types';
 import { SuggestionBox, Item } from './SuggestionBox';
@@ -12,7 +12,12 @@ const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
 };
 
-function toItem(currentProjectName: string, icon: Icon): Item<Icon> {
+function toItem(icon: Icon, suggestedIcons: Icon[]): Item<Icon> {
+  // 基本的にプロジェクト名は省略して表示。
+  // 同名のページタイトルのアイコンが他にある場合は、プロジェクト名も括弧付きで表示。
+  const label = hasDuplicatedPageTitle(icon, suggestedIcons)
+    ? `${icon.pageTitle} (${icon.projectName})`
+    : icon.pageTitle;
   return {
     element: (
       <span>
@@ -21,11 +26,11 @@ function toItem(currentProjectName: string, icon: Icon): Item<Icon> {
           title={icon.imgTitle}
           style="width: 1.3em; height: 1.3em; object-fit: contain;"
           src={icon.imgSrc}
-        />
-        {' ' + icon.getShortPagePath(currentProjectName)}
+        />{' '}
+        <span data-testid="suggested-icon-label">{label}</span>
       </span>
     ),
-    searchableText: icon.getShortPagePath(currentProjectName),
+    searchableText: label,
     value: icon,
   };
 }
@@ -58,9 +63,9 @@ export const App: FunctionComponent<AppProps> = ({
   const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
   const items = useMemo(() => {
     const icons = suggestPresetIcons ? [...editorIcons, ...presetIcons] : editorIcons;
-    return uniqBy(icons, (icon) => icon.getShortPagePath(currentProjectName)).map((icon) =>
-      toItem(currentProjectName, icon),
-    );
+    const suggestedIcons = uniqBy(icons, (icon) => icon.getShortPagePath(currentProjectName));
+
+    return suggestedIcons.map((icon) => toItem(icon, suggestedIcons));
   }, [suggestPresetIcons, editorIcons, presetIcons, currentProjectName]);
 
   const handleSelect = useCallback(

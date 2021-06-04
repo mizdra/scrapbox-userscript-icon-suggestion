@@ -6,7 +6,7 @@ import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { App as NativeApp, AppProps } from '../../src/components/App';
 import { ScrapboxContext } from '../../src/contexts/ScrapboxContext';
-import { Icon, pagePathToIcon } from '../../src/lib/icon';
+import { Icon } from '../../src/lib/icon';
 import { createEditor, createScrapboxAPI } from '../helpers/html';
 import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
@@ -18,9 +18,20 @@ jest.mock('../../src/lib/scrapbox', () => {
 });
 
 // editor 上に埋め込まれるアイコンをカスタマイズしたいので、Context でラップする
-function App(props: AppProps) {
-  const presetIcons: Icon[] = ['bbbbb', 'ccccc', 'ccccc'].map((pagePath) => pagePathToIcon('project', pagePath));
-  const editor = createEditor({ currentProjectName: 'project', iconPagePaths: ['aaaaa', 'aaaaa', 'bbbbb'] });
+type Options = { embeddedIcons?: Icon[] };
+function App(props: AppProps & Options) {
+  const presetIcons: Icon[] = props.presetIcons ?? [
+    new Icon('project', 'bbbbb'),
+    new Icon('project', 'ccccc'),
+    new Icon('project', 'ccccc'),
+  ];
+  const editor = createEditor({
+    embeddedIcons: props.embeddedIcons ?? [
+      new Icon('project', 'aaaaa'),
+      new Icon('project', 'aaaaa'),
+      new Icon('project', 'bbbbb'),
+    ],
+  });
   const scrapbox = createScrapboxAPI();
   return (
     <ScrapboxContext.Provider value={{ editor, scrapbox }}>
@@ -58,7 +69,7 @@ describe('App', () => {
     });
   });
   describe('SuggestBox が表示されている時', () => {
-    async function renderApp(props: AppProps) {
+    async function renderApp(props: AppProps & Options) {
       const renderResult = render(<App {...props} />);
       await act(() => {
         fireEvent(document, keydownCtrlLEvent);
@@ -112,6 +123,36 @@ describe('App', () => {
       const { getByTestId } = await renderApp({ defaultSuggestPresetIcons: true });
       const buttonContainer = getByTestId('button-container');
       expect(buttonContainer.childElementCount).toEqual(3); // aaaaa, bbbbb, ccccc の 3アイコンが表示される
+    });
+    test('同名のページタイトルのアイコンが suggest されている場合は、括弧付きでプロジェクト名が表示される', async () => {
+      const { queryAllByTestId } = await renderApp({
+        embeddedIcons: [
+          new Icon('project', 'a'),
+          new Icon('project', 'b'),
+          new Icon('external-project-1', 'b'),
+          new Icon('external-project-1', 'c'),
+        ],
+        presetIcons: [new Icon('external-project-2', 'c'), new Icon('external-project-2', 'd')],
+      });
+      const suggesteIconLabels1 = queryAllByTestId('suggested-icon-label');
+      expect(suggesteIconLabels1[0]).toHaveTextContent(/^a$/);
+      expect(suggesteIconLabels1[1]).toHaveTextContent(/^b \(project\)$/);
+      expect(suggesteIconLabels1[2]).toHaveTextContent(/^b \(external-project-1\)$/);
+      expect(suggesteIconLabels1[3]).toHaveTextContent(/^c$/);
+
+      // プリセットアイコン表示
+      await act(() => {
+        fireEvent(document, keydownCtrlLEvent);
+      });
+
+      // プリセットアイコンが表示されている時は、プリセットアイコンを含めて同名のページタイトルのアイコンがあるかどうかが判定される
+      const suggesteIconLabels2 = queryAllByTestId('suggested-icon-label');
+      expect(suggesteIconLabels2[0]).toHaveTextContent(/^a$/);
+      expect(suggesteIconLabels2[1]).toHaveTextContent(/^b \(project\)$/);
+      expect(suggesteIconLabels2[2]).toHaveTextContent(/^b \(external-project-1\)$/);
+      expect(suggesteIconLabels2[3]).toHaveTextContent(/^c \(external-project-1\)$/);
+      expect(suggesteIconLabels2[4]).toHaveTextContent(/^c \(external-project-2\)$/);
+      expect(suggesteIconLabels2[5]).toHaveTextContent(/^d$/);
     });
   });
 });

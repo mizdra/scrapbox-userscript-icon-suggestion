@@ -29,7 +29,12 @@ exports[`App 初期状態 isSuggestionOpenKeyDown が真になるようなキー
               style="width: 1.3em; height: 1.3em; object-fit: contain;"
               title="aaaaa"
             />
-             aaaaa
+             
+            <span
+              data-testid="suggested-icon-label"
+            >
+              aaaaa
+            </span>
           </span>
         </div>
         <div
@@ -42,7 +47,12 @@ exports[`App 初期状態 isSuggestionOpenKeyDown が真になるようなキー
               style="width: 1.3em; height: 1.3em; object-fit: contain;"
               title="bbbbb"
             />
-             bbbbb
+             
+            <span
+              data-testid="suggested-icon-label"
+            >
+              bbbbb
+            </span>
           </span>
         </div>
       </div>

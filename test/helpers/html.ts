@@ -1,4 +1,4 @@
-import { pagePathToIcon } from '../../src/lib/icon';
+import { Icon } from '../../src/lib/icon';
 import { CursorPosition } from '../../src/types';
 
 // scrapbox のアイコンの a タグを再現したものを返す関数
@@ -16,8 +16,7 @@ export function createIconLinkElement(projectName: string, pageName: string): HT
   return anchor;
 }
 
-function pagePathToIconLinkElement(currentProjectName: string, pagePath: string): HTMLAnchorElement {
-  const icon = pagePathToIcon(currentProjectName, pagePath);
+export function iconToIconLinkElement(icon: Icon): HTMLAnchorElement {
   const a = document.createElement('a');
   a.setAttribute('class', 'link icon');
   a.setAttribute('rel', 'route');
@@ -33,14 +32,11 @@ function pagePathToIconLinkElement(currentProjectName: string, pagePath: string)
 
 // scrapbox の .editor 要素を再現したものを返す関数
 type CreateEditorOptions = {
-  currentProjectName?: string;
-  iconPagePaths?: string[];
+  embeddedIcons?: Icon[];
   cursorPosition?: CursorPosition;
 };
 
 export function createEditor(options?: CreateEditorOptions): HTMLDivElement {
-  const currentProjectName = options?.currentProjectName ?? 'project';
-
   const editor = document.createElement('div');
   editor.setAttribute('class', 'editor');
   editor.setAttribute('id', 'editor');
@@ -48,14 +44,14 @@ export function createEditor(options?: CreateEditorOptions): HTMLDivElement {
 
   editor.appendChild(createCursor(options?.cursorPosition ?? { styleTop: 0, styleLeft: 0 }));
   editor.appendChild(createTextInput());
-  if (options?.iconPagePaths) embedIcons(currentProjectName, editor, options.iconPagePaths);
+  if (options?.embeddedIcons) embedIcons(editor, options.embeddedIcons);
 
   return editor;
 }
 
-function embedIcons(currentProjectName: string, editor: HTMLElement, iconPagePaths: string[]) {
-  iconPagePaths.forEach((iconPagePath) => {
-    const iconLinkElement = pagePathToIconLinkElement(currentProjectName, iconPagePath);
+function embedIcons(editor: HTMLElement, icons: Icon[]) {
+  icons.forEach((icon) => {
+    const iconLinkElement = iconToIconLinkElement(icon);
     editor.appendChild(iconLinkElement);
   });
 }

@@ -48,13 +48,6 @@ export class Icon {
   }
 }
 
-export function pagePathToIcon(currentProjectName: string, pagePath: string): Icon {
-  const isRoot = pagePath.startsWith(`/`);
-  const projectName = isRoot ? pagePath.slice(1, pagePath.indexOf('/', 1)) : currentProjectName;
-  const pageTitle = isRoot ? pagePath.slice(1 + projectName.length + 1) : pagePath;
-  return new Icon(projectName, pageTitle);
-}
-
 export function iconLinkElementToIcon(currentProjectName: string, iconLinkElement: HTMLAnchorElement): Icon {
   const imgElement = iconLinkElement.querySelector<HTMLImageElement>('img.icon');
   if (!imgElement)
@@ -67,4 +60,17 @@ export function iconLinkElementToIcon(currentProjectName: string, iconLinkElemen
     ? currentProjectName
     : iconLinkElement.pathname.slice(1, iconLinkElement.pathname.indexOf('/', 1));
   return new Icon(projectName, imgElement.alt);
+}
+
+/**
+ * あるアイコンのページタイトルが、suggest されるそれ以外のアイコンのページタイトルと重複するものがあるかを返す。
+ * @param icon ページタイトルが重複しているかを調べたいアイコン
+ * @param suggestedIcons suggest されるアイコン。`icon` 自身を含んで良い。ただし Icon#equals で unique されていることが前提。
+ */
+export function hasDuplicatedPageTitle(icon: Icon, suggestedIcons: Icon[]): boolean {
+  for (const suggestedIcon of suggestedIcons) {
+    if (suggestedIcon.equals(icon)) continue; // 同じアイコンだったらスキップ
+    if (suggestedIcon.pageTitle === icon.pageTitle) return true;
+  }
+  return false;
 }
