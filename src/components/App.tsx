@@ -26,8 +26,8 @@ function toItem(currentProjectName: string, icon: Icon, suggestedIcons: Icon[]):
           title={icon.imgTitle}
           style="width: 1.3em; height: 1.3em; object-fit: contain;"
           src={icon.imgSrc}
-        />
-        {' ' + label}
+        />{' '}
+        <span data-testid="suggested-icon-label">{label}</span>
       </span>
     ),
     searchableText: icon.getShortPagePath(currentProjectName),
