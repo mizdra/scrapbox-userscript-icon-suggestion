@@ -1,7 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/preact';
 import { datatype } from 'faker';
-import { ComponentChild } from 'preact';
-import { PopupMenu } from '../../src/components/PopupMenu';
+import { Item, PopupMenu } from '../../src/components/PopupMenu';
 import { CursorPosition } from '../../src/types';
 import {
   keydownEnterEvent,
@@ -15,7 +14,11 @@ import {
 
 // ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
-const items = [<span key="1">item1</span>, <span key="2">item2</span>, <span key="3">item3</span>];
+const items: Item[] = [
+  { key: 1, element: <span key="1">item1</span> },
+  { key: 2, element: <span key="2">item2</span> },
+  { key: 3, element: <span key="3">item3</span> },
+];
 const props = { cursorPosition, items };
 
 // keydown イベントが PopupMenu 側でキャンセルされずに突き抜けてきたことを確かめるための mock
@@ -72,7 +75,7 @@ describe('PopupMenu', () => {
       expect(queryByTestId('popup-menu')).not.toBeNull();
     });
     describe('アイテムが1つも無い時', () => {
-      const items: ComponentChild[] = [];
+      const items: Item[] = [];
       test('空であることを表すメッセージが表示される', () => {
         const emptyMessage = datatype.string();
         const { getByText } = render(<PopupMenu open {...props} items={items} emptyMessage={emptyMessage} />);
