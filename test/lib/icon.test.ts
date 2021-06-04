@@ -1,4 +1,4 @@
-import { Icon, iconLinkElementToIcon, pagePathToIcon } from '../../src/lib/icon';
+import { hasDuplicatedPageTitle, Icon, iconLinkElementToIcon, pagePathToIcon } from '../../src/lib/icon';
 import { createIconLinkElement } from '../helpers/html';
 
 describe('pagePathToIcon', () => {
@@ -107,4 +107,17 @@ describe('Icon', () => {
     expect(icon.getNotation('other-project')).toEqual('[/project/日本語.icon]');
     expect(icon.equals(new Icon('project', '日本語'))).toEqual(true);
   });
+});
+
+test('hasDuplicatedPageTitle', () => {
+  const suggestedIcons: Icon[] = [
+    new Icon('project', 'a'),
+    new Icon('project', 'b'),
+    new Icon('other-project', 'b'),
+    new Icon('other-project', 'c'),
+  ];
+  expect(hasDuplicatedPageTitle(suggestedIcons[0], suggestedIcons)).toEqual(false);
+  expect(hasDuplicatedPageTitle(suggestedIcons[1], suggestedIcons)).toEqual(true);
+  expect(hasDuplicatedPageTitle(suggestedIcons[2], suggestedIcons)).toEqual(true);
+  expect(hasDuplicatedPageTitle(suggestedIcons[3], suggestedIcons)).toEqual(false);
 });
