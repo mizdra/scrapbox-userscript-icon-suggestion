@@ -1,5 +1,6 @@
 import { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import { JSXInternal } from 'preact/src/jsx';
 import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
@@ -11,7 +12,7 @@ const DEFAULT_IS_POPUP_CLOSE_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
 };
 
-export type Item = ComponentChild;
+export type Item = { key: JSXInternal.IntrinsicAttributes['key']; element: ComponentChild };
 
 export type PopupMenuProps = {
   open: boolean;
@@ -82,8 +83,8 @@ export function PopupMenu({
   const buttonContainerStyle = calcButtonContainerStyle(editorWidth, buttonContainerWidth, cursorPosition, isEmpty);
 
   const itemListElement = items.map((item, i) => (
-    <PopupMenuButton key={i} selected={selectedIndex === i}>
-      {item}
+    <PopupMenuButton key={item.key} selected={selectedIndex === i}>
+      {item.element}
     </PopupMenuButton>
   ));
 

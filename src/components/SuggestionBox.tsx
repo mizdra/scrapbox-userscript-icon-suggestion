@@ -1,11 +1,17 @@
 import Asearch from 'asearch';
 import { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import { JSXInternal } from 'preact/src/jsx';
 import { CursorPosition } from '../types';
 import { PopupMenu } from './PopupMenu';
 import { QueryInput } from './SuggestionBox/QueryInput';
 
-export type Item<T> = { element: ComponentChild; searchableText: string; value: T };
+export type Item<T> = {
+  key: JSXInternal.IntrinsicAttributes['key'];
+  element: ComponentChild;
+  searchableText: string;
+  value: T;
+};
 
 export function matchItems<T>(query: string, items: Item<T>[]): Item<T>[] {
   const maxAambig = Math.min(Math.floor(query.length / 4) + 1, 3);
@@ -49,7 +55,14 @@ export function SuggestionBox<T>({
 }: SuggestionBoxProps<T>) {
   const [query, setQuery] = useState('');
   const matchedItems = useMemo(() => matchItems(query, items), [items, query]);
-  const matchedItemsForPopupMenu = useMemo(() => matchedItems.map((item) => item.element), [matchedItems]);
+  const matchedItemsForPopupMenu = useMemo(
+    () =>
+      matchedItems.map((item) => ({
+        key: item.key,
+        element: item.element,
+      })),
+    [matchedItems],
+  );
 
   useEffect(() => {
     if (open === false) setQuery('');

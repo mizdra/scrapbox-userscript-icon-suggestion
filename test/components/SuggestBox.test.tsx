@@ -8,10 +8,10 @@ import { keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 // ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
 const items = [
-  { element: <span key="1">a</span>, searchableText: 'a', value: 'a' },
-  { element: <span key="2">ab</span>, searchableText: 'ab', value: 'ab' },
-  { element: <span key="3">abc</span>, searchableText: 'abc', value: 'abc' },
-  { element: <span key="4">z</span>, searchableText: 'z', value: 'z' },
+  { key: 1, element: <span key="1">a</span>, searchableText: 'a', value: 'a' },
+  { key: 2, element: <span key="2">ab</span>, searchableText: 'ab', value: 'ab' },
+  { key: 3, element: <span key="3">abc</span>, searchableText: 'abc', value: 'abc' },
+  { key: 4, element: <span key="4">z</span>, searchableText: 'z', value: 'z' },
 ];
 const props = { cursorPosition, items };
 
@@ -20,51 +20,51 @@ describe('matchItems', () => {
     expect(
       matchItems('foo', [
         // マッチする
-        { element: '', searchableText: 'foo', value: '' },
-        { element: '', searchableText: 'foo bar', value: '' },
-        { element: '', searchableText: 'foo bar baz', value: '' },
-        { element: '', searchableText: 'bar foo baz', value: '' },
-        { element: '', searchableText: 'bar baz foo', value: '' },
-        { element: '', searchableText: 'foo foo foo', value: '' },
-        { element: '', searchableText: 'fo bar', value: '' },
-        { element: '', searchableText: 'fo o bar', value: '' },
+        { key: 0, element: '', searchableText: 'foo', value: '' },
+        { key: 1, element: '', searchableText: 'foo bar', value: '' },
+        { key: 2, element: '', searchableText: 'foo bar baz', value: '' },
+        { key: 3, element: '', searchableText: 'bar foo baz', value: '' },
+        { key: 4, element: '', searchableText: 'bar baz foo', value: '' },
+        { key: 5, element: '', searchableText: 'foo foo foo', value: '' },
+        { key: 6, element: '', searchableText: 'fo bar', value: '' },
+        { key: 7, element: '', searchableText: 'fo o bar', value: '' },
         // マッチしない
-        { element: '', searchableText: 'fee', value: '' },
-        { element: '', searchableText: 'bar', value: '' },
+        { key: 8, element: '', searchableText: 'fee', value: '' },
+        { key: 9, element: '', searchableText: 'bar', value: '' },
       ]),
     ).toStrictEqual([
-      { element: '', searchableText: 'foo', value: '' },
-      { element: '', searchableText: 'foo bar', value: '' },
-      { element: '', searchableText: 'foo bar baz', value: '' },
-      { element: '', searchableText: 'bar foo baz', value: '' },
-      { element: '', searchableText: 'bar baz foo', value: '' },
-      { element: '', searchableText: 'foo foo foo', value: '' },
-      { element: '', searchableText: 'fo bar', value: '' },
-      { element: '', searchableText: 'fo o bar', value: '' },
+      { key: 0, element: '', searchableText: 'foo', value: '' },
+      { key: 1, element: '', searchableText: 'foo bar', value: '' },
+      { key: 2, element: '', searchableText: 'foo bar baz', value: '' },
+      { key: 3, element: '', searchableText: 'bar foo baz', value: '' },
+      { key: 4, element: '', searchableText: 'bar baz foo', value: '' },
+      { key: 5, element: '', searchableText: 'foo foo foo', value: '' },
+      { key: 6, element: '', searchableText: 'fo bar', value: '' },
+      { key: 7, element: '', searchableText: 'fo o bar', value: '' },
     ]);
   });
   test('マッチは capital-insensitive', () => {
     expect(
       matchItems('foo', [
-        { element: '', searchableText: 'Foo', value: '' },
-        { element: '', searchableText: 'FOO', value: '' },
-        { element: '', searchableText: 'fOo', value: '' },
+        { key: 0, element: '', searchableText: 'Foo', value: '' },
+        { key: 1, element: '', searchableText: 'FOO', value: '' },
+        { key: 2, element: '', searchableText: 'fOo', value: '' },
       ]),
     ).toStrictEqual([
-      { element: '', searchableText: 'Foo', value: '' },
-      { element: '', searchableText: 'FOO', value: '' },
-      { element: '', searchableText: 'fOo', value: '' },
+      { key: 0, element: '', searchableText: 'Foo', value: '' },
+      { key: 1, element: '', searchableText: 'FOO', value: '' },
+      { key: 2, element: '', searchableText: 'fOo', value: '' },
     ]);
     expect(
       matchItems('FOO', [
-        { element: '', searchableText: 'Foo', value: '' },
-        { element: '', searchableText: 'FOO', value: '' },
-        { element: '', searchableText: 'fOo', value: '' },
+        { key: 0, element: '', searchableText: 'Foo', value: '' },
+        { key: 1, element: '', searchableText: 'FOO', value: '' },
+        { key: 2, element: '', searchableText: 'fOo', value: '' },
       ]),
     ).toStrictEqual([
-      { element: '', searchableText: 'Foo', value: '' },
-      { element: '', searchableText: 'FOO', value: '' },
-      { element: '', searchableText: 'fOo', value: '' },
+      { key: 0, element: '', searchableText: 'Foo', value: '' },
+      { key: 1, element: '', searchableText: 'FOO', value: '' },
+      { key: 2, element: '', searchableText: 'fOo', value: '' },
     ]);
   });
 });
