@@ -20,7 +20,7 @@ function createConfig(input) {
       dir: 'dist',
       format: 'es',
       // Page#addScriptTag で差し込む都合上、bundle ファイルに sourcemap が埋め込まれている必要がある
-      sourcemap: 'inline',
+      sourcemap: process.env.NODE_ENV === 'production' ? 'hidden' : 'inline',
     },
     plugins: [
       alias({
@@ -34,7 +34,7 @@ function createConfig(input) {
       typescript({
         tsconfig: 'tsconfig.src.json',
         // ref: https://github.com/rollup/plugins/issues/260#issuecomment-601551228
-        inlineSources: true,
+        inlineSources: process.env.NODE_ENV === 'production' ? false : true,
       }),
       !!process.env.ANALYZE && visualizer({ template: 'treemap' }),
     ],
