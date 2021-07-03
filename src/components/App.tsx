@@ -49,32 +49,25 @@ export const App: FunctionComponent<AppProps> = ({
   presetIcons = [],
   defaultSuggestPresetIcons = false,
 }) => {
-  const {
-    textInput,
-    cursor,
-    editor,
-    scrapbox: {
-      Layout: layoutName,
-      Project: { name: currentProjectName },
-    },
-  } = useScrapbox();
+  const { textInput, cursor, editor, layout, projectName } = useScrapbox();
+
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [editorIcons, setEditorIcons] = useState<Icon[]>([]);
   const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
   const items = useMemo(() => {
     const icons = suggestPresetIcons ? [...editorIcons, ...presetIcons] : editorIcons;
-    const suggestedIcons = uniqBy(icons, (icon) => icon.getShortPagePath(currentProjectName));
+    const suggestedIcons = uniqBy(icons, (icon) => icon.getShortPagePath(projectName));
 
     return suggestedIcons.map((icon) => toItem(icon, suggestedIcons));
-  }, [suggestPresetIcons, editorIcons, presetIcons, currentProjectName]);
+  }, [suggestPresetIcons, editorIcons, presetIcons, projectName]);
 
   const handleSelect = useCallback(
     (item: Item<Icon>) => {
       setOpen(false);
-      insertText(textInput, item.value.getNotation(currentProjectName));
+      insertText(textInput, item.value.getNotation(projectName));
     },
-    [currentProjectName, textInput],
+    [projectName, textInput],
   );
 
   const handleSelectNonexistent = useCallback(
@@ -92,7 +85,7 @@ export const App: FunctionComponent<AppProps> = ({
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
-      if (layoutName !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
+      if (layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
       if (!isSuggestionOpenKeyDown(e)) return;
       e.preventDefault();
       e.stopPropagation();
@@ -106,7 +99,7 @@ export const App: FunctionComponent<AppProps> = ({
         // 行のアイコン記法が画像化されるようにしておく。
         textInput.blur();
         // 画像化されたらエディタを走査してアイコンを収集
-        const newEditorIcons = scanIconsFromEditor(currentProjectName, editor);
+        const newEditorIcons = scanIconsFromEditor(projectName, editor);
 
         setEditorIcons(newEditorIcons);
         setOpen(true);
@@ -116,16 +109,7 @@ export const App: FunctionComponent<AppProps> = ({
         setSuggestPresetIcons((suggestPresetIcons) => !suggestPresetIcons);
       }
     },
-    [
-      cursor,
-      defaultSuggestPresetIcons,
-      editor,
-      isSuggestionOpenKeyDown,
-      open,
-      layoutName,
-      currentProjectName,
-      textInput,
-    ],
+    [cursor, defaultSuggestPresetIcons, editor, isSuggestionOpenKeyDown, open, layout, projectName, textInput],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 

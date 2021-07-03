@@ -2,9 +2,13 @@ interface Project {
   name: string;
 }
 
+type EventName = 'layout:changed' | 'project:changed';
+
 interface Scrapbox {
   Layout: string;
   Project: Project;
+  addListener: (eventName: EventName, listener: () => void) => Scrapbox;
+  removeListener: (eventName: EventName, listener: () => void) => Scrapbox;
 }
 
 // 本当はグローバルに露出しているが、コードベースの様々なところから無秩序に
