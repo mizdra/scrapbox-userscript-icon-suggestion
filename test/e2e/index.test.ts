@@ -31,7 +31,7 @@ async function goto(url: string) {
 }
 
 test('エディタのあるページで Ctrl+L を押下すると、icon-suggestion が開く', async () => {
-  await goto('https://scrapbox.io/mizdra/icon-suggestion');
+  await goto('https://scrapbox.io/icon-suggestion-example/テスト用ページ1');
 
   expect(await page.isVisible('.popup-menu')).toBeFalsy();
 
@@ -44,9 +44,9 @@ test('エディタのあるページで Ctrl+L を押下すると、icon-suggest
 });
 
 test('プロジェクトのホームからエディタのあるページに smooth transition した時であっても、icon-suggestion が開く', async () => {
-  await goto('https://scrapbox.io/mizdra');
+  await goto('https://scrapbox.io/icon-suggestion-example');
 
-  await page.click('a[href="/mizdra/mizdra"]');
+  await page.click('a[href="/icon-suggestion-example/mizdra"]');
   await page.waitForSelector('.editor', { state: 'visible' });
 
   // Ctrl + L 押下
@@ -58,7 +58,7 @@ test('プロジェクトのホームからエディタのあるページに smoo
 });
 
 test('プロジェクトのホームでは icon-suggestion は開かない', async () => {
-  await goto('https://scrapbox.io/mizdra');
+  await goto('https://scrapbox.io/icon-suggestion-example');
 
   expect(await page.isVisible('.popup-menu')).toBeFalsy();
 
