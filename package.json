@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
+    "dev": "./bin/dev.ts",
     "lint": "run-s -c lint:*",
     "lint:tsc": "run-s -c lint:tsc:*",
     "lint:tsc:src": "tsc -p tsconfig.src.json --noEmit",
     "lint:tsc:test": "tsc -p tsconfig.test.json --noEmit",
+    "lint:tsc:bin": "tsc -p tsconfig.bin.json --noEmit",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier --check .",
     "test": "jest",
