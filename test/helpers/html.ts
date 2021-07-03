@@ -75,10 +75,13 @@ function createTextInput(): HTMLTextAreaElement {
 
 // scrapbox が window に露出させている API を再現したものを返す関数
 export function createScrapboxAPI(): Scrapbox {
-  return {
+  const scrapbox = {
     Layout: 'page',
     Project: {
       name: 'project',
     },
+    addListener: () => scrapbox,
+    removeListener: () => scrapbox,
   };
+  return scrapbox;
 }
