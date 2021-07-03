@@ -52,7 +52,7 @@ export function PopupMenu({
       // 閉じている時は何もしない
       if (!open) return;
       // IMEによる変換中は何もしない
-      if (e.isComposing) return;
+      if (e.isComposing || (e.key === 'Enter' && e.which === 229)) return;
 
       const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
       const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
