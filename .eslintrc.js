@@ -24,16 +24,13 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['src/**/*.{ts,tsx}'],
+      files: ['**/*.{ts,tsx}'],
       parserOptions: {
-        project: './tsconfig.src.json',
+        project: ['./tsconfig.src.json', './tsconfig.test.json', './tsconfig.bin.json'],
       },
     },
     {
-      files: ['test/**/*.{ts,tsx}'],
-      parserOptions: {
-        project: './tsconfig.test.json',
-      },
+      files: ['test/**/*'],
       env: {
         jest: true,
       },
