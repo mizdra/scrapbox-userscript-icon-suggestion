@@ -30,7 +30,7 @@ async function goto(url: string) {
   await page.addScriptTag({ path: resolve(__dirname, '../../dist/e2e.js'), type: 'module' });
 }
 
-test('エディタにページで Ctrl+L を押下すると、icon-suggestion が開く', async () => {
+test('エディタのあるページで Ctrl+L を押下すると、icon-suggestion が開く', async () => {
   await goto('https://scrapbox.io/mizdra/icon-suggestion');
 
   expect(await page.isVisible('.popup-menu')).toBeFalsy();
@@ -43,7 +43,21 @@ test('エディタにページで Ctrl+L を押下すると、icon-suggestion �
   expect(await page.isVisible('.popup-menu')).toBeTruthy();
 });
 
-test('プロジェクト一覧ページでは icon-suggestion は開かない', async () => {
+test('プロジェクトのホームからエディタのあるページに smooth transition した時であっても、icon-suggestion が開く', async () => {
+  await goto('https://scrapbox.io/mizdra');
+
+  await page.click('a[href="/mizdra/mizdra"]');
+  await page.waitForSelector('.editor', { state: 'visible' });
+
+  // Ctrl + L 押下
+  await page.keyboard.down('Control');
+  await page.keyboard.press('l');
+  await page.keyboard.up('Control');
+
+  expect(await page.isVisible('.popup-menu')).toBeTruthy();
+});
+
+test('プロジェクトのホームでは icon-suggestion は開かない', async () => {
   await goto('https://scrapbox.io/mizdra');
 
   expect(await page.isVisible('.popup-menu')).toBeFalsy();
