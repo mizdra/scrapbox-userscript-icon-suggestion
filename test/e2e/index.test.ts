@@ -57,6 +57,40 @@ test('プロジェクトのホームからエディタのあるページに smoo
   expect(await page.isVisible('.popup-menu')).toBeTruthy();
 });
 
+test('別のプロジェクトに smooth transition した時であっても、icon-suggestion が開く', async () => {
+  // `/icon-suggestion-example/テスト用ページ2` => `/mizdra/テスト用ページ2` に smooth transition して、
+  // project 名が変わっても正しい icon が suggest されることをテストする
+
+  await goto(
+    'https://scrapbox.io/icon-suggestion-example/%E3%83%86%E3%82%B9%E3%83%88%E7%94%A8%E3%83%9A%E3%83%BC%E3%82%B82',
+  );
+
+  // Ctrl + L 押下
+  await page.keyboard.down('Control');
+  await page.keyboard.press('l');
+  await page.keyboard.up('Control');
+
+  expect(await page.getAttribute('.popup-menu img', 'src')).toEqual('/api/pages/icon-suggestion-example/mizdra/icon');
+
+  // mizdra プロジェクトのページに smooth transition する
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const linkHandle = (await page.$(
+    'a[href="/mizdra/%E3%83%86%E3%82%B9%E3%83%88%E7%94%A8%E3%83%9A%E3%83%BC%E3%82%B82"]',
+  ))!;
+  // NOTE: デフォルトでは target="_blank" が付いていて smooth transition にならないので、強引に外してしまう
+  await linkHandle.evaluate((node) => node.removeAttribute('target'));
+  await linkHandle.click();
+  await page.waitForSelector('.editor', { state: 'visible' });
+
+  // Ctrl + L 押下
+  await page.keyboard.down('Control');
+  await page.keyboard.press('l');
+  await page.keyboard.up('Control');
+
+  // `icon-suggestion-example/mizdra` ではなく `mizdra/mizdra` が suggest される
+  expect(await page.getAttribute('.popup-menu img', 'src')).toEqual('/api/pages/mizdra/mizdra/icon');
+});
+
 test('プロジェクトのホームでは icon-suggestion は開かない', async () => {
   await goto('https://scrapbox.io/icon-suggestion-example');
 
