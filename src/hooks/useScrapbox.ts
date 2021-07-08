@@ -18,8 +18,8 @@ export function useScrapbox(): UseScrapboxResult {
   useEffect(() => {
     // smooth transition で layout や projectName は変わりうるので、変更を監視する
     const onLayoutChanged = () => setLayout(scrapbox.Layout);
-    scrapbox.addListener('layout:changed', onLayoutChanged);
     const onProjectChanged = () => setProjectName(scrapbox.Project.name);
+    scrapbox.addListener('layout:changed', onLayoutChanged);
     scrapbox.addListener('project:changed', onProjectChanged);
     return () => {
       scrapbox.removeListener('layout:changed', onLayoutChanged);
