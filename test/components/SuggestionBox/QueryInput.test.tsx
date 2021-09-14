@@ -6,6 +6,8 @@ import { calcQueryInputStyle } from '../../../src/lib/calc-style';
 import { CursorPosition } from '../../../src/types';
 import { createEditor, createScrapboxAPI } from '../../helpers/html';
 
+const waitRaf = async () => new Promise((resolve) => requestAnimationFrame(resolve));
+
 // ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
 const props = { cursorPosition };
@@ -25,9 +27,10 @@ describe('QueryInput', () => {
     const expectedStyles = calcQueryInputStyle(editor.clientWidth, cursorPosition);
     expect(input).toHaveStyle(expectedStyles);
   });
-  test('auto-focus される', () => {
+  test('auto-focus される', async () => {
     const { getByTestId } = render(<QueryInput {...props} />);
     const input = getByTestId('query-input');
+    await waitRaf(); // 一拍置いてから focus されるので待つ
     expect(input).toHaveFocus();
   });
   test('defaultQuery が設定できる', () => {
