@@ -20,7 +20,8 @@ export const QueryInput: FunctionComponent<QueryInputProps> = ({ defaultQuery, c
 
   // mount されたら即 focus する
   useEffect(() => {
-    ref.current.focus();
+    // NOTE: 何故かフォーカスが合わないことがあるらしいので、間をおいてからフォーカスする
+    requestAnimationFrame(() => ref.current.focus());
   }, []);
 
   const handleInput = useCallback(
