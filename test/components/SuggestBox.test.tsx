@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { datatype } from 'faker';
-import { matchItems, SuggestionBox } from '../../src/components/SuggestionBox';
+import { SuggestionBox } from '../../src/components/SuggestionBox';
 import { CursorPosition } from '../../src/types';
 import { keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
@@ -14,60 +14,6 @@ const items = [
   { key: 4, element: <span key="4">z</span>, searchableText: 'z', value: 'z' },
 ];
 const props = { cursorPosition, items };
-
-describe('matchItems', () => {
-  test('query にあいまい一致する items のみが返る', () => {
-    expect(
-      matchItems('foo', [
-        // マッチする
-        { key: 0, element: '', searchableText: 'foo', value: '' },
-        { key: 1, element: '', searchableText: 'foo bar', value: '' },
-        { key: 2, element: '', searchableText: 'foo bar baz', value: '' },
-        { key: 3, element: '', searchableText: 'bar foo baz', value: '' },
-        { key: 4, element: '', searchableText: 'bar baz foo', value: '' },
-        { key: 5, element: '', searchableText: 'foo foo foo', value: '' },
-        { key: 6, element: '', searchableText: 'fo bar', value: '' },
-        { key: 7, element: '', searchableText: 'fo o bar', value: '' },
-        // マッチしない
-        { key: 8, element: '', searchableText: 'fee', value: '' },
-        { key: 9, element: '', searchableText: 'bar', value: '' },
-      ]),
-    ).toStrictEqual([
-      { key: 0, element: '', searchableText: 'foo', value: '' },
-      { key: 1, element: '', searchableText: 'foo bar', value: '' },
-      { key: 2, element: '', searchableText: 'foo bar baz', value: '' },
-      { key: 3, element: '', searchableText: 'bar foo baz', value: '' },
-      { key: 4, element: '', searchableText: 'bar baz foo', value: '' },
-      { key: 5, element: '', searchableText: 'foo foo foo', value: '' },
-      { key: 6, element: '', searchableText: 'fo bar', value: '' },
-      { key: 7, element: '', searchableText: 'fo o bar', value: '' },
-    ]);
-  });
-  test('マッチは capital-insensitive', () => {
-    expect(
-      matchItems('foo', [
-        { key: 0, element: '', searchableText: 'Foo', value: '' },
-        { key: 1, element: '', searchableText: 'FOO', value: '' },
-        { key: 2, element: '', searchableText: 'fOo', value: '' },
-      ]),
-    ).toStrictEqual([
-      { key: 0, element: '', searchableText: 'Foo', value: '' },
-      { key: 1, element: '', searchableText: 'FOO', value: '' },
-      { key: 2, element: '', searchableText: 'fOo', value: '' },
-    ]);
-    expect(
-      matchItems('FOO', [
-        { key: 0, element: '', searchableText: 'Foo', value: '' },
-        { key: 1, element: '', searchableText: 'FOO', value: '' },
-        { key: 2, element: '', searchableText: 'fOo', value: '' },
-      ]),
-    ).toStrictEqual([
-      { key: 0, element: '', searchableText: 'Foo', value: '' },
-      { key: 1, element: '', searchableText: 'FOO', value: '' },
-      { key: 2, element: '', searchableText: 'fOo', value: '' },
-    ]);
-  });
-});
 
 describe('SuggestionBox', () => {
   describe('open === false の時', () => {
