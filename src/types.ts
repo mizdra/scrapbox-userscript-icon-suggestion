@@ -31,4 +31,5 @@ export type Item<T> = {
   value: T;
 };
 
+/** SuggestionBox 内でアイテムのフィルタに利用される matcher の型 */
 export type Matcher<T> = (query: string, items: Item<T>[]) => Item<T>[];
