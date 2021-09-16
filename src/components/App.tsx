@@ -5,7 +5,7 @@ import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqBy } from '../lib/collection';
 import { hasDuplicatedPageTitle, Icon } from '../lib/icon';
 import { calcCursorPosition, insertText, scanIconsFromEditor } from '../lib/scrapbox';
-import { CursorPosition } from '../types';
+import { CursorPosition, Matcher } from '../types';
 import { SuggestionBox, Item } from './SuggestionBox';
 
 const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
@@ -39,6 +39,7 @@ export type AppProps = {
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
   defaultSuggestPresetIcons?: boolean;
+  matcher?: Matcher<Icon>;
 };
 
 export const App: FunctionComponent<AppProps> = ({
@@ -46,6 +47,7 @@ export const App: FunctionComponent<AppProps> = ({
   isSuggestionCloseKeyDown,
   presetIcons = [],
   defaultSuggestPresetIcons = false,
+  matcher,
 }) => {
   const { textInput, cursor, editor, layout, projectName } = useScrapbox();
 
@@ -117,6 +119,7 @@ export const App: FunctionComponent<AppProps> = ({
       emptyMessage="キーワードにマッチするアイコンがありません"
       items={items}
       cursorPosition={cursorPosition}
+      matcher={matcher}
       onSelect={handleSelect}
       onSelectNonexistent={handleSelectNonexistent}
       onClose={handleClose}
