@@ -2,7 +2,7 @@ import Asearch from 'asearch';
 import { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { JSXInternal } from 'preact/src/jsx';
-import { CursorPosition } from '../types';
+import { CursorPosition, Matcher } from '../types';
 import { PopupMenu } from './PopupMenu';
 import { QueryInput } from './SuggestionBox/QueryInput';
 
@@ -37,6 +37,7 @@ export type SuggestionBoxProps<T> = {
   emptyMessage?: string;
   items: Item<T>[];
   cursorPosition: CursorPosition;
+  matcher?: Matcher<T>;
   onSelect?: (item: Item<T>, query: string) => void;
   onSelectNonexistent?: (query: string) => void;
   onClose?: (query: string) => void;
@@ -48,13 +49,14 @@ export function SuggestionBox<T>({
   emptyMessage,
   items,
   cursorPosition,
+  matcher = matchItems,
   onSelect,
   onSelectNonexistent,
   onClose,
   isSuggestionCloseKeyDown,
 }: SuggestionBoxProps<T>) {
   const [query, setQuery] = useState('');
-  const matchedItems = useMemo(() => matchItems(query, items), [items, query]);
+  const matchedItems = useMemo(() => matcher(query, items), [items, matcher, query]);
   const matchedItemsForPopupMenu = useMemo(
     () =>
       matchedItems.map((item) => ({
