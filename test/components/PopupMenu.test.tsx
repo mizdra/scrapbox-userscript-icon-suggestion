@@ -34,26 +34,16 @@ describe('PopupMenu', () => {
       const { queryByTestId } = render(<PopupMenu open={false} {...props} />);
       expect(queryByTestId('popup-menu')).toBeNull();
     });
-    test('Enter や Escape を押下しても、onSelect / onSelectNonexistent / onClose は呼び出されない', async () => {
+    test('Enter や Escape を押下しても、onSelect / onClose は呼び出されない', async () => {
       const onSelect = jest.fn();
-      const onSelectNonexistent = jest.fn();
       const onClose = jest.fn();
-      render(
-        <PopupMenu
-          open={false}
-          {...props}
-          onSelect={onSelect}
-          onSelectNonexistent={onSelectNonexistent}
-          onClose={onClose}
-        />,
-      );
+      render(<PopupMenu open={false} {...props} onSelect={onSelect} onClose={onClose} />);
 
       await act(() => {
         fireEvent(document, keydownEnterEvent);
         fireEvent(document, keydownEscapeEvent);
       });
       expect(onSelect).toBeCalledTimes(0);
-      expect(onSelectNonexistent).toBeCalledTimes(0);
       expect(onClose).toBeCalledTimes(0);
     });
     test('いかなるキーを押下しても、PopupMenu 側でキャンセルされない', async () => {
@@ -81,15 +71,13 @@ describe('PopupMenu', () => {
         const { getByText } = render(<PopupMenu open {...props} items={items} emptyMessage={emptyMessage} />);
         expect(getByText(emptyMessage)).toBeVisible();
       });
-      test('Enter 押下で onSelectNonexistent が呼び出される', async () => {
-        const onSelectNonexistent = jest.fn();
-        render(<PopupMenu open {...props} items={items} onSelectNonexistent={onSelectNonexistent} />);
-
-        expect(onSelectNonexistent).toBeCalledTimes(0);
+      test('Enter を押下しても onSelect は呼び出されない', async () => {
+        const onSelect = jest.fn();
+        render(<PopupMenu open {...props} items={items} onSelect={onSelect} />);
         await act(() => {
           fireEvent(document, keydownEnterEvent);
         });
-        expect(onSelectNonexistent).toBeCalledTimes(1);
+        expect(onSelect).toBeCalledTimes(0);
       });
       test('Escape 押下で onClose が呼び出される', async () => {
         const onClose = jest.fn();

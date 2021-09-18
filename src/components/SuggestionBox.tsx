@@ -19,9 +19,9 @@ export type SuggestionBoxProps<T> = {
   items: Item<T>[];
   cursorPosition: CursorPosition;
   matcher?: Matcher<T>;
-  onSelect?: (item: Item<T>, query: string) => void;
-  onSelectNonexistent?: (query: string) => void;
-  onClose?: (query: string) => void;
+  onSelect?: (item: Item<T>) => void;
+  onClose?: () => void;
+  onInputQuery?: (query: string) => void;
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
 };
 
@@ -32,8 +32,8 @@ export function SuggestionBox<T>({
   cursorPosition,
   matcher = forwardPartialFuzzyMatcher,
   onSelect,
-  onSelectNonexistent,
   onClose,
+  onInputQuery,
   isSuggestionCloseKeyDown,
 }: SuggestionBoxProps<T>) {
   const [query, setQuery] = useState('');
@@ -53,16 +53,20 @@ export function SuggestionBox<T>({
 
   const handleSelect = useCallback(
     (_item: ComponentChild, index: number) => {
-      onSelect?.(matchedItems[index], query);
+      onSelect?.(matchedItems[index]);
     },
-    [matchedItems, onSelect, query],
+    [matchedItems, onSelect],
   );
-  const handleSelectNonexistent = useCallback(() => {
-    onSelectNonexistent?.(query);
-  }, [onSelectNonexistent, query]);
   const handleClose = useCallback(() => {
-    onClose?.(query);
-  }, [onClose, query]);
+    onClose?.();
+  }, [onClose]);
+  const handleInputQuery = useCallback(
+    (query: string) => {
+      setQuery(query);
+      onInputQuery?.(query);
+    },
+    [onInputQuery],
+  );
 
   return (
     <div>
@@ -72,12 +76,16 @@ export function SuggestionBox<T>({
         items={matchedItemsForPopupMenu}
         cursorPosition={cursorPosition}
         onSelect={handleSelect}
-        onSelectNonexistent={handleSelectNonexistent}
         onClose={handleClose}
         isPopupCloseKeyDown={isSuggestionCloseKeyDown}
       />
       {open && (
-        <QueryInput defaultQuery={query} cursorPosition={cursorPosition} onInput={setQuery} onBlur={handleClose} />
+        <QueryInput
+          defaultQuery={query}
+          cursorPosition={cursorPosition}
+          onInput={handleInputQuery}
+          onBlur={handleClose}
+        />
       )}
     </div>
   );

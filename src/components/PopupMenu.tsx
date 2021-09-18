@@ -5,6 +5,7 @@ import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { calcButtonContainerStyle, calcPopupMenuStyle, calcTriangleStyle } from '../lib/calc-style';
+import { isComposing } from '../lib/key';
 import { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
@@ -20,7 +21,6 @@ export type PopupMenuProps = {
   cursorPosition: CursorPosition;
   items: Item[];
   onSelect?: (item: Item, index: number) => void;
-  onSelectNonexistent?: () => void;
   onClose?: () => void;
   isPopupCloseKeyDown?: (e: KeyboardEvent) => boolean;
 };
@@ -31,7 +31,6 @@ export function PopupMenu({
   cursorPosition,
   items,
   onSelect,
-  onSelectNonexistent,
   onClose,
   isPopupCloseKeyDown = DEFAULT_IS_POPUP_CLOSE_KEY_DOWN,
 }: PopupMenuProps) {
@@ -52,7 +51,7 @@ export function PopupMenu({
       // 閉じている時は何もしない
       if (!open) return;
       // IMEによる変換中は何もしない
-      if (e.isComposing || (e.key === 'Enter' && e.which === 229)) return;
+      if (isComposing(e)) return;
 
       const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
       const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
@@ -65,7 +64,6 @@ export function PopupMenu({
       }
 
       if (isEmpty || selectedIndex === null) {
-        if (isEnter) onSelectNonexistent?.();
         if (isClose) onClose?.();
       } else {
         if (isTab) setSelectedIndex((selectedIndex + 1) % items.length);
@@ -74,7 +72,7 @@ export function PopupMenu({
         if (isClose) onClose?.();
       }
     },
-    [isEmpty, isPopupCloseKeyDown, items, onClose, onSelect, onSelectNonexistent, open, selectedIndex],
+    [isEmpty, isPopupCloseKeyDown, items, onClose, onSelect, open, selectedIndex],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 

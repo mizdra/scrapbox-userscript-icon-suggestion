@@ -48,15 +48,6 @@ describe('SuggestionBox', () => {
         const { getByText } = render(<SuggestionBox open {...props} items={[]} emptyMessage={emptyMessage} />);
         expect(getByText(emptyMessage)).toBeInTheDocument();
       });
-      test('Enter 押下で onSelectNonexistent が呼び出される', async () => {
-        const onSelectNonexistent = jest.fn();
-        render(<SuggestionBox open {...props} items={[]} onSelectNonexistent={onSelectNonexistent} />);
-        expect(onSelectNonexistent).toBeCalledTimes(0);
-        await act(() => {
-          fireEvent(document, keydownEnterEvent);
-        });
-        expect(onSelectNonexistent).toBeCalledTimes(1);
-      });
     });
     describe('ポップアップに表示されるアイテムが空でない時', () => {
       test('QueryInput に文字を入力するとアイテムがフィルタされる', () => {

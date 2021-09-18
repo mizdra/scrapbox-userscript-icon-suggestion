@@ -53,6 +53,10 @@ type Options = {
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
   /** @deprecated */
   isSuggestionReloadKeyDown?: (e: KeyboardEvent) => boolean;
+  /**
+   * クエリを `[query.icon]` として挿入するかどうかを判定するコールバック。キーが押下される度に呼び出される。
+   * */
+  isInsertQueryKeyDown?: (e: KeyboardEvent) => boolean;
   /** suggest に含めたいプリセットアイコンのリスト */
   presetIcons?: PresetIconsItem[];
   /**
@@ -93,6 +97,7 @@ export async function registerIconSuggestion(options?: Options) {
       <App
         isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown}
         isSuggestionCloseKeyDown={options?.isSuggestionCloseKeyDown}
+        isInsertQueryKeyDown={options?.isInsertQueryKeyDown}
         presetIcons={presetIcons}
         defaultSuggestPresetIcons={options?.defaultSuggestPresetIcons}
         matcher={options?.matcher}

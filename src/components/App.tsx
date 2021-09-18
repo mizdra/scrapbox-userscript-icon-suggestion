@@ -4,12 +4,19 @@ import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqBy } from '../lib/collection';
 import { hasDuplicatedPageTitle, Icon } from '../lib/icon';
+import { isComposing } from '../lib/key';
 import { calcCursorPosition, insertText, scanIconsFromEditor } from '../lib/scrapbox';
 import { CursorPosition, Matcher } from '../types';
 import { SuggestionBox, Item } from './SuggestionBox';
 
 const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
+};
+
+const DEFAULT_IS_INSERT_QUERY_KEY_DOWN = (e: KeyboardEvent) => {
+  if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && e.altKey && !e.metaKey) return true;
+  if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey && e.metaKey) return true;
+  return false;
 };
 
 function toItem(icon: Icon, icons: Icon[]): Item<Icon> {
@@ -37,6 +44,7 @@ function toItem(icon: Icon, icons: Icon[]): Item<Icon> {
 export type AppProps = {
   isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
+  isInsertQueryKeyDown?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
   defaultSuggestPresetIcons?: boolean;
   matcher?: Matcher<Icon>;
@@ -45,6 +53,7 @@ export type AppProps = {
 export const App: FunctionComponent<AppProps> = ({
   isSuggestionOpenKeyDown = DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN,
   isSuggestionCloseKeyDown,
+  isInsertQueryKeyDown = DEFAULT_IS_INSERT_QUERY_KEY_DOWN,
   presetIcons = [],
   defaultSuggestPresetIcons = false,
   matcher,
@@ -61,6 +70,7 @@ export const App: FunctionComponent<AppProps> = ({
 
     return suggestedIcons.map((icon) => toItem(icon, icons));
   }, [suggestPresetIcons, editorIcons, presetIcons, projectName]);
+  const [query, setQuery] = useState('');
 
   const handleSelect = useCallback(
     (item: Item<Icon>) => {
@@ -70,23 +80,14 @@ export const App: FunctionComponent<AppProps> = ({
     [projectName, textInput],
   );
 
-  const handleSelectNonexistent = useCallback(
-    (query: string) => {
-      setOpen(false);
-      insertText(textInput, `[${query}.icon]`);
-    },
-    [textInput],
-  );
-
   const handleClose = useCallback(() => {
     setOpen(false);
     textInput.focus();
   }, [textInput]);
 
-  const handleKeydown = useCallback(
+  const handleSuggestionOpenKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
-      if (!isSuggestionOpenKeyDown(e)) return;
       e.preventDefault();
       e.stopPropagation();
 
@@ -109,7 +110,31 @@ export const App: FunctionComponent<AppProps> = ({
         setSuggestPresetIcons((suggestPresetIcons) => !suggestPresetIcons);
       }
     },
-    [cursor, defaultSuggestPresetIcons, editor, isSuggestionOpenKeyDown, open, layout, projectName, textInput],
+    [cursor, defaultSuggestPresetIcons, editor, open, layout, projectName, textInput],
+  );
+
+  const handleInsertQueryKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
+      if (!open) return; // ポップアップが閉じていたら無視する
+      e.preventDefault();
+      e.stopPropagation();
+      setOpen(false);
+      insertText(textInput, `[${query}.icon]`);
+    },
+    [layout, open, textInput, query],
+  );
+
+  const handleKeydown = useCallback(
+    (e: KeyboardEvent) => {
+      if (isComposing(e)) return; // IMEによる変換中は何もしない
+      if (isSuggestionOpenKeyDown(e)) {
+        handleSuggestionOpenKeyDown(e);
+      } else if (isInsertQueryKeyDown(e)) {
+        handleInsertQueryKeyDown(e);
+      }
+    },
+    [isSuggestionOpenKeyDown, isInsertQueryKeyDown, handleSuggestionOpenKeyDown, handleInsertQueryKeyDown],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
@@ -121,8 +146,8 @@ export const App: FunctionComponent<AppProps> = ({
       cursorPosition={cursorPosition}
       matcher={matcher}
       onSelect={handleSelect}
-      onSelectNonexistent={handleSelectNonexistent}
       onClose={handleClose}
+      onInputQuery={setQuery}
       isSuggestionCloseKeyDown={isSuggestionCloseKeyDown}
     />
   );

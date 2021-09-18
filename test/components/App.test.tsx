@@ -9,7 +9,13 @@ import { ScrapboxContext } from '../../src/contexts/ScrapboxContext';
 import { Icon } from '../../src/lib/icon';
 import { forwardMatcher } from '../../src/lib/matcher';
 import { createEditor, createScrapboxAPI } from '../helpers/html';
-import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
+import {
+  keydownAEvent,
+  keydownAltEnterEvent,
+  keydownCtrlLEvent,
+  keydownEnterEvent,
+  keydownEscapeEvent,
+} from '../helpers/key';
 
 jest.mock('../../src/lib/scrapbox', () => {
   return {
@@ -87,16 +93,6 @@ describe('App', () => {
       expect(queryByTestId('popup-menu')).not.toBeInTheDocument();
     });
     describe('Enter を押下した時', () => {
-      test('アイテムが1つもなければ QueryInput に入力した pagePath のアイコンが挿入される', async () => {
-        const { getByTestId } = await renderApp({ presetIcons: [] });
-        const queryInput = getByTestId('query-input');
-        userEvent.type(queryInput, 'foo');
-        expect(queryInput).toHaveValue('foo');
-        await act(() => {
-          fireEvent(document, keydownEnterEvent);
-        });
-        expect(mockInsertText).toBeCalledWith(expect.anything(), '[foo.icon]');
-      });
       test('アイテムがあれば選択中のアイコンが挿入される', async () => {
         const { getByTestId } = await renderApp({});
         const buttonContainer = getByTestId('button-container');
@@ -120,6 +116,16 @@ describe('App', () => {
         fireEvent(document, keydownCtrlLEvent);
       });
       expect(buttonContainer.childElementCount).toEqual(3); // a, b, cccc の 3アイコンが表示される
+    });
+    test('isInsertQueryKeyDown が真になるようなキーを押下したら、`[query.icon] が挿入される', async () => {
+      const { getByTestId } = await renderApp({});
+      const queryInput = getByTestId('query-input');
+
+      userEvent.type(queryInput, 'mizdra');
+      await act(() => {
+        fireEvent(document, keydownAltEnterEvent);
+      });
+      expect(mockInsertText).toBeCalledWith(expect.anything(), '[mizdra.icon]');
     });
     test('defaultSuggestPresetIcons が真なら最初からプリセットアイコンが suggest される', async () => {
       const { getByTestId } = await renderApp({ defaultSuggestPresetIcons: true });
