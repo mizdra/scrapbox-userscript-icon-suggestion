@@ -87,16 +87,6 @@ describe('App', () => {
       expect(queryByTestId('popup-menu')).not.toBeInTheDocument();
     });
     describe('Enter を押下した時', () => {
-      test('アイテムが1つもなければ QueryInput に入力した pagePath のアイコンが挿入される', async () => {
-        const { getByTestId } = await renderApp({ presetIcons: [] });
-        const queryInput = getByTestId('query-input');
-        userEvent.type(queryInput, 'foo');
-        expect(queryInput).toHaveValue('foo');
-        await act(() => {
-          fireEvent(document, keydownEnterEvent);
-        });
-        expect(mockInsertText).toBeCalledWith(expect.anything(), '[foo.icon]');
-      });
       test('アイテムがあれば選択中のアイコンが挿入される', async () => {
         const { getByTestId } = await renderApp({});
         const buttonContainer = getByTestId('button-container');
