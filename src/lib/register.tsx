@@ -3,7 +3,8 @@ import { App } from '../components/App';
 import { Warning } from '../components/Warning';
 import { evaluatePresetIconItemsToIcons } from '../lib/options';
 import { getEditor } from '../lib/scrapbox';
-import { PresetIconsItem } from '../types';
+import { Matcher, PresetIconsItem } from '../types';
+import { Icon } from './icon';
 
 function IsSuggestionReloadKeyDownWarning() {
   return (
@@ -60,6 +61,10 @@ type Options = {
    * @default `false`
    * */
   defaultSuggestPresetIcons?: boolean;
+  /**
+   * suggest されたアイコンを絞り込むために利用される matcher。
+   */
+  matcher?: Matcher<Icon>;
   scrapbox?: Scrapbox;
   editor?: HTMLElement;
 };
@@ -90,6 +95,7 @@ export async function registerIconSuggestion(options?: Options) {
         isSuggestionCloseKeyDown={options?.isSuggestionCloseKeyDown}
         presetIcons={presetIcons}
         defaultSuggestPresetIcons={options?.defaultSuggestPresetIcons}
+        matcher={options?.matcher}
       />,
       container,
     );
