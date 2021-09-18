@@ -2,6 +2,7 @@ import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { datatype } from 'faker';
 import { SuggestionBox } from '../../src/components/SuggestionBox';
+import { startsWithMatcher } from '../../src/lib/matcher';
 import { CursorPosition } from '../../src/types';
 import { keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
@@ -13,7 +14,8 @@ const items = [
   { key: 3, element: <span key="3">abc</span>, searchableText: 'abc', value: 'abc' },
   { key: 4, element: <span key="4">z</span>, searchableText: 'z', value: 'z' },
 ];
-const props = { cursorPosition, items };
+const matcher = startsWithMatcher;
+const props = { cursorPosition, items, matcher };
 
 describe('SuggestionBox', () => {
   describe('open === false の時', () => {
@@ -64,13 +66,13 @@ describe('SuggestionBox', () => {
 
         expect(buttonContainer.childElementCount).toEqual(4);
         userEvent.type(queryInput, 'a');
-        expect(buttonContainer.childElementCount).toEqual(4);
-        userEvent.type(queryInput, 'b');
         expect(buttonContainer.childElementCount).toEqual(3);
+        userEvent.type(queryInput, 'b');
+        expect(buttonContainer.childElementCount).toEqual(2);
         userEvent.type(queryInput, 'c');
-        expect(buttonContainer.childElementCount).toEqual(2);
+        expect(buttonContainer.childElementCount).toEqual(1);
         userEvent.type(queryInput, 'd');
-        expect(buttonContainer.childElementCount).toEqual(2);
+        expect(buttonContainer.childElementCount).toEqual(0);
       });
       test('Enter 押下で onSelect が呼び出される', async () => {
         const onSelect = jest.fn();
