@@ -68,6 +68,7 @@ export const App: FunctionComponent<AppProps> = ({
 
     return suggestedIcons.map((icon) => toItem(icon, icons));
   }, [suggestPresetIcons, editorIcons, presetIcons, projectName]);
+  const [query, setQuery] = useState('');
 
   const handleSelect = useCallback(
     (item: Item<Icon>) => {
@@ -125,10 +126,9 @@ export const App: FunctionComponent<AppProps> = ({
       e.preventDefault();
       e.stopPropagation();
       setOpen(false);
-      // TODO: 真のクエリを取ってきて挿入する
-      insertText(textInput, `[query.icon]`);
+      insertText(textInput, `[${query}.icon]`);
     },
-    [open, layout, textInput],
+    [layout, open, textInput, query],
   );
 
   const handleKeydown = useCallback(
@@ -154,6 +154,7 @@ export const App: FunctionComponent<AppProps> = ({
       onSelect={handleSelect}
       onSelectNonexistent={handleSelectNonexistent}
       onClose={handleClose}
+      onInputQuery={setQuery}
       isSuggestionCloseKeyDown={isSuggestionCloseKeyDown}
     />
   );

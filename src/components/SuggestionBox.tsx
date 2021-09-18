@@ -22,6 +22,7 @@ export type SuggestionBoxProps<T> = {
   onSelect?: (item: Item<T>, query: string) => void;
   onSelectNonexistent?: (query: string) => void;
   onClose?: (query: string) => void;
+  onInputQuery?: (query: string) => void;
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
 };
 
@@ -34,6 +35,7 @@ export function SuggestionBox<T>({
   onSelect,
   onSelectNonexistent,
   onClose,
+  onInputQuery,
   isSuggestionCloseKeyDown,
 }: SuggestionBoxProps<T>) {
   const [query, setQuery] = useState('');
@@ -63,6 +65,13 @@ export function SuggestionBox<T>({
   const handleClose = useCallback(() => {
     onClose?.(query);
   }, [onClose, query]);
+  const handleInputQuery = useCallback(
+    (query: string) => {
+      setQuery(query);
+      onInputQuery?.(query);
+    },
+    [onInputQuery],
+  );
 
   return (
     <div>
@@ -77,7 +86,12 @@ export function SuggestionBox<T>({
         isPopupCloseKeyDown={isSuggestionCloseKeyDown}
       />
       {open && (
-        <QueryInput defaultQuery={query} cursorPosition={cursorPosition} onInput={setQuery} onBlur={handleClose} />
+        <QueryInput
+          defaultQuery={query}
+          cursorPosition={cursorPosition}
+          onInput={handleInputQuery}
+          onBlur={handleClose}
+        />
       )}
     </div>
   );
