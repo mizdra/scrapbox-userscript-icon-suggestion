@@ -7,10 +7,11 @@ import { uniqBy } from './collection';
  * 曖昧検索で `items` をフィルタしつつ、編集距離の昇順で並べ替えて返す。
  */
 export function fuzzyMatcher<T>(query: string, items: Item<T>[]): Item<T>[] {
-  const maxAambig = Math.min(Math.floor(query.length / 4) + 1, 3);
+  // query の長さが 1〜3文字までは 0 文字まで、4〜7文字までは 1 文字まで、
+  // 8〜11文字までは 2 文字まで、12文字以降は 3 文字まで誤字を許容する
+  const maxAambig = Math.min(Math.floor(query.length / 4), 3);
   const match = Asearch(` ${query} `); // 部分一致できるように、両端をスペースで囲む
-  // あいまい度の少ない項目から順に並べる
-  // 重複は除く
+  // あいまい度の少ない項目から順に並べる (ただし重複は除く)
   const pushedItems: Set<Item<T>> = new Set();
   const result: Item<T>[] = [];
   for (let ambig = 0; ambig <= maxAambig; ambig++) {
