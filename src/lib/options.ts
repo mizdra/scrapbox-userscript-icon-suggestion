@@ -2,8 +2,6 @@ import { PresetIconsItem } from '../types';
 import { Icon } from './icon';
 
 async function evaluatePresetIconItemToPagePaths(presetIconItem: PresetIconsItem): Promise<Icon[]> {
-  // TODO: 十分時間が経過したら例外を投げるのをやめる
-  if (typeof presetIconItem === 'string') throw new Error('`string` type is deprecated.');
   if (presetIconItem instanceof Icon) return [presetIconItem];
   if (Array.isArray(presetIconItem)) {
     const promises = presetIconItem.map(evaluatePresetIconItemToPagePaths);

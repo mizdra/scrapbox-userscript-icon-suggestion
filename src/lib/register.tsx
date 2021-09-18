@@ -1,44 +1,9 @@
 import { render } from 'preact';
 import { App } from '../components/App';
-import { Warning } from '../components/Warning';
 import { evaluatePresetIconItemsToIcons } from '../lib/options';
 import { getEditor } from '../lib/scrapbox';
 import { Matcher, PresetIconsItem } from '../types';
 import { Icon } from './icon';
-
-function IsSuggestionReloadKeyDownWarning() {
-  return (
-    <Warning>
-      <p>
-        icon-suggestion
-        のアップデートにより、ポップアップを開く度に、その時点でページに埋め込まれているアイコンがアイコンリストに表示されるようになりました。
-        それに伴い、ユーザ様がお使いの <code>isSuggestionReloadKeyDown</code>{' '}
-        オプションが廃止されました。今後当該オプションはご利用頂けませんので、 ご利用の UserScript
-        から当該オプションを削除して下さい。この警告は当該オプションを削除するまで表示され続けます。
-      </p>
-      <p>
-        アップデートの詳細については <a href="https://scrapbox.io/mizdra/icon-suggestion">icon-suggestion</a>{' '}
-        を参照して下さい。
-      </p>
-    </Warning>
-  );
-}
-
-function PresetIconsWarning() {
-  return (
-    <Warning>
-      <p>
-        icon-suggestion のアップデートにより、<code>presetIcons</code> オプションの要素に <code>{`'done'`}</code>{' '}
-        形式の値が渡せなくなりました。 今後は <code>{`new Icon('your-project-name', 'done')`}</code>{' '}
-        形式の値をご利用下さい。この警告は形式の値の利用がされなくなるまで表示され続けます。
-      </p>
-      <p>
-        アップデートの詳細については <a href="https://scrapbox.io/mizdra/icon-suggestion">icon-suggestion</a>{' '}
-        を参照して下さい。
-      </p>
-    </Warning>
-  );
-}
 
 type Options = {
   /**
@@ -51,8 +16,6 @@ type Options = {
    * `true` ならポップアップを閉じるキーだと判定される。
    * */
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
-  /** @deprecated */
-  isSuggestionReloadKeyDown?: (e: KeyboardEvent) => boolean;
   /**
    * クエリを `[query.icon]` として挿入するかどうかを判定するコールバック。キーが押下される度に呼び出される。
    * */
@@ -83,32 +46,17 @@ export async function registerIconSuggestion(options?: Options) {
   const warningMessageContainer = document.createElement('div');
   document.querySelector('.app')?.prepend(warningMessageContainer);
 
-  // 廃止されたオプションを使用している場合は警告する
-  // TODO: 十分時間が経過したら警告をやめる
-  if (options?.isSuggestionReloadKeyDown) {
-    render(<IsSuggestionReloadKeyDownWarning />, warningMessageContainer);
-    return;
-  }
+  const presetIcons = options?.presetIcons ? await evaluatePresetIconItemsToIcons(options.presetIcons) : undefined;
 
-  try {
-    const presetIcons = options?.presetIcons ? await evaluatePresetIconItemsToIcons(options.presetIcons) : undefined;
-
-    render(
-      <App
-        isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown}
-        isSuggestionCloseKeyDown={options?.isSuggestionCloseKeyDown}
-        isInsertQueryKeyDown={options?.isInsertQueryKeyDown}
-        presetIcons={presetIcons}
-        defaultSuggestPresetIcons={options?.defaultSuggestPresetIcons}
-        matcher={options?.matcher}
-      />,
-      container,
-    );
-  } catch (e: unknown) {
-    if (e instanceof Error && e.message === '`string` type is deprecated.') {
-      render(<PresetIconsWarning />, warningMessageContainer);
-    } else {
-      throw e;
-    }
-  }
+  render(
+    <App
+      isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown}
+      isSuggestionCloseKeyDown={options?.isSuggestionCloseKeyDown}
+      isInsertQueryKeyDown={options?.isInsertQueryKeyDown}
+      presetIcons={presetIcons}
+      defaultSuggestPresetIcons={options?.defaultSuggestPresetIcons}
+      matcher={options?.matcher}
+    />,
+    container,
+  );
 }
