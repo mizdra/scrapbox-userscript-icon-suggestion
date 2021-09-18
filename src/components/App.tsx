@@ -14,7 +14,9 @@ const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
 };
 
 const DEFAULT_IS_INSERT_QUERY_KEY_DOWN = (e: KeyboardEvent) => {
-  return e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && e.altKey && !e.metaKey;
+  if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && e.altKey && !e.metaKey) return true;
+  if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey && e.metaKey) return true;
+  return false;
 };
 
 function toItem(icon: Icon, icons: Icon[]): Item<Icon> {
