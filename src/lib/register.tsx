@@ -90,25 +90,17 @@ export async function registerIconSuggestion(options?: Options) {
     return;
   }
 
-  try {
-    const presetIcons = options?.presetIcons ? await evaluatePresetIconItemsToIcons(options.presetIcons) : undefined;
+  const presetIcons = options?.presetIcons ? await evaluatePresetIconItemsToIcons(options.presetIcons) : undefined;
 
-    render(
-      <App
-        isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown}
-        isSuggestionCloseKeyDown={options?.isSuggestionCloseKeyDown}
-        isInsertQueryKeyDown={options?.isInsertQueryKeyDown}
-        presetIcons={presetIcons}
-        defaultSuggestPresetIcons={options?.defaultSuggestPresetIcons}
-        matcher={options?.matcher}
-      />,
-      container,
-    );
-  } catch (e: unknown) {
-    if (e instanceof Error && e.message === '`string` type is deprecated.') {
-      render(<PresetIconsWarning />, warningMessageContainer);
-    } else {
-      throw e;
-    }
-  }
+  render(
+    <App
+      isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown}
+      isSuggestionCloseKeyDown={options?.isSuggestionCloseKeyDown}
+      isInsertQueryKeyDown={options?.isInsertQueryKeyDown}
+      presetIcons={presetIcons}
+      defaultSuggestPresetIcons={options?.defaultSuggestPresetIcons}
+      matcher={options?.matcher}
+    />,
+    container,
+  );
 }
