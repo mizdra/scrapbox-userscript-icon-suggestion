@@ -1,7 +1,7 @@
 import { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { JSXInternal } from 'preact/src/jsx';
-import { combinedMatcher } from '../lib/matcher';
+import { forwardPartialFuzzyMatcher } from '../lib/matcher';
 import { CursorPosition, Matcher } from '../types';
 import { PopupMenu } from './PopupMenu';
 import { QueryInput } from './SuggestionBox/QueryInput';
@@ -30,7 +30,7 @@ export function SuggestionBox<T>({
   emptyMessage,
   items,
   cursorPosition,
-  matcher = combinedMatcher,
+  matcher = forwardPartialFuzzyMatcher,
   onSelect,
   onSelectNonexistent,
   onClose,

@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import { App as NativeApp, AppProps } from '../../src/components/App';
 import { ScrapboxContext } from '../../src/contexts/ScrapboxContext';
 import { Icon } from '../../src/lib/icon';
-import { startsWithMatcher } from '../../src/lib/matcher';
+import { forwardMatcher } from '../../src/lib/matcher';
 import { createEditor, createScrapboxAPI } from '../helpers/html';
 import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
@@ -34,7 +34,7 @@ function App(props: AppProps & Options) {
     ],
   });
   const scrapbox = createScrapboxAPI();
-  const matcher = startsWithMatcher;
+  const matcher = forwardMatcher;
   return (
     <ScrapboxContext.Provider value={{ editor, scrapbox }}>
       <NativeApp presetIcons={presetIcons} matcher={matcher} {...props} />
