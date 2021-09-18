@@ -62,7 +62,7 @@ type Options = {
   /**
    * ポップアップを開いた直後にプリセットアイコンを候補として表示するか。
    * `true` なら表示、`false` なら非表示。
-   * @default `false`
+   * @default true
    * */
   defaultSuggestPresetIcons?: boolean;
   /**

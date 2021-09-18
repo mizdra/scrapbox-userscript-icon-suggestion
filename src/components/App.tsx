@@ -55,7 +55,7 @@ export const App: FunctionComponent<AppProps> = ({
   isSuggestionCloseKeyDown,
   isInsertQueryKeyDown = DEFAULT_IS_INSERT_QUERY_KEY_DOWN,
   presetIcons = [],
-  defaultSuggestPresetIcons = false,
+  defaultSuggestPresetIcons = true,
   matcher,
 }) => {
   const { textInput, cursor, editor, layout, projectName } = useScrapbox();
