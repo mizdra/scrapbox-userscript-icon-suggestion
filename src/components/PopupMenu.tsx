@@ -5,6 +5,7 @@ import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { calcButtonContainerStyle, calcPopupMenuStyle, calcTriangleStyle } from '../lib/calc-style';
+import { isComposing } from '../lib/key';
 import { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
@@ -52,7 +53,7 @@ export function PopupMenu({
       // 閉じている時は何もしない
       if (!open) return;
       // IMEによる変換中は何もしない
-      if (e.isComposing || (e.key === 'Enter' && e.which === 229)) return;
+      if (isComposing(e)) return;
 
       const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
       const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;

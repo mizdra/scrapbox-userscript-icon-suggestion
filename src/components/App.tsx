@@ -4,6 +4,7 @@ import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqBy } from '../lib/collection';
 import { hasDuplicatedPageTitle, Icon } from '../lib/icon';
+import { isComposing } from '../lib/key';
 import { calcCursorPosition, insertText, scanIconsFromEditor } from '../lib/scrapbox';
 import { CursorPosition, Matcher } from '../types';
 import { SuggestionBox, Item } from './SuggestionBox';
@@ -132,6 +133,7 @@ export const App: FunctionComponent<AppProps> = ({
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
+      if (isComposing(e)) return; // IMEによる変換中は何もしない
       if (isSuggestionOpenKeyDown(e)) {
         handleSuggestionOpenKeyDown(e);
       } else if (isInsertQueryKeyDown(e)) {
