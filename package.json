@@ -1,6 +1,6 @@
 {
   "name": "scrapbox-userscript-icon-suggestion",
-  "version": "0.0.0",
+  "version": "4.0.0",
   "description": "Scrapbox's UserScript to suggest and insert icons.",
   "main": "index.js",
   "scripts": {
