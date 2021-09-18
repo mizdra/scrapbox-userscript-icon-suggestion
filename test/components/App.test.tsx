@@ -43,7 +43,7 @@ function App(props: AppProps & Options) {
   const matcher = forwardMatcher;
   return (
     <ScrapboxContext.Provider value={{ editor, scrapbox }}>
-      <NativeApp presetIcons={presetIcons} matcher={matcher} {...props} />
+      <NativeApp presetIcons={presetIcons} defaultSuggestPresetIcons={false} matcher={matcher} {...props} />
     </ScrapboxContext.Provider>
   );
 }
