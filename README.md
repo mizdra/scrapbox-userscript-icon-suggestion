@@ -13,7 +13,7 @@ $ yarn install
 $ yarn run build
 ```
 
-### コマンドリスト
+### npm-scripts (for contributor)
 
 - `yarn run build`: JS のビルドを実行
 - `yarn run lint`: lint や format を実行
