@@ -19,9 +19,9 @@ export type SuggestionBoxProps<T> = {
   items: Item<T>[];
   cursorPosition: CursorPosition;
   matcher?: Matcher<T>;
-  onSelect?: (item: Item<T>, query: string) => void;
-  onSelectNonexistent?: (query: string) => void;
-  onClose?: (query: string) => void;
+  onSelect?: (item: Item<T>) => void;
+  onSelectNonexistent?: () => void;
+  onClose?: () => void;
   onInputQuery?: (query: string) => void;
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
 };
@@ -55,16 +55,16 @@ export function SuggestionBox<T>({
 
   const handleSelect = useCallback(
     (_item: ComponentChild, index: number) => {
-      onSelect?.(matchedItems[index], query);
+      onSelect?.(matchedItems[index]);
     },
-    [matchedItems, onSelect, query],
+    [matchedItems, onSelect],
   );
   const handleSelectNonexistent = useCallback(() => {
-    onSelectNonexistent?.(query);
-  }, [onSelectNonexistent, query]);
+    onSelectNonexistent?.();
+  }, [onSelectNonexistent]);
   const handleClose = useCallback(() => {
-    onClose?.(query);
-  }, [onClose, query]);
+    onClose?.();
+  }, [onClose]);
   const handleInputQuery = useCallback(
     (query: string) => {
       setQuery(query);

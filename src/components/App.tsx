@@ -78,13 +78,10 @@ export const App: FunctionComponent<AppProps> = ({
     [projectName, textInput],
   );
 
-  const handleSelectNonexistent = useCallback(
-    (query: string) => {
-      setOpen(false);
-      insertText(textInput, `[${query}.icon]`);
-    },
-    [textInput],
-  );
+  const handleSelectNonexistent = useCallback(() => {
+    setOpen(false);
+    insertText(textInput, `[${query}.icon]`);
+  }, [query, textInput]);
 
   const handleClose = useCallback(() => {
     setOpen(false);
