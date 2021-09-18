@@ -83,10 +83,9 @@ export const App: FunctionComponent<AppProps> = ({
     textInput.focus();
   }, [textInput]);
 
-  const handleKeydown = useCallback(
+  const handleSuggestionOpenKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
-      if (!isSuggestionOpenKeyDown(e)) return;
       e.preventDefault();
       e.stopPropagation();
 
@@ -109,7 +108,16 @@ export const App: FunctionComponent<AppProps> = ({
         setSuggestPresetIcons((suggestPresetIcons) => !suggestPresetIcons);
       }
     },
-    [cursor, defaultSuggestPresetIcons, editor, isSuggestionOpenKeyDown, open, layout, projectName, textInput],
+    [cursor, defaultSuggestPresetIcons, editor, open, layout, projectName, textInput],
+  );
+
+  const handleKeydown = useCallback(
+    (e: KeyboardEvent) => {
+      if (isSuggestionOpenKeyDown(e)) {
+        handleSuggestionOpenKeyDown(e);
+      }
+    },
+    [isSuggestionOpenKeyDown, handleSuggestionOpenKeyDown],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
