@@ -1,44 +1,9 @@
 import { render } from 'preact';
 import { App } from '../components/App';
-import { Warning } from '../components/Warning';
 import { evaluatePresetIconItemsToIcons } from '../lib/options';
 import { getEditor } from '../lib/scrapbox';
 import { Matcher, PresetIconsItem } from '../types';
 import { Icon } from './icon';
-
-function IsSuggestionReloadKeyDownWarning() {
-  return (
-    <Warning>
-      <p>
-        icon-suggestion
-        のアップデートにより、ポップアップを開く度に、その時点でページに埋め込まれているアイコンがアイコンリストに表示されるようになりました。
-        それに伴い、ユーザ様がお使いの <code>isSuggestionReloadKeyDown</code>{' '}
-        オプションが廃止されました。今後当該オプションはご利用頂けませんので、 ご利用の UserScript
-        から当該オプションを削除して下さい。この警告は当該オプションを削除するまで表示され続けます。
-      </p>
-      <p>
-        アップデートの詳細については <a href="https://scrapbox.io/mizdra/icon-suggestion">icon-suggestion</a>{' '}
-        を参照して下さい。
-      </p>
-    </Warning>
-  );
-}
-
-function PresetIconsWarning() {
-  return (
-    <Warning>
-      <p>
-        icon-suggestion のアップデートにより、<code>presetIcons</code> オプションの要素に <code>{`'done'`}</code>{' '}
-        形式の値が渡せなくなりました。 今後は <code>{`new Icon('your-project-name', 'done')`}</code>{' '}
-        形式の値をご利用下さい。この警告は形式の値の利用がされなくなるまで表示され続けます。
-      </p>
-      <p>
-        アップデートの詳細については <a href="https://scrapbox.io/mizdra/icon-suggestion">icon-suggestion</a>{' '}
-        を参照して下さい。
-      </p>
-    </Warning>
-  );
-}
 
 type Options = {
   /**
