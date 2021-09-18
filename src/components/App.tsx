@@ -78,11 +78,6 @@ export const App: FunctionComponent<AppProps> = ({
     [projectName, textInput],
   );
 
-  const handleSelectNonexistent = useCallback(() => {
-    setOpen(false);
-    insertText(textInput, `[${query}.icon]`);
-  }, [query, textInput]);
-
   const handleClose = useCallback(() => {
     setOpen(false);
     textInput.focus();
@@ -149,7 +144,6 @@ export const App: FunctionComponent<AppProps> = ({
       cursorPosition={cursorPosition}
       matcher={matcher}
       onSelect={handleSelect}
-      onSelectNonexistent={handleSelectNonexistent}
       onClose={handleClose}
       onInputQuery={setQuery}
       isSuggestionCloseKeyDown={isSuggestionCloseKeyDown}

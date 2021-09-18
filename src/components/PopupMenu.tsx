@@ -21,7 +21,6 @@ export type PopupMenuProps = {
   cursorPosition: CursorPosition;
   items: Item[];
   onSelect?: (item: Item, index: number) => void;
-  onSelectNonexistent?: () => void;
   onClose?: () => void;
   isPopupCloseKeyDown?: (e: KeyboardEvent) => boolean;
 };
@@ -32,7 +31,6 @@ export function PopupMenu({
   cursorPosition,
   items,
   onSelect,
-  onSelectNonexistent,
   onClose,
   isPopupCloseKeyDown = DEFAULT_IS_POPUP_CLOSE_KEY_DOWN,
 }: PopupMenuProps) {
@@ -66,7 +64,6 @@ export function PopupMenu({
       }
 
       if (isEmpty || selectedIndex === null) {
-        if (isEnter) onSelectNonexistent?.();
         if (isClose) onClose?.();
       } else {
         if (isTab) setSelectedIndex((selectedIndex + 1) % items.length);
@@ -75,7 +72,7 @@ export function PopupMenu({
         if (isClose) onClose?.();
       }
     },
-    [isEmpty, isPopupCloseKeyDown, items, onClose, onSelect, onSelectNonexistent, open, selectedIndex],
+    [isEmpty, isPopupCloseKeyDown, items, onClose, onSelect, open, selectedIndex],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
