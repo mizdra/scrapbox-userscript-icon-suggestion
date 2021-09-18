@@ -22,11 +22,16 @@ $ yarn run build
 ## リリース方法 (for maintainer)
 
 ```console
-$ yarn install
-$ yarn run build | cat dist/index.js | pbcopy
+$ git switch master
+$ git pull
+$ yarn version
+$ rm -rf dist && yarn run build
 
+$ cat dist/index.js | pbcopy
 $ open https://scrapbox.io/customize/icon-suggestion
 $ # ソースコードコーナーにクリップボードの中身をペースト
+
+$ git push --follow-tags
 ```
 
 ## 著作権情報
