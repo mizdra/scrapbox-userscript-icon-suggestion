@@ -12,6 +12,10 @@ const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
 };
 
+const DEFAULT_IS_INSERT_QUERY_KEY_DOWN = (e: KeyboardEvent) => {
+  return e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && e.altKey && !e.metaKey;
+};
+
 function toItem(icon: Icon, icons: Icon[]): Item<Icon> {
   // 基本的にプロジェクト名は省略して表示。
   // 同名のページタイトルのアイコンが他にある場合は、プロジェクト名も括弧付きで表示。
@@ -37,6 +41,7 @@ function toItem(icon: Icon, icons: Icon[]): Item<Icon> {
 export type AppProps = {
   isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
+  isInsertQueryKeyDown?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
   defaultSuggestPresetIcons?: boolean;
   matcher?: Matcher<Icon>;
@@ -45,6 +50,7 @@ export type AppProps = {
 export const App: FunctionComponent<AppProps> = ({
   isSuggestionOpenKeyDown = DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN,
   isSuggestionCloseKeyDown,
+  isInsertQueryKeyDown = DEFAULT_IS_INSERT_QUERY_KEY_DOWN,
   presetIcons = [],
   defaultSuggestPresetIcons = false,
   matcher,
@@ -111,13 +117,28 @@ export const App: FunctionComponent<AppProps> = ({
     [cursor, defaultSuggestPresetIcons, editor, open, layout, projectName, textInput],
   );
 
+  const handleInsertQueryKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
+      if (!open) return; // ポップアップが閉じていたら無視する
+      e.preventDefault();
+      e.stopPropagation();
+      setOpen(false);
+      // TODO: 真のクエリを取ってきて挿入する
+      insertText(textInput, `[query.icon]`);
+    },
+    [open, layout, textInput],
+  );
+
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
       if (isSuggestionOpenKeyDown(e)) {
         handleSuggestionOpenKeyDown(e);
+      } else if (isInsertQueryKeyDown(e)) {
+        handleInsertQueryKeyDown(e);
       }
     },
-    [isSuggestionOpenKeyDown, handleSuggestionOpenKeyDown],
+    [isSuggestionOpenKeyDown, isInsertQueryKeyDown, handleSuggestionOpenKeyDown, handleInsertQueryKeyDown],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
