@@ -4,7 +4,7 @@
 
 ## 使い方
 
-[icon-suggestion - mizdra](https://scrapbox.io/mizdra/icon-suggestion) を参照。
+[icon-suggestion - Scrapbox カスタマイズコレクション](https://scrapbox.io/customize/icon-suggestion) を参照。
 
 ## ビルド方法 (for contributor)
 
@@ -25,7 +25,7 @@ $ yarn run build
 $ yarn install
 $ yarn run build | cat dist/index.js | pbcopy
 
-$ open https://scrapbox.io/mizdra/icon-suggestion
+$ open https://scrapbox.io/customize/icon-suggestion
 $ # ソースコードコーナーにクリップボードの中身をペースト
 ```
 
