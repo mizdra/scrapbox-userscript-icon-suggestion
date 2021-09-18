@@ -51,8 +51,6 @@ type Options = {
    * `true` ならポップアップを閉じるキーだと判定される。
    * */
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
-  /** @deprecated */
-  isSuggestionReloadKeyDown?: (e: KeyboardEvent) => boolean;
   /**
    * クエリを `[query.icon]` として挿入するかどうかを判定するコールバック。キーが押下される度に呼び出される。
    * */
@@ -82,13 +80,6 @@ export async function registerIconSuggestion(options?: Options) {
 
   const warningMessageContainer = document.createElement('div');
   document.querySelector('.app')?.prepend(warningMessageContainer);
-
-  // 廃止されたオプションを使用している場合は警告する
-  // TODO: 十分時間が経過したら警告をやめる
-  if (options?.isSuggestionReloadKeyDown) {
-    render(<IsSuggestionReloadKeyDownWarning />, warningMessageContainer);
-    return;
-  }
 
   const presetIcons = options?.presetIcons ? await evaluatePresetIconItemsToIcons(options.presetIcons) : undefined;
 
