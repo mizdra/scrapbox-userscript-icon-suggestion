@@ -2,62 +2,62 @@ import { combinedMatcher, fuzzyMatcher, includesMatcher, startsWithMatcher } fro
 
 describe('fuzzyMatcher', () => {
   describe('query に曖昧一致する items のみが返る', () => {
-    test('query の長さが 0〜3 なら 1 文字も誤字を許容しない', () => {
+    test('query の長さが 0〜2 なら 1 文字も誤字を許容しない', () => {
+      expect(
+        fuzzyMatcher('aa', [
+          // マッチする
+          { key: 0, element: '', searchableText: 'aa', value: '' },
+          // マッチしない
+          { key: 1, element: '', searchableText: 'ab', value: '' },
+        ]),
+      ).toStrictEqual([{ key: 0, element: '', searchableText: 'aa', value: '' }]);
+    });
+    test('query の長さが 3〜5 なら 1 文字まで誤字を許容する', () => {
       expect(
         fuzzyMatcher('aaa', [
           // マッチする
           { key: 0, element: '', searchableText: 'aaa', value: '' },
-          // マッチしない
           { key: 1, element: '', searchableText: 'aab', value: '' },
-        ]),
-      ).toStrictEqual([{ key: 0, element: '', searchableText: 'aaa', value: '' }]);
-    });
-    test('query の長さが 4〜7 なら 1 文字まで誤字を許容する', () => {
-      expect(
-        fuzzyMatcher('aaaa', [
-          // マッチする
-          { key: 0, element: '', searchableText: 'aaaa', value: '' },
-          { key: 1, element: '', searchableText: 'aaab', value: '' },
           // マッチしない
-          { key: 2, element: '', searchableText: 'aabb', value: '' },
+          { key: 2, element: '', searchableText: 'abb', value: '' },
         ]),
       ).toStrictEqual([
-        { key: 0, element: '', searchableText: 'aaaa', value: '' },
-        { key: 1, element: '', searchableText: 'aaab', value: '' },
+        { key: 0, element: '', searchableText: 'aaa', value: '' },
+        { key: 1, element: '', searchableText: 'aab', value: '' },
       ]);
     });
-    test('query の長さが 8〜11 なら 2 文字まで誤字を許容する', () => {
+    test('query の長さが 6〜8 なら 2 文字まで誤字を許容する', () => {
       expect(
-        fuzzyMatcher('aaaaaaaa', [
+        fuzzyMatcher('aaaaaa', [
           // マッチする
-          { key: 0, element: '', searchableText: 'aaaaaaaa', value: '' },
-          { key: 1, element: '', searchableText: 'aaaaaaab', value: '' },
-          { key: 2, element: '', searchableText: 'aaaaaabb', value: '' },
+          { key: 0, element: '', searchableText: 'aaaaaa', value: '' },
+          { key: 1, element: '', searchableText: 'aaaaab', value: '' },
+          { key: 2, element: '', searchableText: 'aaaabb', value: '' },
           // マッチしない
-          { key: 3, element: '', searchableText: 'aaaaabbb', value: '' },
+          { key: 3, element: '', searchableText: 'aaabbb', value: '' },
         ]),
       ).toStrictEqual([
-        { key: 0, element: '', searchableText: 'aaaaaaaa', value: '' },
-        { key: 1, element: '', searchableText: 'aaaaaaab', value: '' },
-        { key: 2, element: '', searchableText: 'aaaaaabb', value: '' },
+        { key: 0, element: '', searchableText: 'aaaaaa', value: '' },
+        { key: 1, element: '', searchableText: 'aaaaab', value: '' },
+        { key: 2, element: '', searchableText: 'aaaabb', value: '' },
       ]);
     });
-    test('query の長さが 12 以上なら 3 文字まで誤字を許容する', () => {
+    test('query の長さが 9 以上なら 3 文字まで誤字を許容する', () => {
       expect(
-        fuzzyMatcher('aaaaaaaaaaaa', [
+        fuzzyMatcher('aaaaaaaaa', [
           // マッチする
-          { key: 0, element: '', searchableText: 'aaaaaaaaaaaa', value: '' },
-          { key: 1, element: '', searchableText: 'aaaaaaaaaaab', value: '' },
-          { key: 2, element: '', searchableText: 'aaaaaaaaaabb', value: '' },
-          { key: 3, element: '', searchableText: 'aaaaaaaaabbb', value: '' },
+          { key: 0, element: '', searchableText: 'aaaaaaaaa', value: '' },
+          { key: 1, element: '', searchableText: 'aaaaaaaab', value: '' },
+          { key: 2, element: '', searchableText: 'aaaaaaabb', value: '' },
+          { key: 3, element: '', searchableText: 'aaaaaabbb', value: '' },
           // マッチしない
-          { key: 4, element: '', searchableText: 'aaaaaaaabbbb', value: '' },
+          { key: 4, element: '', searchableText: 'aaaaabbbb', value: '' },
         ]),
       ).toStrictEqual([
-        { key: 0, element: '', searchableText: 'aaaaaaaaaaaa', value: '' },
-        { key: 1, element: '', searchableText: 'aaaaaaaaaaab', value: '' },
-        { key: 2, element: '', searchableText: 'aaaaaaaaaabb', value: '' },
-        { key: 3, element: '', searchableText: 'aaaaaaaaabbb', value: '' },
+        { key: 0, element: '', searchableText: 'aaaaaaaaa', value: '' },
+        { key: 1, element: '', searchableText: 'aaaaaaaab', value: '' },
+        { key: 2, element: '', searchableText: 'aaaaaaabb', value: '' },
+        { key: 3, element: '', searchableText: 'aaaaaabbb', value: '' },
       ]);
     });
   });
