@@ -7,6 +7,7 @@ import userEvent from '@testing-library/user-event';
 import { App as NativeApp, AppProps } from '../../src/components/App';
 import { ScrapboxContext } from '../../src/contexts/ScrapboxContext';
 import { Icon } from '../../src/lib/icon';
+import { startsWithMatcher } from '../../src/lib/matcher';
 import { createEditor, createScrapboxAPI } from '../helpers/html';
 import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
@@ -21,21 +22,22 @@ jest.mock('../../src/lib/scrapbox', () => {
 type Options = { embeddedIcons?: Icon[] };
 function App(props: AppProps & Options) {
   const presetIcons: Icon[] = props.presetIcons ?? [
-    new Icon('project', 'bbbbb'),
-    new Icon('project', 'ccccc'),
-    new Icon('project', 'ccccc'),
+    new Icon('project', 'b'),
+    new Icon('project', 'c'),
+    new Icon('project', 'c'),
   ];
   const editor = createEditor({
     embeddedIcons: props.embeddedIcons ?? [
-      new Icon('project', 'aaaaa'),
-      new Icon('project', 'aaaaa'),
-      new Icon('project', 'bbbbb'),
+      new Icon('project', 'a'),
+      new Icon('project', 'a'),
+      new Icon('project', 'b'),
     ],
   });
   const scrapbox = createScrapboxAPI();
+  const matcher = startsWithMatcher;
   return (
     <ScrapboxContext.Provider value={{ editor, scrapbox }}>
-      <NativeApp presetIcons={presetIcons} {...props} />
+      <NativeApp presetIcons={presetIcons} matcher={matcher} {...props} />
     </ScrapboxContext.Provider>
   );
 }
@@ -100,29 +102,29 @@ describe('App', () => {
         const buttonContainer = getByTestId('button-container');
         const queryInput = getByTestId('query-input');
 
-        expect(buttonContainer.childElementCount).toEqual(2); // aaaaa, bbbbb の 2アイコンが表示される
-        userEvent.type(queryInput, 'bbbbb');
-        expect(buttonContainer.childElementCount).toEqual(1); // bbbbb だけ表示される
+        expect(buttonContainer.childElementCount).toEqual(2); // a, b の 2アイコンが表示される
+        userEvent.type(queryInput, 'b');
+        expect(buttonContainer.childElementCount).toEqual(1); // b だけ表示される
         await act(() => {
           fireEvent(document, keydownEnterEvent);
         });
-        expect(mockInsertText).toBeCalledWith(expect.anything(), '[bbbbb.icon]');
+        expect(mockInsertText).toBeCalledWith(expect.anything(), '[b.icon]');
       });
     });
     test('isSuggestionOpenKeyDown が真になるようなキーを押下したら、presetIcons が suggest される', async () => {
       const { getByTestId } = await renderApp({});
       const buttonContainer = getByTestId('button-container');
 
-      expect(buttonContainer.childElementCount).toEqual(2); // aaaaa, bbbbb の 2アイコンが表示される
+      expect(buttonContainer.childElementCount).toEqual(2); // a, b の 2アイコンが表示される
       await act(() => {
         fireEvent(document, keydownCtrlLEvent);
       });
-      expect(buttonContainer.childElementCount).toEqual(3); // aaaaa, bbbbb, cccc の 3アイコンが表示される
+      expect(buttonContainer.childElementCount).toEqual(3); // a, b, cccc の 3アイコンが表示される
     });
     test('defaultSuggestPresetIcons が真なら最初からプリセットアイコンが suggest される', async () => {
       const { getByTestId } = await renderApp({ defaultSuggestPresetIcons: true });
       const buttonContainer = getByTestId('button-container');
-      expect(buttonContainer.childElementCount).toEqual(3); // aaaaa, bbbbb, ccccc の 3アイコンが表示される
+      expect(buttonContainer.childElementCount).toEqual(3); // a, b, c の 3アイコンが表示される
     });
     test('同名のページタイトルのアイコンが suggest されている場合は、括弧付きでプロジェクト名が表示される', async () => {
       const { queryAllByTestId } = await renderApp({

@@ -24,16 +24,16 @@ exports[`App 初期状態 isSuggestionOpenKeyDown が真になるようなキー
         >
           <span>
             <img
-              alt="aaaaa"
-              src="/api/pages/project/aaaaa/icon"
+              alt="a"
+              src="/api/pages/project/a/icon"
               style="width: 1.3em; height: 1.3em; object-fit: contain;"
-              title="aaaaa"
+              title="a"
             />
              
             <span
               data-testid="suggested-icon-label"
             >
-              aaaaa
+              a
             </span>
           </span>
         </div>
@@ -42,16 +42,16 @@ exports[`App 初期状態 isSuggestionOpenKeyDown が真になるようなキー
         >
           <span>
             <img
-              alt="bbbbb"
-              src="/api/pages/project/bbbbb/icon"
+              alt="b"
+              src="/api/pages/project/b/icon"
               style="width: 1.3em; height: 1.3em; object-fit: contain;"
-              title="bbbbb"
+              title="b"
             />
              
             <span
               data-testid="suggested-icon-label"
             >
-              bbbbb
+              b
             </span>
           </span>
         </div>

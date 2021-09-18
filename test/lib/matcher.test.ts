@@ -1,31 +1,96 @@
 import { combinedMatcher, fuzzyMatcher, includesMatcher, startsWithMatcher } from '../../src/lib/matcher';
 
 describe('fuzzyMatcher', () => {
-  test('query にあいまい一致する items のみが返る', () => {
+  describe('query に曖昧一致する items のみが返る', () => {
+    test('query の長さが 0〜2 なら 1 文字も誤字を許容しない', () => {
+      expect(
+        fuzzyMatcher('aa', [
+          // マッチする
+          { key: 0, element: '', searchableText: 'aa', value: '' },
+          // マッチしない
+          { key: 1, element: '', searchableText: 'ab', value: '' },
+        ]),
+      ).toStrictEqual([{ key: 0, element: '', searchableText: 'aa', value: '' }]);
+    });
+    test('query の長さが 3〜5 なら 1 文字まで誤字を許容する', () => {
+      expect(
+        fuzzyMatcher('aaa', [
+          // マッチする
+          { key: 0, element: '', searchableText: 'aaa', value: '' },
+          { key: 1, element: '', searchableText: 'aab', value: '' },
+          // マッチしない
+          { key: 2, element: '', searchableText: 'abb', value: '' },
+        ]),
+      ).toStrictEqual([
+        { key: 0, element: '', searchableText: 'aaa', value: '' },
+        { key: 1, element: '', searchableText: 'aab', value: '' },
+      ]);
+    });
+    test('query の長さが 6〜8 なら 2 文字まで誤字を許容する', () => {
+      expect(
+        fuzzyMatcher('aaaaaa', [
+          // マッチする
+          { key: 0, element: '', searchableText: 'aaaaaa', value: '' },
+          { key: 1, element: '', searchableText: 'aaaaab', value: '' },
+          { key: 2, element: '', searchableText: 'aaaabb', value: '' },
+          // マッチしない
+          { key: 3, element: '', searchableText: 'aaabbb', value: '' },
+        ]),
+      ).toStrictEqual([
+        { key: 0, element: '', searchableText: 'aaaaaa', value: '' },
+        { key: 1, element: '', searchableText: 'aaaaab', value: '' },
+        { key: 2, element: '', searchableText: 'aaaabb', value: '' },
+      ]);
+    });
+    test('query の長さが 9 以上なら 3 文字まで誤字を許容する', () => {
+      expect(
+        fuzzyMatcher('aaaaaaaaa', [
+          // マッチする
+          { key: 0, element: '', searchableText: 'aaaaaaaaa', value: '' },
+          { key: 1, element: '', searchableText: 'aaaaaaaab', value: '' },
+          { key: 2, element: '', searchableText: 'aaaaaaabb', value: '' },
+          { key: 3, element: '', searchableText: 'aaaaaabbb', value: '' },
+          // マッチしない
+          { key: 4, element: '', searchableText: 'aaaaabbbb', value: '' },
+        ]),
+      ).toStrictEqual([
+        { key: 0, element: '', searchableText: 'aaaaaaaaa', value: '' },
+        { key: 1, element: '', searchableText: 'aaaaaaaab', value: '' },
+        { key: 2, element: '', searchableText: 'aaaaaaabb', value: '' },
+        { key: 3, element: '', searchableText: 'aaaaaabbb', value: '' },
+      ]);
+    });
+  });
+  describe('曖昧度の昇順で返ってくる', () => {
     expect(
-      fuzzyMatcher('foo', [
-        // マッチする
-        { key: 0, element: '', searchableText: 'foo', value: '' },
-        { key: 1, element: '', searchableText: 'foo bar', value: '' },
-        { key: 2, element: '', searchableText: 'foo bar baz', value: '' },
-        { key: 3, element: '', searchableText: 'bar foo baz', value: '' },
-        { key: 4, element: '', searchableText: 'bar baz foo', value: '' },
-        { key: 5, element: '', searchableText: 'foo foo foo', value: '' },
-        { key: 6, element: '', searchableText: 'fo bar', value: '' },
-        { key: 7, element: '', searchableText: 'fo o bar', value: '' },
-        // マッチしない
-        { key: 8, element: '', searchableText: 'fee', value: '' },
-        { key: 9, element: '', searchableText: 'bar', value: '' },
+      fuzzyMatcher('aaaaaaaaaaaa', [
+        { key: 0, element: '', searchableText: 'aaaaaaaaabbb', value: '' },
+        { key: 1, element: '', searchableText: 'aaaaaaaaaccc', value: '' },
+        { key: 2, element: '', searchableText: 'aaaaaaaaaabb', value: '' },
+        { key: 3, element: '', searchableText: 'aaaaaaaaaacc', value: '' },
+        { key: 4, element: '', searchableText: 'aaaaaaaaaaab', value: '' },
+        { key: 5, element: '', searchableText: 'aaaaaaaaaaac', value: '' },
+        { key: 6, element: '', searchableText: 'aaaaaaaaaaaa', value: '' },
       ]),
     ).toStrictEqual([
-      { key: 0, element: '', searchableText: 'foo', value: '' },
-      { key: 1, element: '', searchableText: 'foo bar', value: '' },
-      { key: 2, element: '', searchableText: 'foo bar baz', value: '' },
-      { key: 3, element: '', searchableText: 'bar foo baz', value: '' },
-      { key: 4, element: '', searchableText: 'bar baz foo', value: '' },
-      { key: 5, element: '', searchableText: 'foo foo foo', value: '' },
-      { key: 6, element: '', searchableText: 'fo bar', value: '' },
-      { key: 7, element: '', searchableText: 'fo o bar', value: '' },
+      { key: 6, element: '', searchableText: 'aaaaaaaaaaaa', value: '' },
+      { key: 4, element: '', searchableText: 'aaaaaaaaaaab', value: '' },
+      { key: 5, element: '', searchableText: 'aaaaaaaaaaac', value: '' },
+      { key: 2, element: '', searchableText: 'aaaaaaaaaabb', value: '' },
+      { key: 3, element: '', searchableText: 'aaaaaaaaaacc', value: '' },
+      { key: 0, element: '', searchableText: 'aaaaaaaaabbb', value: '' },
+      { key: 1, element: '', searchableText: 'aaaaaaaaaccc', value: '' },
+    ]);
+  });
+  describe('部分一致する', () => {
+    expect(
+      fuzzyMatcher('foo', [
+        { key: 0, element: '', searchableText: 'foo bar', value: '' },
+        { key: 1, element: '', searchableText: 'bar foo baz', value: '' },
+      ]),
+    ).toStrictEqual([
+      { key: 0, element: '', searchableText: 'foo bar', value: '' },
+      { key: 1, element: '', searchableText: 'bar foo baz', value: '' },
     ]);
   });
   test('マッチは capital-insensitive', () => {
@@ -146,26 +211,26 @@ describe('includesMatcher', () => {
 describe('combinedMatcher', () => {
   test('前方一致 > 部分一致 > 曖昧検索 の順で並び替えられて返される', () => {
     expect(
-      combinedMatcher('foo', [
+      combinedMatcher('aaaa', [
         // 曖昧一致する
-        { key: 1, element: '', searchableText: 'fox bar', value: '' },
-        { key: 2, element: '', searchableText: 'zoo bar', value: '' },
+        { key: 1, element: '', searchableText: 'aaab', value: '' },
+        { key: 2, element: '', searchableText: 'aaac', value: '' },
         // 部分一致する
-        { key: 3, element: '', searchableText: 'bar foo baz', value: '' },
-        { key: 4, element: '', searchableText: 'bar baz foo', value: '' },
+        { key: 3, element: '', searchableText: 'bbbb aaaa cccc', value: '' },
+        { key: 4, element: '', searchableText: 'bbbb cccc aaaa', value: '' },
         // 前方一致する
-        { key: 5, element: '', searchableText: 'foo', value: '' },
-        { key: 6, element: '', searchableText: 'foo bar', value: '' },
+        { key: 5, element: '', searchableText: 'aaaa', value: '' },
+        { key: 6, element: '', searchableText: 'aaaa bbbb', value: '' },
         // マッチしない
         { key: 7, element: '', searchableText: 'mizdra', value: '' },
       ]),
     ).toStrictEqual([
-      { key: 5, element: '', searchableText: 'foo', value: '' },
-      { key: 6, element: '', searchableText: 'foo bar', value: '' },
-      { key: 3, element: '', searchableText: 'bar foo baz', value: '' },
-      { key: 4, element: '', searchableText: 'bar baz foo', value: '' },
-      { key: 1, element: '', searchableText: 'fox bar', value: '' },
-      { key: 2, element: '', searchableText: 'zoo bar', value: '' },
+      { key: 5, element: '', searchableText: 'aaaa', value: '' },
+      { key: 6, element: '', searchableText: 'aaaa bbbb', value: '' },
+      { key: 3, element: '', searchableText: 'bbbb aaaa cccc', value: '' },
+      { key: 4, element: '', searchableText: 'bbbb cccc aaaa', value: '' },
+      { key: 1, element: '', searchableText: 'aaab', value: '' },
+      { key: 2, element: '', searchableText: 'aaac', value: '' },
     ]);
   });
 });
