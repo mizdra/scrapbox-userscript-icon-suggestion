@@ -4,7 +4,7 @@
 
 ## 使い方
 
-[icon-suggestion - mizdra](https://scrapbox.io/mizdra/icon-suggestion) を参照。
+[icon-suggestion - Scrapbox カスタマイズコレクション](https://scrapbox.io/customize/icon-suggestion) を参照。
 
 ## ビルド方法 (for contributor)
 
@@ -13,7 +13,7 @@ $ yarn install
 $ yarn run build
 ```
 
-### コマンドリスト
+### npm-scripts (for contributor)
 
 - `yarn run build`: JS のビルドを実行
 - `yarn run lint`: lint や format を実行
@@ -22,11 +22,16 @@ $ yarn run build
 ## リリース方法 (for maintainer)
 
 ```console
-$ yarn install
-$ yarn run build | cat dist/index.js | pbcopy
+$ git switch master
+$ git pull
+$ yarn version
+$ rm -rf dist && yarn run build
 
-$ open https://scrapbox.io/mizdra/icon-suggestion
+$ cat dist/index.js | pbcopy
+$ open https://scrapbox.io/customize/icon-suggestion
 $ # ソースコードコーナーにクリップボードの中身をペースト
+
+$ git push --follow-tags
 ```
 
 ## 著作権情報
