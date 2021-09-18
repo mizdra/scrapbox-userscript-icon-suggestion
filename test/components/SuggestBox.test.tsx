@@ -2,7 +2,7 @@ import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { datatype } from 'faker';
 import { SuggestionBox } from '../../src/components/SuggestionBox';
-import { startsWithMatcher } from '../../src/lib/matcher';
+import { forwardMatcher } from '../../src/lib/matcher';
 import { CursorPosition } from '../../src/types';
 import { keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
@@ -14,7 +14,7 @@ const items = [
   { key: 3, element: <span key="3">abc</span>, searchableText: 'abc', value: 'abc' },
   { key: 4, element: <span key="4">z</span>, searchableText: 'z', value: 'z' },
 ];
-const matcher = startsWithMatcher;
+const matcher = forwardMatcher;
 const props = { cursorPosition, items, matcher };
 
 describe('SuggestionBox', () => {

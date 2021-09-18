@@ -1,4 +1,4 @@
-import { combinedMatcher, fuzzyMatcher, includesMatcher, startsWithMatcher } from '../../src/lib/matcher';
+import { forwardPartialFuzzyMatcher, fuzzyMatcher, partialMatcher, forwardMatcher } from '../../src/lib/matcher';
 
 describe('fuzzyMatcher', () => {
   describe('query に曖昧一致する items のみが返る', () => {
@@ -119,10 +119,10 @@ describe('fuzzyMatcher', () => {
   });
 });
 
-describe('startsWithMatcher', () => {
+describe('forwardMatcher', () => {
   test('query に前方一致する items のみが返る', () => {
     expect(
-      startsWithMatcher('foo', [
+      forwardMatcher('foo', [
         // マッチする
         { key: 0, element: '', searchableText: 'foo', value: '' },
         { key: 1, element: '', searchableText: 'foo bar', value: '' },
@@ -137,7 +137,7 @@ describe('startsWithMatcher', () => {
   });
   test('マッチは capital-insensitive', () => {
     expect(
-      startsWithMatcher('foo', [
+      forwardMatcher('foo', [
         { key: 0, element: '', searchableText: 'Foo', value: '' },
         { key: 1, element: '', searchableText: 'FOO', value: '' },
         { key: 2, element: '', searchableText: 'fOo', value: '' },
@@ -148,7 +148,7 @@ describe('startsWithMatcher', () => {
       { key: 2, element: '', searchableText: 'fOo', value: '' },
     ]);
     expect(
-      startsWithMatcher('FOO', [
+      forwardMatcher('FOO', [
         { key: 0, element: '', searchableText: 'Foo', value: '' },
         { key: 1, element: '', searchableText: 'FOO', value: '' },
         { key: 2, element: '', searchableText: 'fOo', value: '' },
@@ -161,10 +161,10 @@ describe('startsWithMatcher', () => {
   });
 });
 
-describe('includesMatcher', () => {
+describe('partialMatcher', () => {
   test('query に部分一致する items のみが返る', () => {
     expect(
-      includesMatcher('foo', [
+      partialMatcher('foo', [
         // マッチする
         { key: 0, element: '', searchableText: 'foo', value: '' },
         { key: 1, element: '', searchableText: 'foo bar', value: '' },
@@ -184,7 +184,7 @@ describe('includesMatcher', () => {
   });
   test('マッチは capital-insensitive', () => {
     expect(
-      includesMatcher('foo', [
+      partialMatcher('foo', [
         { key: 0, element: '', searchableText: 'Foo', value: '' },
         { key: 1, element: '', searchableText: 'FOO', value: '' },
         { key: 2, element: '', searchableText: 'fOo', value: '' },
@@ -195,7 +195,7 @@ describe('includesMatcher', () => {
       { key: 2, element: '', searchableText: 'fOo', value: '' },
     ]);
     expect(
-      includesMatcher('FOO', [
+      partialMatcher('FOO', [
         { key: 0, element: '', searchableText: 'Foo', value: '' },
         { key: 1, element: '', searchableText: 'FOO', value: '' },
         { key: 2, element: '', searchableText: 'fOo', value: '' },
@@ -208,10 +208,10 @@ describe('includesMatcher', () => {
   });
 });
 
-describe('combinedMatcher', () => {
-  test('前方一致 > 部分一致 > 曖昧検索 の順で並び替えられて返される', () => {
+describe('forwardPartialFuzzyMatcher', () => {
+  test('前方一致 > 部分一致 > 曖昧一致 の順で並び替えられて返される', () => {
     expect(
-      combinedMatcher('aaaa', [
+      forwardPartialFuzzyMatcher('aaaa', [
         // 曖昧一致する
         { key: 1, element: '', searchableText: 'aaab', value: '' },
         { key: 2, element: '', searchableText: 'aaac', value: '' },
