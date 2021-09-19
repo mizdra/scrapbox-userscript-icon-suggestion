@@ -1,6 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/preact';
 import { datatype } from 'faker';
-import { Icon, PopupMenu } from '../../src/components/PopupMenu';
+import { PopupMenu } from '../../src/components/PopupMenu';
+import { Icon } from '../../src/lib/icon';
 import { CursorPosition } from '../../src/types';
 import {
   keydownEnterEvent,
@@ -14,11 +15,7 @@ import {
 
 // ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
-const icons: Icon[] = [
-  { key: 1, element: <span key="1">icon1</span> },
-  { key: 2, element: <span key="2">icon2</span> },
-  { key: 3, element: <span key="3">icon3</span> },
-];
+const icons: Icon[] = [new Icon('project', 'icon1'), new Icon('project', 'icon2'), new Icon('project', 'icon3')];
 const props = { cursorPosition, icons };
 
 // keydown イベントが PopupMenu 側でキャンセルされずに突き抜けてきたことを確かめるための mock
@@ -93,35 +90,35 @@ describe('PopupMenu', () => {
     describe('アイテムが1つ以上ある時', () => {
       test('Tab 押下で次のアイテムを選択できる', async () => {
         const { getByText } = render(<PopupMenu open {...props} />);
-        expect(getByText('icon1').parentElement).toHaveClass('selected');
+        expect(getByText('icon1').closest('.selected')).not.toBeNull();
         await act(() => {
           fireEvent(document, keydownTabEvent);
         });
-        expect(getByText('icon2').parentElement).toHaveClass('selected');
+        expect(getByText('icon2').closest('.selected')).not.toBeNull();
         await act(() => {
           fireEvent(document, keydownTabEvent);
         });
-        expect(getByText('icon3').parentElement).toHaveClass('selected');
+        expect(getByText('icon3').closest('.selected')).not.toBeNull();
         await act(() => {
           fireEvent(document, keydownTabEvent);
         });
-        expect(getByText('icon1').parentElement).toHaveClass('selected');
+        expect(getByText('icon1').closest('.selected')).not.toBeNull();
       });
       test('Shift+Tab 押下で前のアイテムを選択できる', async () => {
         const { getByText } = render(<PopupMenu open {...props} />);
-        expect(getByText('icon1').parentElement).toHaveClass('selected');
+        expect(getByText('icon1').closest('.selected')).not.toBeNull();
         await act(() => {
           fireEvent(document, keydownShiftTabEvent);
         });
-        expect(getByText('icon3').parentElement).toHaveClass('selected');
+        expect(getByText('icon3').closest('.selected')).not.toBeNull();
         await act(() => {
           fireEvent(document, keydownShiftTabEvent);
         });
-        expect(getByText('icon2').parentElement).toHaveClass('selected');
+        expect(getByText('icon2').closest('.selected')).not.toBeNull();
         await act(() => {
           fireEvent(document, keydownShiftTabEvent);
         });
-        expect(getByText('icon1').parentElement).toHaveClass('selected');
+        expect(getByText('icon1').closest('.selected')).not.toBeNull();
       });
       test('Enter 押下で onSelect が呼び出される', async () => {
         const onSelect = jest.fn();
