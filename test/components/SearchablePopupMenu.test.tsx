@@ -15,8 +15,8 @@ const icons = [
   new Icon('project', 'abc'),
   new Icon('project', 'z'),
 ];
-const matcher = forwardMatcher;
-const props = { cursorPosition, icons, matcher };
+const matcher = (query: string) => forwardMatcher({ query, composedIcons: icons, embeddedIcons: [], presetIcons: [] });
+const props = { cursorPosition, matcher };
 
 describe('SearchablePopupMenu', () => {
   describe('open === false の時', () => {
@@ -46,7 +46,9 @@ describe('SearchablePopupMenu', () => {
     describe('ポップアップに表示されるアイテムが空の時', () => {
       test('emptyMessage でアイテムが空の時のメッセージを変更できる', () => {
         const emptyMessage = datatype.string();
-        const { getByText } = render(<SearchablePopupMenu open {...props} icons={[]} emptyMessage={emptyMessage} />);
+        const { getByText } = render(
+          <SearchablePopupMenu open {...props} matcher={() => []} emptyMessage={emptyMessage} />,
+        );
         expect(getByText(emptyMessage)).toBeInTheDocument();
       });
     });
