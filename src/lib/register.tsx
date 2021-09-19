@@ -26,7 +26,7 @@ type Options = {
    * `true` なら表示、`false` なら非表示。
    * @default true
    * */
-  defaultShowPresetIcons?: boolean;
+  defaultIsShownPresetIcons?: boolean;
   /**
    * suggest されたアイコンを絞り込むために利用される matcher。
    */
@@ -53,7 +53,7 @@ export async function registerIconSuggestion(options?: Options) {
       isExitIconSuggestionKey={options?.isExitIconSuggestionKey}
       isInsertQueryAsIconKey={options?.isInsertQueryAsIconKey}
       presetIcons={presetIcons}
-      defaultShowPresetIcons={options?.defaultShowPresetIcons}
+      defaultIsShownPresetIcons={options?.defaultIsShownPresetIcons}
       matcher={options?.matcher}
     />,
     container,

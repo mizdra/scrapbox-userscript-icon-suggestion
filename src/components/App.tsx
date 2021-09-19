@@ -25,7 +25,7 @@ export type AppProps = {
   isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
   isInsertQueryAsIconKey?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
-  defaultShowPresetIcons?: boolean;
+  defaultIsShownPresetIcons?: boolean;
   matcher?: Matcher;
 };
 
@@ -34,7 +34,7 @@ export const App: FunctionComponent<AppProps> = ({
   isExitIconSuggestionKey,
   isInsertQueryAsIconKey = DEFAULT_IS_INSERT_QUERY_KEY_DOWN,
   presetIcons = [],
-  defaultShowPresetIcons = true,
+  defaultIsShownPresetIcons = true,
   matcher = forwardPartialFuzzyMatcher,
 }) => {
   const { textInput, cursor, editor, layout, projectName } = useScrapbox();
@@ -42,13 +42,13 @@ export const App: FunctionComponent<AppProps> = ({
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
-  const [showPresetIcons, setShowPresetIcons] = useState(defaultShowPresetIcons);
+  const [isShownPresetIcons, setIsShownPresetIcons] = useState(defaultIsShownPresetIcons);
   const composedMatcher = useCallback(
     (query: string) => {
-      const composedIcons = uniqueIcons(showPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons);
+      const composedIcons = uniqueIcons(isShownPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons);
       return matcher({ query, composedIcons, presetIcons, embeddedIcons });
     },
-    [embeddedIcons, matcher, presetIcons, showPresetIcons],
+    [embeddedIcons, matcher, presetIcons, isShownPresetIcons],
   );
   const [query, setQuery] = useState('');
 
@@ -84,13 +84,13 @@ export const App: FunctionComponent<AppProps> = ({
 
         setEmbeddedIcons(newEmbeddedIcons);
         setOpen(true);
-        setShowPresetIcons(defaultShowPresetIcons);
+        setIsShownPresetIcons(defaultIsShownPresetIcons);
       } else {
         // ポップアップが開いていたら、preset icon の表示・非表示をトグルする
-        setShowPresetIcons((showPresetIcons) => !showPresetIcons);
+        setIsShownPresetIcons((isShownPresetIcons) => !isShownPresetIcons);
       }
     },
-    [cursor, defaultShowPresetIcons, editor, open, layout, projectName, textInput],
+    [cursor, defaultIsShownPresetIcons, editor, open, layout, projectName, textInput],
   );
 
   const handleInsertQueryKeyDown = useCallback(

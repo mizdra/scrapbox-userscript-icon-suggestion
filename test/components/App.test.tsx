@@ -45,7 +45,7 @@ function App(props: AppProps & Options) {
   const matcher = forwardMatcher;
   return (
     <ScrapboxContext.Provider value={{ editor, scrapbox }}>
-      <NativeApp presetIcons={presetIcons} defaultShowPresetIcons={false} matcher={matcher} {...props} />
+      <NativeApp presetIcons={presetIcons} defaultIsShownPresetIcons={false} matcher={matcher} {...props} />
     </ScrapboxContext.Provider>
   );
 }
@@ -129,8 +129,8 @@ describe('App', () => {
       });
       expect(mockInsertText).toBeCalledWith(expect.anything(), '[mizdra.icon]');
     });
-    test('defaultShowPresetIcons が真なら最初からプリセットアイコンが suggest される', async () => {
-      const { getByTestId } = await renderApp({ defaultShowPresetIcons: true });
+    test('defaultIsShownPresetIcons が真なら最初からプリセットアイコンが suggest される', async () => {
+      const { getByTestId } = await renderApp({ defaultIsShownPresetIcons: true });
       const buttonContainer = getByTestId('button-container');
       expect(buttonContainer.childElementCount).toEqual(3); // a, b, c の 3アイコンが表示される
     });
@@ -138,14 +138,14 @@ describe('App', () => {
 
   describe('インテグレーションテスト', () => {
     describe('matcher', () => {
-      test('embeddedIcons や presetIcons、showPresetIcons の状態で matcher に渡される引数が変わる', async () => {
+      test('embeddedIcons や presetIcons、isShownPresetIcons の状態で matcher に渡される引数が変わる', async () => {
         const presetIcons = [new Icon('project', 'b'), new Icon('project', 'c'), new Icon('project', 'c')];
         const embeddedIcons = [new Icon('project', 'a'), new Icon('project', 'a'), new Icon('project', 'b')];
 
         const matcher: Matcher = jest.fn(() => []);
         render(
           <App
-            defaultShowPresetIcons={false}
+            defaultIsShownPresetIcons={false}
             presetIcons={presetIcons}
             embeddedIcons={embeddedIcons}
             matcher={matcher}

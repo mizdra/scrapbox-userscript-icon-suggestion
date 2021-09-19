@@ -36,7 +36,7 @@ export type MatcherOptions = {
   /** 検索欄に入力された文字列 */
   query: string;
   /**
-   * `showPresetIcons` が真の時は `[...presetIcons, ...embeddedIcons]` を、
+   * `isShownPresetIcons` が真の時は `[...presetIcons, ...embeddedIcons]` を、
    * 偽の時は `embeddedIcons` を表すアイコンリスト。
    * */
   composedIcons: Icon[];
