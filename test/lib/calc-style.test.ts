@@ -1,7 +1,7 @@
 import {
   calcButtonContainerStyle,
   calcPopupMenuStyle,
-  calcQueryInputStyle,
+  calcSearchInputStyle,
   calcTriangleStyle,
 } from '../../src/lib/calc-style';
 
@@ -83,27 +83,27 @@ describe('calcButtonContainerStyle', () => {
   });
 });
 
-describe('calcQueryInputStyle', () => {
+describe('calcSearchInputStyle', () => {
   const editorWidth = 1000;
   const cursorPosition = { styleTop: 200, styleLeft: 500 };
-  test('エディタの中央にカーソルがあれば、<QueryInput> を中央に表示するスタイルが返される', () => {
-    expect(calcQueryInputStyle(editorWidth, cursorPosition)).toStrictEqual({
+  test('エディタの中央にカーソルがあれば、<SearchInput> を中央に表示するスタイルが返される', () => {
+    expect(calcSearchInputStyle(editorWidth, cursorPosition)).toStrictEqual({
       position: 'absolute',
       top: cursorPosition.styleTop,
       left: 500,
       transform: `translateX(-50%)`,
     });
   });
-  test('エディタの左側にカーソルがあれば、<QueryInput> を左側に表示するスタイルが返される', () => {
-    expect(calcQueryInputStyle(editorWidth, { ...cursorPosition, styleLeft: 100 })).toStrictEqual({
+  test('エディタの左側にカーソルがあれば、<SearchInput> を左側に表示するスタイルが返される', () => {
+    expect(calcSearchInputStyle(editorWidth, { ...cursorPosition, styleLeft: 100 })).toStrictEqual({
       position: 'absolute',
       top: cursorPosition.styleTop,
       left: 100,
       transform: `translateX(-10%)`,
     });
   });
-  test('エディタの右側にカーソルがあれば、<QueryInput> を右側に表示するスタイルが返される', () => {
-    expect(calcQueryInputStyle(editorWidth, { ...cursorPosition, styleLeft: 900 })).toStrictEqual({
+  test('エディタの右側にカーソルがあれば、<SearchInput> を右側に表示するスタイルが返される', () => {
+    expect(calcSearchInputStyle(editorWidth, { ...cursorPosition, styleLeft: 900 })).toStrictEqual({
       position: 'absolute',
       top: cursorPosition.styleTop,
       left: 900,

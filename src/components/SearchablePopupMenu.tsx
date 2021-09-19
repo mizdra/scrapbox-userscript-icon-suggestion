@@ -4,7 +4,7 @@ import { JSXInternal } from 'preact/src/jsx';
 import { forwardPartialFuzzyMatcher } from '../lib/matcher';
 import { CursorPosition, Matcher } from '../types';
 import { PopupMenu } from './PopupMenu';
-import { QueryInput } from './SearchablePopupMenu/QueryInput';
+import { SearchInput } from './SearchablePopupMenu/SearchInput';
 
 export type Item<T> = {
   key: JSXInternal.IntrinsicAttributes['key'];
@@ -80,7 +80,7 @@ export function SearchablePopupMenu<T>({
         isPopupCloseKeyDown={isSuggestionCloseKeyDown}
       />
       {open && (
-        <QueryInput
+        <SearchInput
           defaultQuery={query}
           cursorPosition={cursorPosition}
           onInput={handleInputQuery}
