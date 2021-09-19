@@ -5,9 +5,9 @@ import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqBy } from '../lib/collection';
 import { hasDuplicatedPageTitle, Icon } from '../lib/icon';
 import { isComposing } from '../lib/key';
-import { calcCursorPosition, insertText, scanIconsFromEditor } from '../lib/scrapbox';
+import { calcCursorPosition, insertText, scanEmbeddedIcons } from '../lib/scrapbox';
 import { CursorPosition, Matcher } from '../types';
-import { SuggestionBox, Item } from './SuggestionBox';
+import { SearchablePopupMenu, Item } from './SearchablePopupMenu';
 
 const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
@@ -62,14 +62,14 @@ export const App: FunctionComponent<AppProps> = ({
 
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
-  const [editorIcons, setEditorIcons] = useState<Icon[]>([]);
+  const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
   const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
   const items = useMemo(() => {
-    const icons = suggestPresetIcons ? [...editorIcons, ...presetIcons] : editorIcons;
+    const icons = suggestPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons;
     const suggestedIcons = uniqBy(icons, (icon) => icon.getShortPagePath(projectName));
 
     return suggestedIcons.map((icon) => toItem(icon, icons));
-  }, [suggestPresetIcons, editorIcons, presetIcons, projectName]);
+  }, [suggestPresetIcons, embeddedIcons, presetIcons, projectName]);
   const [query, setQuery] = useState('');
 
   const handleSelect = useCallback(
@@ -95,14 +95,14 @@ export const App: FunctionComponent<AppProps> = ({
         // ポップアップが閉じていたら開く
         setCursorPosition(calcCursorPosition(cursor));
 
-        // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanIconsFromEditor` で
+        // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanEmbeddedIcons` で
         // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった
         // 行のアイコン記法が画像化されるようにしておく。
         textInput.blur();
         // 画像化されたらエディタを走査してアイコンを収集
-        const newEditorIcons = scanIconsFromEditor(projectName, editor);
+        const newEmbeddedIcons = scanEmbeddedIcons(projectName, editor);
 
-        setEditorIcons(newEditorIcons);
+        setEmbeddedIcons(newEmbeddedIcons);
         setOpen(true);
         setSuggestPresetIcons(defaultSuggestPresetIcons);
       } else {
@@ -139,7 +139,7 @@ export const App: FunctionComponent<AppProps> = ({
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
   return (
-    <SuggestionBox
+    <SearchablePopupMenu
       open={open}
       emptyMessage="キーワードにマッチするアイコンがありません"
       items={items}

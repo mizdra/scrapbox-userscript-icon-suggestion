@@ -57,7 +57,7 @@ describe('App', () => {
     test('SuggestBox が表示されない', () => {
       const { asFragment, queryByTestId } = render(<App />);
       expect(queryByTestId('popup-menu')).toBeNull();
-      expect(queryByTestId('query-input')).toBeNull();
+      expect(queryByTestId('search-input')).toBeNull();
       expect(asFragment()).toMatchSnapshot();
     });
     test('isSuggestionOpenKeyDown が真になるようなキーを押すと SuggestBox が表示される', async () => {
@@ -67,12 +67,12 @@ describe('App', () => {
         fireEvent(document, keydownEscapeEvent);
       });
       expect(queryByTestId('popup-menu')).toBeNull();
-      expect(queryByTestId('query-input')).toBeNull();
+      expect(queryByTestId('search-input')).toBeNull();
       await act(() => {
         fireEvent(document, keydownAEvent);
       });
       expect(queryByTestId('popup-menu')).toBeInTheDocument();
-      expect(queryByTestId('query-input')).toBeInTheDocument();
+      expect(queryByTestId('search-input')).toBeInTheDocument();
       expect(asFragment()).toMatchSnapshot();
     });
   });
@@ -96,10 +96,10 @@ describe('App', () => {
       test('アイテムがあれば選択中のアイコンが挿入される', async () => {
         const { getByTestId } = await renderApp({});
         const buttonContainer = getByTestId('button-container');
-        const queryInput = getByTestId('query-input');
+        const searchInput = getByTestId('search-input');
 
         expect(buttonContainer.childElementCount).toEqual(2); // a, b の 2アイコンが表示される
-        userEvent.type(queryInput, 'b');
+        userEvent.type(searchInput, 'b');
         expect(buttonContainer.childElementCount).toEqual(1); // b だけ表示される
         await act(() => {
           fireEvent(document, keydownEnterEvent);
@@ -119,9 +119,9 @@ describe('App', () => {
     });
     test('isInsertQueryKeyDown が真になるようなキーを押下したら、`[query.icon] が挿入される', async () => {
       const { getByTestId } = await renderApp({});
-      const queryInput = getByTestId('query-input');
+      const searchInput = getByTestId('search-input');
 
-      userEvent.type(queryInput, 'mizdra');
+      userEvent.type(searchInput, 'mizdra');
       await act(() => {
         fireEvent(document, keydownAltEnterEvent);
       });

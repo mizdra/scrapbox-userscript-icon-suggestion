@@ -1,4 +1,4 @@
-import { calcCursorPosition, scanIconsFromEditor } from '../../src/lib/scrapbox';
+import { calcCursorPosition, scanEmbeddedIcons } from '../../src/lib/scrapbox';
 import { createEditor, createIconLinkElement, createCursor } from '../helpers/html';
 
 const editor = createEditor();
@@ -13,8 +13,8 @@ editor.appendChild(createIconLinkElement('other-project', 'foo'));
 
 const cursor = createCursor({ styleTop: 147, styleLeft: 0 });
 
-test('scanIconsFromEditor', () => {
-  const expectedIcons = scanIconsFromEditor('project', editor);
+test('scanEmbeddedIcons', () => {
+  const expectedIcons = scanEmbeddedIcons('project', editor);
 
   const expectedIconPagePaths = expectedIcons.map((icon) => icon.getShortPagePath('project'));
   expect(expectedIconPagePaths).toStrictEqual([

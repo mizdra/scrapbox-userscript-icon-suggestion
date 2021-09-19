@@ -22,7 +22,7 @@ export type PresetIconsItem =
   | (() => Promise<PresetIconsItem[]>);
 
 /**
- * SuggestionBox 内で利用している suggest 対象のデータを表す型
+ * SearchablePopupMenu 内で利用している suggest 対象のデータを表す型
  * */
 export type Item<T> = {
   key: JSXInternal.IntrinsicAttributes['key'];
@@ -31,5 +31,5 @@ export type Item<T> = {
   value: T;
 };
 
-/** SuggestionBox 内でアイテムのフィルタに利用される matcher の型 */
+/** SearchablePopupMenu 内でアイテムのフィルタに利用される matcher の型 */
 export type Matcher<T> = (query: string, items: Item<T>[]) => Item<T>[];

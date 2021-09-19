@@ -4,7 +4,7 @@ import { JSXInternal } from 'preact/src/jsx';
 import { forwardPartialFuzzyMatcher } from '../lib/matcher';
 import { CursorPosition, Matcher } from '../types';
 import { PopupMenu } from './PopupMenu';
-import { QueryInput } from './SuggestionBox/QueryInput';
+import { SearchInput } from './SearchablePopupMenu/SearchInput';
 
 export type Item<T> = {
   key: JSXInternal.IntrinsicAttributes['key'];
@@ -13,7 +13,7 @@ export type Item<T> = {
   value: T;
 };
 
-export type SuggestionBoxProps<T> = {
+export type SearchablePopupMenuProps<T> = {
   open: boolean;
   emptyMessage?: string;
   items: Item<T>[];
@@ -25,7 +25,7 @@ export type SuggestionBoxProps<T> = {
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
 };
 
-export function SuggestionBox<T>({
+export function SearchablePopupMenu<T>({
   open,
   emptyMessage,
   items,
@@ -35,7 +35,7 @@ export function SuggestionBox<T>({
   onClose,
   onInputQuery,
   isSuggestionCloseKeyDown,
-}: SuggestionBoxProps<T>) {
+}: SearchablePopupMenuProps<T>) {
   const [query, setQuery] = useState('');
   const matchedItems = useMemo(() => matcher(query, items), [items, matcher, query]);
   const matchedItemsForPopupMenu = useMemo(
@@ -80,7 +80,7 @@ export function SuggestionBox<T>({
         isPopupCloseKeyDown={isSuggestionCloseKeyDown}
       />
       {open && (
-        <QueryInput
+        <SearchInput
           defaultQuery={query}
           cursorPosition={cursorPosition}
           onInput={handleInputQuery}

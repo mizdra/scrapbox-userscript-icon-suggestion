@@ -47,8 +47,8 @@ export function calcButtonContainerStyle(
   };
 }
 
-/** <QueryInput> のスタイルを計算する */
-export function calcQueryInputStyle(editorWidth: number, cursorPosition: CursorPosition): JSXInternal.CSSProperties {
+/** <SearchInput> のスタイルを計算する */
+export function calcSearchInputStyle(editorWidth: number, cursorPosition: CursorPosition): JSXInternal.CSSProperties {
   const translateX = (cursorPosition.styleLeft / editorWidth) * 100;
 
   return {
