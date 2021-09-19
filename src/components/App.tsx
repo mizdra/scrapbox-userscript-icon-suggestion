@@ -25,7 +25,7 @@ export type AppProps = {
   isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
   isInsertQueryAsIconKey?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
-  defaultSuggestPresetIcons?: boolean;
+  defaultShowPresetIcons?: boolean;
   matcher?: Matcher;
 };
 
@@ -34,7 +34,7 @@ export const App: FunctionComponent<AppProps> = ({
   isExitIconSuggestionKey,
   isInsertQueryAsIconKey = DEFAULT_IS_INSERT_QUERY_KEY_DOWN,
   presetIcons = [],
-  defaultSuggestPresetIcons = true,
+  defaultShowPresetIcons = true,
   matcher = forwardPartialFuzzyMatcher,
 }) => {
   const { textInput, cursor, editor, layout, projectName } = useScrapbox();
@@ -42,7 +42,7 @@ export const App: FunctionComponent<AppProps> = ({
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
-  const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
+  const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultShowPresetIcons);
   const composedMatcher = useCallback(
     (query: string) => {
       const composedIcons = uniqueIcons(suggestPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons);
@@ -84,13 +84,13 @@ export const App: FunctionComponent<AppProps> = ({
 
         setEmbeddedIcons(newEmbeddedIcons);
         setOpen(true);
-        setSuggestPresetIcons(defaultSuggestPresetIcons);
+        setSuggestPresetIcons(defaultShowPresetIcons);
       } else {
         // ポップアップが開いていたら、preset icon の表示・非表示をトグルする
         setSuggestPresetIcons((suggestPresetIcons) => !suggestPresetIcons);
       }
     },
-    [cursor, defaultSuggestPresetIcons, editor, open, layout, projectName, textInput],
+    [cursor, defaultShowPresetIcons, editor, open, layout, projectName, textInput],
   );
 
   const handleInsertQueryKeyDown = useCallback(
