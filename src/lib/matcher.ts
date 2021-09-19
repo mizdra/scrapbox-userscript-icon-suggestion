@@ -20,7 +20,7 @@ export function fuzzyMatcher(query: string, icons: Icon[]): Icon[] {
   }
   // 重複は除く
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return uniqBy(newIcons, (icon) => icon.key);
+  return uniqBy(newIcons, (icon) => icon.fullPagePath);
 }
 
 /**
@@ -46,5 +46,5 @@ export function partialMatcher(query: string, icons: Icon[]): Icon[] {
 export function forwardPartialFuzzyMatcher(query: string, icons: Icon[]): Icon[] {
   const newIcons = [...forwardMatcher(query, icons), ...partialMatcher(query, icons), ...fuzzyMatcher(query, icons)];
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return uniqBy(newIcons, (icon) => icon.key);
+  return uniqBy(newIcons, (icon) => icon.fullPagePath);
 }
