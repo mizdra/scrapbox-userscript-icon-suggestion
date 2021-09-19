@@ -1,4 +1,6 @@
-export function uniqBy<T, U>(arr: T[], fn: (el: T) => U): T[] {
+import { Icon } from './icon';
+
+export function uniqueBy<T, U>(arr: T[], fn: (el: T) => U): T[] {
   const result: T[] = [];
   const keys = new Set<U>();
   for (const el of arr) {
@@ -9,4 +11,9 @@ export function uniqBy<T, U>(arr: T[], fn: (el: T) => U): T[] {
     }
   }
   return result;
+}
+
+/** 重複するアイコンを取り除く */
+export function uniqueIcons(icons: Icon[]): Icon[] {
+  return uniqueBy(icons, (icon) => icon.fullPagePath);
 }
