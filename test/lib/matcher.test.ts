@@ -1,210 +1,148 @@
+import { Icon } from '../../src/lib/icon';
 import { forwardPartialFuzzyMatcher, fuzzyMatcher, partialMatcher, forwardMatcher } from '../../src/lib/matcher';
 
 describe('fuzzyMatcher', () => {
-  describe('query に曖昧一致する items のみが返る', () => {
+  describe('query に曖昧一致する icons のみが返る', () => {
     test('query の長さが 0〜2 なら 1 文字も誤字を許容しない', () => {
       expect(
         fuzzyMatcher('aa', [
           // マッチする
-          { key: 0, element: '', searchableText: 'aa', value: '' },
+          new Icon('project', 'aa'),
           // マッチしない
-          { key: 1, element: '', searchableText: 'ab', value: '' },
+          new Icon('project', 'ab'),
         ]),
-      ).toStrictEqual([{ key: 0, element: '', searchableText: 'aa', value: '' }]);
+      ).toStrictEqual([new Icon('project', 'aa')]);
     });
     test('query の長さが 3〜5 なら 1 文字まで誤字を許容する', () => {
       expect(
         fuzzyMatcher('aaa', [
           // マッチする
-          { key: 0, element: '', searchableText: 'aaa', value: '' },
-          { key: 1, element: '', searchableText: 'aab', value: '' },
+          new Icon('project', 'aaa'),
+          new Icon('project', 'aab'),
           // マッチしない
-          { key: 2, element: '', searchableText: 'abb', value: '' },
+          new Icon('project', 'abb'),
         ]),
-      ).toStrictEqual([
-        { key: 0, element: '', searchableText: 'aaa', value: '' },
-        { key: 1, element: '', searchableText: 'aab', value: '' },
-      ]);
+      ).toStrictEqual([new Icon('project', 'aaa'), new Icon('project', 'aab')]);
     });
     test('query の長さが 6〜8 なら 2 文字まで誤字を許容する', () => {
       expect(
         fuzzyMatcher('aaaaaa', [
           // マッチする
-          { key: 0, element: '', searchableText: 'aaaaaa', value: '' },
-          { key: 1, element: '', searchableText: 'aaaaab', value: '' },
-          { key: 2, element: '', searchableText: 'aaaabb', value: '' },
+          new Icon('project', 'aaaaaa'),
+          new Icon('project', 'aaaaab'),
+          new Icon('project', 'aaaabb'),
           // マッチしない
-          { key: 3, element: '', searchableText: 'aaabbb', value: '' },
+          new Icon('project', 'aaabbb'),
         ]),
-      ).toStrictEqual([
-        { key: 0, element: '', searchableText: 'aaaaaa', value: '' },
-        { key: 1, element: '', searchableText: 'aaaaab', value: '' },
-        { key: 2, element: '', searchableText: 'aaaabb', value: '' },
-      ]);
+      ).toStrictEqual([new Icon('project', 'aaaaaa'), new Icon('project', 'aaaaab'), new Icon('project', 'aaaabb')]);
     });
     test('query の長さが 9 以上なら 3 文字まで誤字を許容する', () => {
       expect(
         fuzzyMatcher('aaaaaaaaa', [
           // マッチする
-          { key: 0, element: '', searchableText: 'aaaaaaaaa', value: '' },
-          { key: 1, element: '', searchableText: 'aaaaaaaab', value: '' },
-          { key: 2, element: '', searchableText: 'aaaaaaabb', value: '' },
-          { key: 3, element: '', searchableText: 'aaaaaabbb', value: '' },
+          new Icon('project', 'aaaaaaaaa'),
+          new Icon('project', 'aaaaaaaab'),
+          new Icon('project', 'aaaaaaabb'),
+          new Icon('project', 'aaaaaabbb'),
           // マッチしない
-          { key: 4, element: '', searchableText: 'aaaaabbbb', value: '' },
+          new Icon('project', 'aaaaabbbb'),
         ]),
       ).toStrictEqual([
-        { key: 0, element: '', searchableText: 'aaaaaaaaa', value: '' },
-        { key: 1, element: '', searchableText: 'aaaaaaaab', value: '' },
-        { key: 2, element: '', searchableText: 'aaaaaaabb', value: '' },
-        { key: 3, element: '', searchableText: 'aaaaaabbb', value: '' },
+        new Icon('project', 'aaaaaaaaa'),
+        new Icon('project', 'aaaaaaaab'),
+        new Icon('project', 'aaaaaaabb'),
+        new Icon('project', 'aaaaaabbb'),
       ]);
     });
   });
   describe('曖昧度の昇順で返ってくる', () => {
     expect(
       fuzzyMatcher('aaaaaaaaaaaa', [
-        { key: 0, element: '', searchableText: 'aaaaaaaaabbb', value: '' },
-        { key: 1, element: '', searchableText: 'aaaaaaaaaccc', value: '' },
-        { key: 2, element: '', searchableText: 'aaaaaaaaaabb', value: '' },
-        { key: 3, element: '', searchableText: 'aaaaaaaaaacc', value: '' },
-        { key: 4, element: '', searchableText: 'aaaaaaaaaaab', value: '' },
-        { key: 5, element: '', searchableText: 'aaaaaaaaaaac', value: '' },
-        { key: 6, element: '', searchableText: 'aaaaaaaaaaaa', value: '' },
+        new Icon('project', 'aaaaaaaaabbb'),
+        new Icon('project', 'aaaaaaaaaccc'),
+        new Icon('project', 'aaaaaaaaaabb'),
+        new Icon('project', 'aaaaaaaaaacc'),
+        new Icon('project', 'aaaaaaaaaaab'),
+        new Icon('project', 'aaaaaaaaaaac'),
+        new Icon('project', 'aaaaaaaaaaaa'),
       ]),
     ).toStrictEqual([
-      { key: 6, element: '', searchableText: 'aaaaaaaaaaaa', value: '' },
-      { key: 4, element: '', searchableText: 'aaaaaaaaaaab', value: '' },
-      { key: 5, element: '', searchableText: 'aaaaaaaaaaac', value: '' },
-      { key: 2, element: '', searchableText: 'aaaaaaaaaabb', value: '' },
-      { key: 3, element: '', searchableText: 'aaaaaaaaaacc', value: '' },
-      { key: 0, element: '', searchableText: 'aaaaaaaaabbb', value: '' },
-      { key: 1, element: '', searchableText: 'aaaaaaaaaccc', value: '' },
+      new Icon('project', 'aaaaaaaaaaaa'),
+      new Icon('project', 'aaaaaaaaaaab'),
+      new Icon('project', 'aaaaaaaaaaac'),
+      new Icon('project', 'aaaaaaaaaabb'),
+      new Icon('project', 'aaaaaaaaaacc'),
+      new Icon('project', 'aaaaaaaaabbb'),
+      new Icon('project', 'aaaaaaaaaccc'),
     ]);
   });
   describe('部分一致する', () => {
-    expect(
-      fuzzyMatcher('foo', [
-        { key: 0, element: '', searchableText: 'foo bar', value: '' },
-        { key: 1, element: '', searchableText: 'bar foo baz', value: '' },
-      ]),
-    ).toStrictEqual([
-      { key: 0, element: '', searchableText: 'foo bar', value: '' },
-      { key: 1, element: '', searchableText: 'bar foo baz', value: '' },
+    expect(fuzzyMatcher('foo', [new Icon('project', 'foo bar'), new Icon('project', 'bar foo baz')])).toStrictEqual([
+      new Icon('project', 'foo bar'),
+      new Icon('project', 'bar foo baz'),
     ]);
   });
   test('マッチは capital-insensitive', () => {
     expect(
-      fuzzyMatcher('foo', [
-        { key: 0, element: '', searchableText: 'Foo', value: '' },
-        { key: 1, element: '', searchableText: 'FOO', value: '' },
-        { key: 2, element: '', searchableText: 'fOo', value: '' },
-      ]),
-    ).toStrictEqual([
-      { key: 0, element: '', searchableText: 'Foo', value: '' },
-      { key: 1, element: '', searchableText: 'FOO', value: '' },
-      { key: 2, element: '', searchableText: 'fOo', value: '' },
-    ]);
+      fuzzyMatcher('foo', [new Icon('project', 'Foo'), new Icon('project', 'FOO'), new Icon('project', 'fOo')]),
+    ).toStrictEqual([new Icon('project', 'Foo'), new Icon('project', 'FOO'), new Icon('project', 'fOo')]);
     expect(
-      fuzzyMatcher('FOO', [
-        { key: 0, element: '', searchableText: 'Foo', value: '' },
-        { key: 1, element: '', searchableText: 'FOO', value: '' },
-        { key: 2, element: '', searchableText: 'fOo', value: '' },
-      ]),
-    ).toStrictEqual([
-      { key: 0, element: '', searchableText: 'Foo', value: '' },
-      { key: 1, element: '', searchableText: 'FOO', value: '' },
-      { key: 2, element: '', searchableText: 'fOo', value: '' },
-    ]);
+      fuzzyMatcher('FOO', [new Icon('project', 'Foo'), new Icon('project', 'FOO'), new Icon('project', 'fOo')]),
+    ).toStrictEqual([new Icon('project', 'Foo'), new Icon('project', 'FOO'), new Icon('project', 'fOo')]);
   });
 });
 
 describe('forwardMatcher', () => {
-  test('query に前方一致する items のみが返る', () => {
+  test('query に前方一致する icons のみが返る', () => {
     expect(
       forwardMatcher('foo', [
         // マッチする
-        { key: 0, element: '', searchableText: 'foo', value: '' },
-        { key: 1, element: '', searchableText: 'foo bar', value: '' },
+        new Icon('project', 'foo'),
+        new Icon('project', 'foo bar'),
         // マッチしない
-        { key: 2, element: '', searchableText: 'bar foo', value: '' },
-        { key: 3, element: '', searchableText: 'fo bar', value: '' },
+        new Icon('project', 'bar foo'),
+        new Icon('project', 'fo bar'),
       ]),
-    ).toStrictEqual([
-      { key: 0, element: '', searchableText: 'foo', value: '' },
-      { key: 1, element: '', searchableText: 'foo bar', value: '' },
-    ]);
+    ).toStrictEqual([new Icon('project', 'foo'), new Icon('project', 'foo bar')]);
   });
   test('マッチは capital-insensitive', () => {
     expect(
-      forwardMatcher('foo', [
-        { key: 0, element: '', searchableText: 'Foo', value: '' },
-        { key: 1, element: '', searchableText: 'FOO', value: '' },
-        { key: 2, element: '', searchableText: 'fOo', value: '' },
-      ]),
-    ).toStrictEqual([
-      { key: 0, element: '', searchableText: 'Foo', value: '' },
-      { key: 1, element: '', searchableText: 'FOO', value: '' },
-      { key: 2, element: '', searchableText: 'fOo', value: '' },
-    ]);
+      forwardMatcher('foo', [new Icon('project', 'Foo'), new Icon('project', 'FOO'), new Icon('project', 'fOo')]),
+    ).toStrictEqual([new Icon('project', 'Foo'), new Icon('project', 'FOO'), new Icon('project', 'fOo')]);
     expect(
-      forwardMatcher('FOO', [
-        { key: 0, element: '', searchableText: 'Foo', value: '' },
-        { key: 1, element: '', searchableText: 'FOO', value: '' },
-        { key: 2, element: '', searchableText: 'fOo', value: '' },
-      ]),
-    ).toStrictEqual([
-      { key: 0, element: '', searchableText: 'Foo', value: '' },
-      { key: 1, element: '', searchableText: 'FOO', value: '' },
-      { key: 2, element: '', searchableText: 'fOo', value: '' },
-    ]);
+      forwardMatcher('FOO', [new Icon('project', 'Foo'), new Icon('project', 'FOO'), new Icon('project', 'fOo')]),
+    ).toStrictEqual([new Icon('project', 'Foo'), new Icon('project', 'FOO'), new Icon('project', 'fOo')]);
   });
 });
 
 describe('partialMatcher', () => {
-  test('query に部分一致する items のみが返る', () => {
+  test('query に部分一致する icons のみが返る', () => {
     expect(
       partialMatcher('foo', [
         // マッチする
-        { key: 0, element: '', searchableText: 'foo', value: '' },
-        { key: 1, element: '', searchableText: 'foo bar', value: '' },
-        { key: 2, element: '', searchableText: 'foo bar baz', value: '' },
-        { key: 3, element: '', searchableText: 'bar foo baz', value: '' },
-        { key: 4, element: '', searchableText: 'bar baz foo', value: '' },
+        new Icon('project', 'foo'),
+        new Icon('project', 'foo bar'),
+        new Icon('project', 'foo bar baz'),
+        new Icon('project', 'bar foo baz'),
+        new Icon('project', 'bar baz foo'),
         // マッチしない
-        { key: 3, element: '', searchableText: 'fo bar', value: '' },
+        new Icon('project', 'fo bar'),
       ]),
     ).toStrictEqual([
-      { key: 0, element: '', searchableText: 'foo', value: '' },
-      { key: 1, element: '', searchableText: 'foo bar', value: '' },
-      { key: 2, element: '', searchableText: 'foo bar baz', value: '' },
-      { key: 3, element: '', searchableText: 'bar foo baz', value: '' },
-      { key: 4, element: '', searchableText: 'bar baz foo', value: '' },
+      new Icon('project', 'foo'),
+      new Icon('project', 'foo bar'),
+      new Icon('project', 'foo bar baz'),
+      new Icon('project', 'bar foo baz'),
+      new Icon('project', 'bar baz foo'),
     ]);
   });
   test('マッチは capital-insensitive', () => {
     expect(
-      partialMatcher('foo', [
-        { key: 0, element: '', searchableText: 'Foo', value: '' },
-        { key: 1, element: '', searchableText: 'FOO', value: '' },
-        { key: 2, element: '', searchableText: 'fOo', value: '' },
-      ]),
-    ).toStrictEqual([
-      { key: 0, element: '', searchableText: 'Foo', value: '' },
-      { key: 1, element: '', searchableText: 'FOO', value: '' },
-      { key: 2, element: '', searchableText: 'fOo', value: '' },
-    ]);
+      partialMatcher('foo', [new Icon('project', 'Foo'), new Icon('project', 'FOO'), new Icon('project', 'fOo')]),
+    ).toStrictEqual([new Icon('project', 'Foo'), new Icon('project', 'FOO'), new Icon('project', 'fOo')]);
     expect(
-      partialMatcher('FOO', [
-        { key: 0, element: '', searchableText: 'Foo', value: '' },
-        { key: 1, element: '', searchableText: 'FOO', value: '' },
-        { key: 2, element: '', searchableText: 'fOo', value: '' },
-      ]),
-    ).toStrictEqual([
-      { key: 0, element: '', searchableText: 'Foo', value: '' },
-      { key: 1, element: '', searchableText: 'FOO', value: '' },
-      { key: 2, element: '', searchableText: 'fOo', value: '' },
-    ]);
+      partialMatcher('FOO', [new Icon('project', 'Foo'), new Icon('project', 'FOO'), new Icon('project', 'fOo')]),
+    ).toStrictEqual([new Icon('project', 'Foo'), new Icon('project', 'FOO'), new Icon('project', 'fOo')]);
   });
 });
 
@@ -213,24 +151,24 @@ describe('forwardPartialFuzzyMatcher', () => {
     expect(
       forwardPartialFuzzyMatcher('aaaa', [
         // 曖昧一致する
-        { key: 1, element: '', searchableText: 'aaab', value: '' },
-        { key: 2, element: '', searchableText: 'aaac', value: '' },
+        new Icon('project', 'aaab'),
+        new Icon('project', 'aaac'),
         // 部分一致する
-        { key: 3, element: '', searchableText: 'bbbb aaaa cccc', value: '' },
-        { key: 4, element: '', searchableText: 'bbbb cccc aaaa', value: '' },
+        new Icon('project', 'bbbb aaaa cccc'),
+        new Icon('project', 'bbbb cccc aaaa'),
         // 前方一致する
-        { key: 5, element: '', searchableText: 'aaaa', value: '' },
-        { key: 6, element: '', searchableText: 'aaaa bbbb', value: '' },
+        new Icon('project', 'aaaa'),
+        new Icon('project', 'aaaa bbbb'),
         // マッチしない
-        { key: 7, element: '', searchableText: 'mizdra', value: '' },
+        new Icon('project', 'mizdra'),
       ]),
     ).toStrictEqual([
-      { key: 5, element: '', searchableText: 'aaaa', value: '' },
-      { key: 6, element: '', searchableText: 'aaaa bbbb', value: '' },
-      { key: 3, element: '', searchableText: 'bbbb aaaa cccc', value: '' },
-      { key: 4, element: '', searchableText: 'bbbb cccc aaaa', value: '' },
-      { key: 1, element: '', searchableText: 'aaab', value: '' },
-      { key: 2, element: '', searchableText: 'aaac', value: '' },
+      new Icon('project', 'aaaa'),
+      new Icon('project', 'aaaa bbbb'),
+      new Icon('project', 'bbbb aaaa cccc'),
+      new Icon('project', 'bbbb cccc aaaa'),
+      new Icon('project', 'aaab'),
+      new Icon('project', 'aaac'),
     ]);
   });
 });

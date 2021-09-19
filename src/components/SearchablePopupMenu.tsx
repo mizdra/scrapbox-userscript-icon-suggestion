@@ -1,25 +1,18 @@
 import { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { JSXInternal } from 'preact/src/jsx';
+import { Icon } from '../lib/icon';
 import { forwardPartialFuzzyMatcher } from '../lib/matcher';
 import { CursorPosition, Matcher } from '../types';
 import { PopupMenu } from './PopupMenu';
 import { SearchInput } from './SearchablePopupMenu/SearchInput';
 
-export type Item<T> = {
-  key: JSXInternal.IntrinsicAttributes['key'];
-  element: ComponentChild;
-  searchableText: string;
-  value: T;
-};
-
 export type SearchablePopupMenuProps<T> = {
   open: boolean;
   emptyMessage?: string;
-  items: Item<T>[];
+  icons: Icon[];
   cursorPosition: CursorPosition;
   matcher?: Matcher<T>;
-  onSelect?: (item: Item<T>) => void;
+  onSelect?: (icon: Icon) => void;
   onClose?: () => void;
   onInputQuery?: (query: string) => void;
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
@@ -28,7 +21,7 @@ export type SearchablePopupMenuProps<T> = {
 export function SearchablePopupMenu<T>({
   open,
   emptyMessage,
-  items,
+  icons,
   cursorPosition,
   matcher = forwardPartialFuzzyMatcher,
   onSelect,
@@ -37,25 +30,17 @@ export function SearchablePopupMenu<T>({
   isSuggestionCloseKeyDown,
 }: SearchablePopupMenuProps<T>) {
   const [query, setQuery] = useState('');
-  const matchedItems = useMemo(() => matcher(query, items), [items, matcher, query]);
-  const matchedItemsForPopupMenu = useMemo(
-    () =>
-      matchedItems.map((item) => ({
-        key: item.key,
-        element: item.element,
-      })),
-    [matchedItems],
-  );
+  const matchedIcons = useMemo(() => matcher(query, icons), [icons, matcher, query]);
 
   useEffect(() => {
     if (open === false) setQuery('');
   }, [open]);
 
   const handleSelect = useCallback(
-    (_item: ComponentChild, index: number) => {
-      onSelect?.(matchedItems[index]);
+    (_icon: ComponentChild, index: number) => {
+      onSelect?.(matchedIcons[index]);
     },
-    [matchedItems, onSelect],
+    [matchedIcons, onSelect],
   );
   const handleClose = useCallback(() => {
     onClose?.();
@@ -73,7 +58,7 @@ export function SearchablePopupMenu<T>({
       <PopupMenu
         open={open}
         emptyMessage={emptyMessage}
-        items={matchedItemsForPopupMenu}
+        icons={matchedIcons}
         cursorPosition={cursorPosition}
         onSelect={handleSelect}
         onClose={handleClose}

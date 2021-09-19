@@ -132,35 +132,5 @@ describe('App', () => {
       const buttonContainer = getByTestId('button-container');
       expect(buttonContainer.childElementCount).toEqual(3); // a, b, c の 3アイコンが表示される
     });
-    test('同名のページタイトルのアイコンが suggest されている場合は、括弧付きでプロジェクト名が表示される', async () => {
-      const { queryAllByTestId } = await renderApp({
-        embeddedIcons: [
-          new Icon('project', 'a'),
-          new Icon('project', 'b'),
-          new Icon('external-project-1', 'b'),
-          new Icon('external-project-1', 'c'),
-        ],
-        presetIcons: [new Icon('external-project-2', 'c'), new Icon('external-project-2', 'd')],
-      });
-      const suggesteIconLabels1 = queryAllByTestId('suggested-icon-label');
-      expect(suggesteIconLabels1[0]).toHaveTextContent(/^a$/);
-      expect(suggesteIconLabels1[1]).toHaveTextContent(/^b \(project\)$/);
-      expect(suggesteIconLabels1[2]).toHaveTextContent(/^b \(external-project-1\)$/);
-      expect(suggesteIconLabels1[3]).toHaveTextContent(/^c$/);
-
-      // プリセットアイコン表示
-      await act(() => {
-        fireEvent(document, keydownCtrlLEvent);
-      });
-
-      // プリセットアイコンが表示されている時は、プリセットアイコンを含めて同名のページタイトルのアイコンがあるかどうかが判定される
-      const suggesteIconLabels2 = queryAllByTestId('suggested-icon-label');
-      expect(suggesteIconLabels2[0]).toHaveTextContent(/^a$/);
-      expect(suggesteIconLabels2[1]).toHaveTextContent(/^b \(project\)$/);
-      expect(suggesteIconLabels2[2]).toHaveTextContent(/^b \(external-project-1\)$/);
-      expect(suggesteIconLabels2[3]).toHaveTextContent(/^c \(external-project-1\)$/);
-      expect(suggesteIconLabels2[4]).toHaveTextContent(/^c \(external-project-2\)$/);
-      expect(suggesteIconLabels2[5]).toHaveTextContent(/^d$/);
-    });
   });
 });
