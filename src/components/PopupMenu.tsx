@@ -1,10 +1,9 @@
-import { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { JSXInternal } from 'preact/src/jsx';
 import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { calcButtonContainerStyle, calcPopupMenuStyle, calcTriangleStyle } from '../lib/calc-style';
+import { Icon } from '../lib/icon';
 import { isComposing } from '../lib/key';
 import { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
@@ -12,8 +11,6 @@ import { PopupMenuButton } from './PopupMenu/Button';
 const DEFAULT_IS_POPUP_CLOSE_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
 };
-
-export type Icon = { key: JSXInternal.IntrinsicAttributes['key']; element: ComponentChild };
 
 export type PopupMenuProps = {
   open: boolean;

@@ -1,6 +1,6 @@
 import Asearch from 'asearch';
-import { Icon } from '../types';
 import { uniqBy } from './collection';
+import { Icon } from './icon';
 
 /**
  * 曖昧一致による matcher。

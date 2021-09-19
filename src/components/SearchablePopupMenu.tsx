@@ -1,17 +1,10 @@
 import { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { JSXInternal } from 'preact/src/jsx';
+import { Icon } from '../lib/icon';
 import { forwardPartialFuzzyMatcher } from '../lib/matcher';
 import { CursorPosition, Matcher } from '../types';
 import { PopupMenu } from './PopupMenu';
 import { SearchInput } from './SearchablePopupMenu/SearchInput';
-
-export type Icon<T> = {
-  key: JSXInternal.IntrinsicAttributes['key'];
-  element: ComponentChild;
-  searchableText: string;
-  value: T;
-};
 
 export type SearchablePopupMenuProps<T> = {
   open: boolean;
