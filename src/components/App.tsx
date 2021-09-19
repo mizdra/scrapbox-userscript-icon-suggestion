@@ -75,7 +75,7 @@ export const App: FunctionComponent<AppProps> = ({
   const handleSelect = useCallback(
     (icon: Icon) => {
       setOpen(false);
-      insertText(textInput, icon.value.getNotation(projectName));
+      insertText(textInput, icon.getNotation(projectName));
     },
     [projectName, textInput],
   );
