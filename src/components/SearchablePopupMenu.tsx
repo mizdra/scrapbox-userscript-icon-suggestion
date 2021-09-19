@@ -9,10 +9,10 @@ import { SearchInput } from './SearchablePopupMenu/SearchInput';
 export type SearchablePopupMenuProps<T> = {
   open: boolean;
   emptyMessage?: string;
-  icons: Icon<T>[];
+  icons: Icon[];
   cursorPosition: CursorPosition;
   matcher?: Matcher<T>;
-  onSelect?: (icon: Icon<T>) => void;
+  onSelect?: (icon: Icon) => void;
   onClose?: () => void;
   onInputQuery?: (query: string) => void;
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
