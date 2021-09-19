@@ -9,16 +9,16 @@ type Options = {
    * ポップアップを開くキーかどうかを判定するコールバック。キーが押下される度に呼び出される。
    * `true` ならポップアップを開くキーだと判定される。
    * */
-  isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
+  isLaunchIconSuggestionKey?: (e: KeyboardEvent) => boolean;
   /**
    * ポップアップを閉じるキーかどうかを判定するコールバック。キーが押下される度に呼び出される。
    * `true` ならポップアップを閉じるキーだと判定される。
    * */
-  isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
+  isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
   /**
    * クエリを `[query.icon]` として挿入するかどうかを判定するコールバック。キーが押下される度に呼び出される。
    * */
-  isInsertQueryKeyDown?: (e: KeyboardEvent) => boolean;
+  isInsertQueryAsIconKey?: (e: KeyboardEvent) => boolean;
   /** suggest に含めたいプリセットアイコンのリスト */
   presetIcons?: PresetIconsItem[];
   /**
@@ -26,7 +26,7 @@ type Options = {
    * `true` なら表示、`false` なら非表示。
    * @default true
    * */
-  defaultSuggestPresetIcons?: boolean;
+  defaultIsShownPresetIcons?: boolean;
   /**
    * suggest されたアイコンを絞り込むために利用される matcher。
    */
@@ -49,11 +49,11 @@ export async function registerIconSuggestion(options?: Options) {
 
   render(
     <App
-      isSuggestionOpenKeyDown={options?.isSuggestionOpenKeyDown}
-      isSuggestionCloseKeyDown={options?.isSuggestionCloseKeyDown}
-      isInsertQueryKeyDown={options?.isInsertQueryKeyDown}
+      isLaunchIconSuggestionKey={options?.isLaunchIconSuggestionKey}
+      isExitIconSuggestionKey={options?.isExitIconSuggestionKey}
+      isInsertQueryAsIconKey={options?.isInsertQueryAsIconKey}
       presetIcons={presetIcons}
-      defaultSuggestPresetIcons={options?.defaultSuggestPresetIcons}
+      defaultIsShownPresetIcons={options?.defaultIsShownPresetIcons}
       matcher={options?.matcher}
     />,
     container,

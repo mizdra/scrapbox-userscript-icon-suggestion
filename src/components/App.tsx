@@ -10,31 +10,31 @@ import { calcCursorPosition, insertText, scanEmbeddedIcons } from '../lib/scrapb
 import { CursorPosition, Matcher } from '../types';
 import { SearchablePopupMenu } from './SearchablePopupMenu';
 
-const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
+const DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
 };
 
-const DEFAULT_IS_INSERT_QUERY_KEY_DOWN = (e: KeyboardEvent) => {
+const DEFAULT_IS_INSERT_QUERY_AS_ICON_KEY = (e: KeyboardEvent) => {
   if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && e.altKey && !e.metaKey) return true;
   if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey && e.metaKey) return true;
   return false;
 };
 
 export type AppProps = {
-  isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
-  isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
-  isInsertQueryKeyDown?: (e: KeyboardEvent) => boolean;
+  isLaunchIconSuggestionKey?: (e: KeyboardEvent) => boolean;
+  isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
+  isInsertQueryAsIconKey?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
-  defaultSuggestPresetIcons?: boolean;
+  defaultIsShownPresetIcons?: boolean;
   matcher?: Matcher;
 };
 
 export const App: FunctionComponent<AppProps> = ({
-  isSuggestionOpenKeyDown = DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN,
-  isSuggestionCloseKeyDown,
-  isInsertQueryKeyDown = DEFAULT_IS_INSERT_QUERY_KEY_DOWN,
+  isLaunchIconSuggestionKey = DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY,
+  isExitIconSuggestionKey,
+  isInsertQueryAsIconKey = DEFAULT_IS_INSERT_QUERY_AS_ICON_KEY,
   presetIcons = [],
-  defaultSuggestPresetIcons = true,
+  defaultIsShownPresetIcons = true,
   matcher = forwardPartialFuzzyMatcher,
 }) => {
   const { textInput, cursor, editor, layout, projectName } = useScrapbox();
@@ -42,13 +42,13 @@ export const App: FunctionComponent<AppProps> = ({
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
-  const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
+  const [isShownPresetIcons, setIsShownPresetIcons] = useState(defaultIsShownPresetIcons);
   const composedMatcher = useCallback(
     (query: string) => {
-      const composedIcons = uniqueIcons(suggestPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons);
+      const composedIcons = uniqueIcons(isShownPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons);
       return matcher({ query, composedIcons, presetIcons, embeddedIcons });
     },
-    [embeddedIcons, matcher, presetIcons, suggestPresetIcons],
+    [embeddedIcons, matcher, presetIcons, isShownPresetIcons],
   );
   const [query, setQuery] = useState('');
 
@@ -65,7 +65,7 @@ export const App: FunctionComponent<AppProps> = ({
     textInput.focus();
   }, [textInput]);
 
-  const handleSuggestionOpenKeyDown = useCallback(
+  const handleLaunchIconSuggestionKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
       e.preventDefault();
@@ -84,16 +84,16 @@ export const App: FunctionComponent<AppProps> = ({
 
         setEmbeddedIcons(newEmbeddedIcons);
         setOpen(true);
-        setSuggestPresetIcons(defaultSuggestPresetIcons);
+        setIsShownPresetIcons(defaultIsShownPresetIcons);
       } else {
         // ポップアップが開いていたら、preset icon の表示・非表示をトグルする
-        setSuggestPresetIcons((suggestPresetIcons) => !suggestPresetIcons);
+        setIsShownPresetIcons((isShownPresetIcons) => !isShownPresetIcons);
       }
     },
-    [cursor, defaultSuggestPresetIcons, editor, open, layout, projectName, textInput],
+    [cursor, defaultIsShownPresetIcons, editor, open, layout, projectName, textInput],
   );
 
-  const handleInsertQueryKeyDown = useCallback(
+  const handleInsertQueryAsIconKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
       if (!open) return; // ポップアップが閉じていたら無視する
@@ -108,13 +108,18 @@ export const App: FunctionComponent<AppProps> = ({
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
       if (isComposing(e)) return; // IMEによる変換中は何もしない
-      if (isSuggestionOpenKeyDown(e)) {
-        handleSuggestionOpenKeyDown(e);
-      } else if (isInsertQueryKeyDown(e)) {
-        handleInsertQueryKeyDown(e);
+      if (isLaunchIconSuggestionKey(e)) {
+        handleLaunchIconSuggestionKeyDown(e);
+      } else if (isInsertQueryAsIconKey(e)) {
+        handleInsertQueryAsIconKeyDown(e);
       }
     },
-    [isSuggestionOpenKeyDown, isInsertQueryKeyDown, handleSuggestionOpenKeyDown, handleInsertQueryKeyDown],
+    [
+      isLaunchIconSuggestionKey,
+      isInsertQueryAsIconKey,
+      handleLaunchIconSuggestionKeyDown,
+      handleInsertQueryAsIconKeyDown,
+    ],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
@@ -127,7 +132,7 @@ export const App: FunctionComponent<AppProps> = ({
       onSelect={handleSelect}
       onClose={handleClose}
       onInputQuery={setQuery}
-      isSuggestionCloseKeyDown={isSuggestionCloseKeyDown}
+      isExitIconSuggestionKey={isExitIconSuggestionKey}
     />
   );
 };

@@ -150,12 +150,12 @@ describe('PopupMenu', () => {
         });
         expect(onClose).toBeCalledTimes(1);
       });
-      test('ポップアップを閉じるキーは isPopupCloseKeyDown でカスタマイズできる', async () => {
-        const isPopupCloseKeyDown = (e: KeyboardEvent) => {
+      test('ポップアップを閉じるキーは isClosePopupKey でカスタマイズできる', async () => {
+        const isClosePopupKey = (e: KeyboardEvent) => {
           return e.key === 'g' && e.ctrlKey && !e.shiftKey && !e.altKey;
         };
         const onClose = jest.fn();
-        render(<PopupMenu open {...props} onClose={onClose} isPopupCloseKeyDown={isPopupCloseKeyDown} />);
+        render(<PopupMenu open {...props} onClose={onClose} isClosePopupKey={isClosePopupKey} />);
 
         expect(onClose).toBeCalledTimes(0);
         await act(() => {

@@ -45,7 +45,7 @@ function App(props: AppProps & Options) {
   const matcher = forwardMatcher;
   return (
     <ScrapboxContext.Provider value={{ editor, scrapbox }}>
-      <NativeApp presetIcons={presetIcons} defaultSuggestPresetIcons={false} matcher={matcher} {...props} />
+      <NativeApp presetIcons={presetIcons} defaultIsShownPresetIcons={false} matcher={matcher} {...props} />
     </ScrapboxContext.Provider>
   );
 }
@@ -62,9 +62,9 @@ describe('App', () => {
       expect(queryByTestId('search-input')).toBeNull();
       expect(asFragment()).toMatchSnapshot();
     });
-    test('isSuggestionOpenKeyDown が真になるようなキーを押すと SuggestBox が表示される', async () => {
-      const isSuggestionOpenKeyDown = (e: KeyboardEvent) => e.key === 'a';
-      const { asFragment, queryByTestId } = render(<App isSuggestionOpenKeyDown={isSuggestionOpenKeyDown} />);
+    test('isLaunchIconSuggestionKey が真になるようなキーを押すと SuggestBox が表示される', async () => {
+      const isLaunchIconSuggestionKey = (e: KeyboardEvent) => e.key === 'a';
+      const { asFragment, queryByTestId } = render(<App isLaunchIconSuggestionKey={isLaunchIconSuggestionKey} />);
       await act(() => {
         fireEvent(document, keydownEscapeEvent);
       });
@@ -109,7 +109,7 @@ describe('App', () => {
         expect(mockInsertText).toBeCalledWith(expect.anything(), '[b.icon]');
       });
     });
-    test('isSuggestionOpenKeyDown が真になるようなキーを押下したら、presetIcons が suggest される', async () => {
+    test('isLaunchIconSuggestionKey が真になるようなキーを押下したら、presetIcons が suggest される', async () => {
       const { getByTestId } = await renderApp({});
       const buttonContainer = getByTestId('button-container');
 
@@ -119,7 +119,7 @@ describe('App', () => {
       });
       expect(buttonContainer.childElementCount).toEqual(3); // a, b, cccc の 3アイコンが表示される
     });
-    test('isInsertQueryKeyDown が真になるようなキーを押下したら、`[query.icon] が挿入される', async () => {
+    test('isInsertQueryAsIconKey が真になるようなキーを押下したら、`[query.icon] が挿入される', async () => {
       const { getByTestId } = await renderApp({});
       const searchInput = getByTestId('search-input');
 
@@ -129,8 +129,8 @@ describe('App', () => {
       });
       expect(mockInsertText).toBeCalledWith(expect.anything(), '[mizdra.icon]');
     });
-    test('defaultSuggestPresetIcons が真なら最初からプリセットアイコンが suggest される', async () => {
-      const { getByTestId } = await renderApp({ defaultSuggestPresetIcons: true });
+    test('defaultIsShownPresetIcons が真なら最初からプリセットアイコンが suggest される', async () => {
+      const { getByTestId } = await renderApp({ defaultIsShownPresetIcons: true });
       const buttonContainer = getByTestId('button-container');
       expect(buttonContainer.childElementCount).toEqual(3); // a, b, c の 3アイコンが表示される
     });
@@ -138,14 +138,14 @@ describe('App', () => {
 
   describe('インテグレーションテスト', () => {
     describe('matcher', () => {
-      test('embeddedIcons や presetIcons、suggestPresetIcons の状態で matcher に渡される引数が変わる', async () => {
+      test('embeddedIcons や presetIcons、isShownPresetIcons の状態で matcher に渡される引数が変わる', async () => {
         const presetIcons = [new Icon('project', 'b'), new Icon('project', 'c'), new Icon('project', 'c')];
         const embeddedIcons = [new Icon('project', 'a'), new Icon('project', 'a'), new Icon('project', 'b')];
 
         const matcher: Matcher = jest.fn(() => []);
         render(
           <App
-            defaultSuggestPresetIcons={false}
+            defaultIsShownPresetIcons={false}
             presetIcons={presetIcons}
             embeddedIcons={embeddedIcons}
             matcher={matcher}
