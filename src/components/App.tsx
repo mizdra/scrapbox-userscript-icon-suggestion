@@ -62,14 +62,14 @@ export const App: FunctionComponent<AppProps> = ({
 
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
-  const [editorIcons, setEditorIcons] = useState<Icon[]>([]);
+  const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
   const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
   const items = useMemo(() => {
-    const icons = suggestPresetIcons ? [...editorIcons, ...presetIcons] : editorIcons;
+    const icons = suggestPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons;
     const suggestedIcons = uniqBy(icons, (icon) => icon.getShortPagePath(projectName));
 
     return suggestedIcons.map((icon) => toItem(icon, icons));
-  }, [suggestPresetIcons, editorIcons, presetIcons, projectName]);
+  }, [suggestPresetIcons, embeddedIcons, presetIcons, projectName]);
   const [query, setQuery] = useState('');
 
   const handleSelect = useCallback(
@@ -100,9 +100,9 @@ export const App: FunctionComponent<AppProps> = ({
         // 行のアイコン記法が画像化されるようにしておく。
         textInput.blur();
         // 画像化されたらエディタを走査してアイコンを収集
-        const newEditorIcons = scanEmbeddedIcons(projectName, editor);
+        const newEmbeddedIcons = scanEmbeddedIcons(projectName, editor);
 
-        setEditorIcons(newEditorIcons);
+        setEmbeddedIcons(newEmbeddedIcons);
         setOpen(true);
         setSuggestPresetIcons(defaultSuggestPresetIcons);
       } else {
