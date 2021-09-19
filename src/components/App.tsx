@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { useCallback, useMemo, useState } from 'preact/hooks';
+import { forwardPartialFuzzyMatcher } from '..';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqBy } from '../lib/collection';
@@ -25,7 +26,7 @@ export type AppProps = {
   isInsertQueryKeyDown?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
   defaultSuggestPresetIcons?: boolean;
-  matcher?: Matcher<Icon>;
+  matcher?: Matcher;
 };
 
 export const App: FunctionComponent<AppProps> = ({
@@ -34,7 +35,7 @@ export const App: FunctionComponent<AppProps> = ({
   isInsertQueryKeyDown = DEFAULT_IS_INSERT_QUERY_KEY_DOWN,
   presetIcons = [],
   defaultSuggestPresetIcons = true,
-  matcher,
+  matcher = forwardPartialFuzzyMatcher,
 }) => {
   const { textInput, cursor, editor, layout, projectName } = useScrapbox();
 
@@ -42,10 +43,13 @@ export const App: FunctionComponent<AppProps> = ({
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
   const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
-  const icons = useMemo(() => {
-    const icons = suggestPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons;
-    return uniqBy(icons, (icon) => icon.fullPagePath);
-  }, [suggestPresetIcons, embeddedIcons, presetIcons]);
+  const composedMatcher = useMemo(() => {
+    const composedIcons = uniqBy(
+      suggestPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons,
+      (icon) => icon.fullPagePath,
+    );
+    return (query: string) => matcher({ query, composedIcons, presetIcons, embeddedIcons });
+  }, [embeddedIcons, matcher, presetIcons, suggestPresetIcons]);
   const [query, setQuery] = useState('');
 
   const handleSelect = useCallback(
@@ -118,9 +122,8 @@ export const App: FunctionComponent<AppProps> = ({
     <SearchablePopupMenu
       open={open}
       emptyMessage="キーワードにマッチするアイコンがありません"
-      icons={icons}
       cursorPosition={cursorPosition}
-      matcher={matcher}
+      matcher={composedMatcher}
       onSelect={handleSelect}
       onClose={handleClose}
       onInputQuery={setQuery}
