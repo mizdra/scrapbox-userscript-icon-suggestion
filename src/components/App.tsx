@@ -19,7 +19,7 @@ const DEFAULT_IS_INSERT_QUERY_KEY_DOWN = (e: KeyboardEvent) => {
   return false;
 };
 
-function toIcon(icon: Icon, icons: Icon[]): Icon<Icon> {
+function toIcon(icon: Icon, icons: Icon[]): Icon {
   // 基本的にプロジェクト名は省略して表示。
   // 同名のページタイトルのアイコンが他にある場合は、プロジェクト名も括弧付きで表示。
   const label = hasDuplicatedPageTitle(icon, icons) ? `${icon.pageTitle} (${icon.projectName})` : icon.pageTitle;
@@ -73,7 +73,7 @@ export const App: FunctionComponent<AppProps> = ({
   const [query, setQuery] = useState('');
 
   const handleSelect = useCallback(
-    (icon: Icon<Icon>) => {
+    (icon: Icon) => {
       setOpen(false);
       insertText(textInput, icon.value.getNotation(projectName));
     },
