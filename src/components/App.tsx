@@ -7,7 +7,7 @@ import { hasDuplicatedPageTitle, Icon } from '../lib/icon';
 import { isComposing } from '../lib/key';
 import { calcCursorPosition, insertText, scanEmbeddedIcons } from '../lib/scrapbox';
 import { CursorPosition, Matcher } from '../types';
-import { SuggestionBox, Item } from './SuggestionBox';
+import { SearchablePopupMenu, Item } from './SearchablePopupMenu';
 
 const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
@@ -139,7 +139,7 @@ export const App: FunctionComponent<AppProps> = ({
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
   return (
-    <SuggestionBox
+    <SearchablePopupMenu
       open={open}
       emptyMessage="キーワードにマッチするアイコンがありません"
       items={items}

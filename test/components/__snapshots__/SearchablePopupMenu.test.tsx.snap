@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SuggestionBox open === false の時 ポップアップも QueryInput も表示されない 1`] = `
+exports[`SearchablePopupMenu open === false の時 ポップアップも QueryInput も表示されない 1`] = `
 <DocumentFragment>
   <div />
 </DocumentFragment>
 `;
 
-exports[`SuggestionBox open === true の時 ポップアップと QueryInput が表示される 1`] = `
+exports[`SearchablePopupMenu open === true の時 ポップアップと QueryInput が表示される 1`] = `
 <DocumentFragment>
   <div>
     <div

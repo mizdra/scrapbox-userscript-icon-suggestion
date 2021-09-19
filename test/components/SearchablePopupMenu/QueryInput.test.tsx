@@ -1,6 +1,6 @@
 import { fireEvent, render, waitFor } from '@testing-library/preact';
 import faker from 'faker';
-import { QueryInput } from '../../../src/components/SuggestionBox/QueryInput';
+import { QueryInput } from '../../../src/components/SearchablePopupMenu/QueryInput';
 import { ScrapboxContext } from '../../../src/contexts/ScrapboxContext';
 import { calcQueryInputStyle } from '../../../src/lib/calc-style';
 import { CursorPosition } from '../../../src/types';
