@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'preact/hooks';
 import { forwardPartialFuzzyMatcher } from '..';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
-import { uniqBy } from '../lib/collection';
+import { uniqIcons } from '../lib/collection';
 import { Icon } from '../lib/icon';
 import { isComposing } from '../lib/key';
 import { calcCursorPosition, insertText, scanEmbeddedIcons } from '../lib/scrapbox';
@@ -44,10 +44,7 @@ export const App: FunctionComponent<AppProps> = ({
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
   const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
   const composedMatcher = useMemo(() => {
-    const composedIcons = uniqBy(
-      suggestPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons,
-      (icon) => icon.fullPagePath,
-    );
+    const composedIcons = uniqIcons(suggestPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons);
     return (query: string) => matcher({ query, composedIcons, presetIcons, embeddedIcons });
   }, [embeddedIcons, matcher, presetIcons, suggestPresetIcons]);
   const [query, setQuery] = useState('');
