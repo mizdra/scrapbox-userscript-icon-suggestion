@@ -3,7 +3,7 @@ import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { calcButtonContainerStyle, calcPopupMenuStyle, calcTriangleStyle } from '../lib/calc-style';
-import { Icon } from '../lib/icon';
+import { hasDuplicatedPageTitle, Icon } from '../lib/icon';
 import { isComposing } from '../lib/key';
 import { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
@@ -76,20 +76,22 @@ export function PopupMenu({
   const popupMenuStyle = calcPopupMenuStyle(cursorPosition);
   const triangleStyle = calcTriangleStyle(cursorPosition, isEmpty);
   const buttonContainerStyle = calcButtonContainerStyle(editorWidth, buttonContainerWidth, cursorPosition, isEmpty);
-
-  const iconListElement = icons.map((icon, i) => (
-    <PopupMenuButton key={icon.fullPagePath} selected={selectedIndex === i}>
-      <span>
-        <img
-          alt={icon.imgAlt}
-          title={icon.imgTitle}
-          style="width: 1.3em; height: 1.3em; object-fit: contain;"
-          src={icon.imgSrc}
-        />{' '}
-        <span data-testid="suggested-icon-label">{icon.getSearchableText()}</span>
-      </span>
-    </PopupMenuButton>
-  ));
+  const iconListElement = icons.map((icon, i) => {
+    const label = hasDuplicatedPageTitle(icon, icons) ? `${icon.pageTitle} (${icon.projectName})` : icon.pageTitle;
+    return (
+      <PopupMenuButton key={icon.fullPagePath} selected={selectedIndex === i}>
+        <span>
+          <img
+            alt={icon.imgAlt}
+            title={icon.imgTitle}
+            style="width: 1.3em; height: 1.3em; object-fit: contain;"
+            src={icon.imgSrc}
+          />{' '}
+          <span data-testid="suggested-icon-label">{label}</span>
+        </span>
+      </PopupMenuButton>
+    );
+  });
 
   return (
     <>
