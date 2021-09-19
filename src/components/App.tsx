@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { useCallback, useMemo, useState } from 'preact/hooks';
+import { useCallback, useState } from 'preact/hooks';
 import { forwardPartialFuzzyMatcher } from '..';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
@@ -43,10 +43,13 @@ export const App: FunctionComponent<AppProps> = ({
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
   const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
-  const composedMatcher = useMemo(() => {
-    const composedIcons = uniqIcons(suggestPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons);
-    return (query: string) => matcher({ query, composedIcons, presetIcons, embeddedIcons });
-  }, [embeddedIcons, matcher, presetIcons, suggestPresetIcons]);
+  const composedMatcher = useCallback(
+    (query: string) => {
+      const composedIcons = uniqIcons(suggestPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons);
+      return matcher({ query, composedIcons, presetIcons, embeddedIcons });
+    },
+    [embeddedIcons, matcher, presetIcons, suggestPresetIcons],
+  );
   const [query, setQuery] = useState('');
 
   const handleSelect = useCallback(
