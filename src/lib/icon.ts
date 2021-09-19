@@ -42,10 +42,6 @@ export class Icon {
   getNotation(currentProjectName: string): string {
     return `[${this.getShortPagePath(currentProjectName)}.icon]`;
   }
-  /** 検索に利用される文字列 */
-  getSearchableText(): string {
-    return this.pageTitle;
-  }
   /** インスタンス同士が表すアイコンが一致するかどうか */
   equals(target: Icon): boolean {
     return this.fullPagePath === target.fullPagePath;

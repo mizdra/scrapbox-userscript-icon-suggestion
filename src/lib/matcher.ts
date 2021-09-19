@@ -15,7 +15,7 @@ export function fuzzyMatcher(query: string, icons: Icon[]): Icon[] {
   const newIcons: Icon[] = [];
   for (let ambig = 0; ambig <= maxAambig; ambig++) {
     for (const icon of icons) {
-      if (match(icon.getSearchableText(), ambig)) newIcons.push(icon);
+      if (match(icon.pageTitle, ambig)) newIcons.push(icon);
     }
   }
   // 重複は除く
@@ -28,7 +28,7 @@ export function fuzzyMatcher(query: string, icons: Icon[]): Icon[] {
  * 元の `icons` の順序を維持しつつ、`icons` を前方一致でフィルタして返す。
  * */
 export function forwardMatcher(query: string, icons: Icon[]): Icon[] {
-  return icons.filter((icon) => icon.getSearchableText().toLowerCase().startsWith(query.toLowerCase()));
+  return icons.filter((icon) => icon.pageTitle.toLowerCase().startsWith(query.toLowerCase()));
 }
 
 /**
@@ -36,7 +36,7 @@ export function forwardMatcher(query: string, icons: Icon[]): Icon[] {
  * 元の `icons` の順序を維持しつつ、`icons` を部分一致でフィルタして返す。
  * */
 export function partialMatcher(query: string, icons: Icon[]): Icon[] {
-  return icons.filter((icon) => icon.getSearchableText().toLowerCase().includes(query.toLowerCase()));
+  return icons.filter((icon) => icon.pageTitle.toLowerCase().includes(query.toLowerCase()));
 }
 
 /**
