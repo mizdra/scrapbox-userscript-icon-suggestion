@@ -1,6 +1,6 @@
 import Asearch from 'asearch';
 import { MatcherOptions } from '../types';
-import { uniqIcons } from './collection';
+import { uniqueIcons } from './collection';
 import { Icon } from './icon';
 
 /**
@@ -21,7 +21,7 @@ export function fuzzyMatcher({ query, composedIcons }: MatcherOptions): Icon[] {
   }
   // 重複は除く
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return uniqIcons(newIcons);
+  return uniqueIcons(newIcons);
 }
 
 /**
@@ -47,5 +47,5 @@ export function partialMatcher({ query, composedIcons }: MatcherOptions): Icon[]
 export function forwardPartialFuzzyMatcher(options: MatcherOptions): Icon[] {
   const newIcons = [...forwardMatcher(options), ...partialMatcher(options), ...fuzzyMatcher(options)];
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return uniqIcons(newIcons);
+  return uniqueIcons(newIcons);
 }

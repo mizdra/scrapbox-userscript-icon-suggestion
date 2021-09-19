@@ -1,13 +1,13 @@
 import { Icon } from '../../src';
-import { uniqBy, uniqIcons } from '../../src/lib/collection';
+import { uniqueBy, uniqueIcons } from '../../src/lib/collection';
 
-describe('uniqBy', () => {
+describe('uniqueBy', () => {
   test('空配列が入力されたら空配列を返す', () => {
-    expect(uniqBy([], () => 0)).toStrictEqual([]);
+    expect(uniqueBy([], () => 0)).toStrictEqual([]);
   });
   test('関数の戻り値をキーとして unique される', () => {
     expect(
-      uniqBy(
+      uniqueBy(
         [
           { key: 'a', value: 0 },
           { key: 'a', value: 1 },
@@ -26,10 +26,10 @@ describe('uniqBy', () => {
   });
 });
 
-test('uniqIcons', () => {
-  expect(uniqIcons([])).toStrictEqual([]);
+test('uniqueIcons', () => {
+  expect(uniqueIcons([])).toStrictEqual([]);
   expect(
-    uniqIcons([
+    uniqueIcons([
       new Icon('project', 'a'),
       new Icon('project', 'a'),
       new Icon('project', 'b'),

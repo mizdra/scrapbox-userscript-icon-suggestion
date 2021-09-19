@@ -6,7 +6,7 @@ import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { App as NativeApp, AppProps } from '../../src/components/App';
 import { ScrapboxContext } from '../../src/contexts/ScrapboxContext';
-import { uniqIcons } from '../../src/lib/collection';
+import { uniqueIcons } from '../../src/lib/collection';
 import { Icon } from '../../src/lib/icon';
 import { forwardMatcher } from '../../src/lib/matcher';
 import { Matcher } from '../../src/types';
@@ -156,7 +156,7 @@ describe('App', () => {
         });
         expect(matcher).lastCalledWith({
           query: '',
-          composedIcons: uniqIcons(embeddedIcons),
+          composedIcons: uniqueIcons(embeddedIcons),
           presetIcons: presetIcons,
           embeddedIcons: embeddedIcons,
         });
@@ -167,7 +167,7 @@ describe('App', () => {
 
         expect(matcher).lastCalledWith({
           query: '',
-          composedIcons: uniqIcons([...embeddedIcons, ...presetIcons]),
+          composedIcons: uniqueIcons([...embeddedIcons, ...presetIcons]),
           presetIcons: presetIcons,
           embeddedIcons: embeddedIcons,
         });
