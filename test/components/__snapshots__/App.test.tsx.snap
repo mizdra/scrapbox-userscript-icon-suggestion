@@ -6,7 +6,7 @@ exports[`App 初期状態 SuggestBox が表示されない 1`] = `
 </DocumentFragment>
 `;
 
-exports[`App 初期状態 isSuggestionOpenKeyDown が真になるようなキーを押すと SuggestBox が表示される 1`] = `
+exports[`App 初期状態 isLaunchIconSuggestionKey が真になるようなキーを押すと SuggestBox が表示される 1`] = `
 <DocumentFragment>
   <div>
     <div

@@ -62,9 +62,9 @@ describe('App', () => {
       expect(queryByTestId('search-input')).toBeNull();
       expect(asFragment()).toMatchSnapshot();
     });
-    test('isSuggestionOpenKeyDown が真になるようなキーを押すと SuggestBox が表示される', async () => {
-      const isSuggestionOpenKeyDown = (e: KeyboardEvent) => e.key === 'a';
-      const { asFragment, queryByTestId } = render(<App isSuggestionOpenKeyDown={isSuggestionOpenKeyDown} />);
+    test('isLaunchIconSuggestionKey が真になるようなキーを押すと SuggestBox が表示される', async () => {
+      const isLaunchIconSuggestionKey = (e: KeyboardEvent) => e.key === 'a';
+      const { asFragment, queryByTestId } = render(<App isLaunchIconSuggestionKey={isLaunchIconSuggestionKey} />);
       await act(() => {
         fireEvent(document, keydownEscapeEvent);
       });
@@ -109,7 +109,7 @@ describe('App', () => {
         expect(mockInsertText).toBeCalledWith(expect.anything(), '[b.icon]');
       });
     });
-    test('isSuggestionOpenKeyDown が真になるようなキーを押下したら、presetIcons が suggest される', async () => {
+    test('isLaunchIconSuggestionKey が真になるようなキーを押下したら、presetIcons が suggest される', async () => {
       const { getByTestId } = await renderApp({});
       const buttonContainer = getByTestId('button-container');
 
