@@ -8,7 +8,7 @@ import { isComposing } from '../lib/key';
 import { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
-const DEFAULT_IS_POPUP_CLOSE_KEY_DOWN = (e: KeyboardEvent) => {
+const DEFAULT_IS_CLOSE_POPUP_KEY = (e: KeyboardEvent) => {
   return e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
 };
 
@@ -19,7 +19,7 @@ export type PopupMenuProps = {
   icons: Icon[];
   onSelect?: (icon: Icon, index: number) => void;
   onClose?: () => void;
-  isPopupCloseKeyDown?: (e: KeyboardEvent) => boolean;
+  isClosePopupKey?: (e: KeyboardEvent) => boolean;
 };
 
 export function PopupMenu({
@@ -29,7 +29,7 @@ export function PopupMenu({
   icons,
   onSelect,
   onClose,
-  isPopupCloseKeyDown = DEFAULT_IS_POPUP_CLOSE_KEY_DOWN,
+  isClosePopupKey = DEFAULT_IS_CLOSE_POPUP_KEY,
 }: PopupMenuProps) {
   const { editor } = useScrapbox();
   const { ref, width: buttonContainerWidth = 0 } = useResizeObserver<HTMLDivElement>();
@@ -53,7 +53,7 @@ export function PopupMenu({
       const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
       const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
       const isEnter = e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-      const isClose = isPopupCloseKeyDown(e);
+      const isClose = isClosePopupKey(e);
 
       if (isTab || isShiftTab || isEnter || isClose) {
         e.preventDefault();
@@ -69,7 +69,7 @@ export function PopupMenu({
         if (isClose) onClose?.();
       }
     },
-    [isEmpty, isPopupCloseKeyDown, icons, onClose, onSelect, open, selectedIndex],
+    [isEmpty, isClosePopupKey, icons, onClose, onSelect, open, selectedIndex],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 

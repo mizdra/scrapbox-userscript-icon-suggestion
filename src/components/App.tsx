@@ -10,11 +10,11 @@ import { calcCursorPosition, insertText, scanEmbeddedIcons } from '../lib/scrapb
 import { CursorPosition, Matcher } from '../types';
 import { SearchablePopupMenu } from './SearchablePopupMenu';
 
-const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
+const DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
 };
 
-const DEFAULT_IS_INSERT_QUERY_KEY_DOWN = (e: KeyboardEvent) => {
+const DEFAULT_IS_INSERT_QUERY_AS_ICON_KEY = (e: KeyboardEvent) => {
   if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && e.altKey && !e.metaKey) return true;
   if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey && e.metaKey) return true;
   return false;
@@ -30,9 +30,9 @@ export type AppProps = {
 };
 
 export const App: FunctionComponent<AppProps> = ({
-  isLaunchIconSuggestionKey = DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN,
+  isLaunchIconSuggestionKey = DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY,
   isExitIconSuggestionKey,
-  isInsertQueryAsIconKey = DEFAULT_IS_INSERT_QUERY_KEY_DOWN,
+  isInsertQueryAsIconKey = DEFAULT_IS_INSERT_QUERY_AS_ICON_KEY,
   presetIcons = [],
   defaultIsShownPresetIcons = true,
   matcher = forwardPartialFuzzyMatcher,
@@ -65,7 +65,7 @@ export const App: FunctionComponent<AppProps> = ({
     textInput.focus();
   }, [textInput]);
 
-  const handleSuggestionOpenKeyDown = useCallback(
+  const handleLaunchIconSuggestionKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
       e.preventDefault();
@@ -93,7 +93,7 @@ export const App: FunctionComponent<AppProps> = ({
     [cursor, defaultIsShownPresetIcons, editor, open, layout, projectName, textInput],
   );
 
-  const handleInsertQueryKeyDown = useCallback(
+  const handleInsertQueryAsIconKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
       if (!open) return; // ポップアップが閉じていたら無視する
@@ -109,12 +109,17 @@ export const App: FunctionComponent<AppProps> = ({
     (e: KeyboardEvent) => {
       if (isComposing(e)) return; // IMEによる変換中は何もしない
       if (isLaunchIconSuggestionKey(e)) {
-        handleSuggestionOpenKeyDown(e);
+        handleLaunchIconSuggestionKeyDown(e);
       } else if (isInsertQueryAsIconKey(e)) {
-        handleInsertQueryKeyDown(e);
+        handleInsertQueryAsIconKeyDown(e);
       }
     },
-    [isLaunchIconSuggestionKey, isInsertQueryAsIconKey, handleSuggestionOpenKeyDown, handleInsertQueryKeyDown],
+    [
+      isLaunchIconSuggestionKey,
+      isInsertQueryAsIconKey,
+      handleLaunchIconSuggestionKeyDown,
+      handleInsertQueryAsIconKeyDown,
+    ],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 

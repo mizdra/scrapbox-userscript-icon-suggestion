@@ -61,7 +61,7 @@ export function SearchablePopupMenu({
         cursorPosition={cursorPosition}
         onSelect={handleSelect}
         onClose={handleClose}
-        isPopupCloseKeyDown={isExitIconSuggestionKey}
+        isClosePopupKey={isExitIconSuggestionKey}
       />
       {open && (
         <SearchInput
