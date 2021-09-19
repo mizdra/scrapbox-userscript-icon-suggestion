@@ -78,8 +78,16 @@ export function PopupMenu({
   const buttonContainerStyle = calcButtonContainerStyle(editorWidth, buttonContainerWidth, cursorPosition, isEmpty);
 
   const iconListElement = icons.map((icon, i) => (
-    <PopupMenuButton key={icon.key} selected={selectedIndex === i}>
-      {icon.element}
+    <PopupMenuButton key={icon.fullPagePath} selected={selectedIndex === i}>
+      <span>
+        <img
+          alt={icon.imgAlt}
+          title={icon.imgTitle}
+          style="width: 1.3em; height: 1.3em; object-fit: contain;"
+          src={icon.imgSrc}
+        />{' '}
+        <span data-testid="suggested-icon-label">{icon.getSearchableText()}</span>
+      </span>
     </PopupMenuButton>
   ));
 

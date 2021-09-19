@@ -31,14 +31,6 @@ export function SearchablePopupMenu<T>({
 }: SearchablePopupMenuProps<T>) {
   const [query, setQuery] = useState('');
   const matchedIcons = useMemo(() => matcher(query, icons), [icons, matcher, query]);
-  const matchedIconsForPopupMenu = useMemo(
-    () =>
-      matchedIcons.map((icon) => ({
-        key: icon.key,
-        element: icon.element,
-      })),
-    [matchedIcons],
-  );
 
   useEffect(() => {
     if (open === false) setQuery('');
@@ -66,7 +58,7 @@ export function SearchablePopupMenu<T>({
       <PopupMenu
         open={open}
         emptyMessage={emptyMessage}
-        icons={matchedIconsForPopupMenu}
+        icons={matchedIcons}
         cursorPosition={cursorPosition}
         onSelect={handleSelect}
         onClose={handleClose}
