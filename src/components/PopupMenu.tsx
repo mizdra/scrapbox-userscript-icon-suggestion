@@ -13,14 +13,14 @@ const DEFAULT_IS_POPUP_CLOSE_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
 };
 
-export type Item = { key: JSXInternal.IntrinsicAttributes['key']; element: ComponentChild };
+export type Icon = { key: JSXInternal.IntrinsicAttributes['key']; element: ComponentChild };
 
 export type PopupMenuProps = {
   open: boolean;
   emptyMessage?: string;
   cursorPosition: CursorPosition;
-  items: Item[];
-  onSelect?: (item: Item, index: number) => void;
+  icons: Icon[];
+  onSelect?: (icon: Icon, index: number) => void;
   onClose?: () => void;
   isPopupCloseKeyDown?: (e: KeyboardEvent) => boolean;
 };
@@ -29,22 +29,22 @@ export function PopupMenu({
   open,
   emptyMessage,
   cursorPosition,
-  items,
+  icons,
   onSelect,
   onClose,
   isPopupCloseKeyDown = DEFAULT_IS_POPUP_CLOSE_KEY_DOWN,
 }: PopupMenuProps) {
   const { editor } = useScrapbox();
   const { ref, width: buttonContainerWidth = 0 } = useResizeObserver<HTMLDivElement>();
-  const isEmpty = useMemo(() => items.length === 0, [items.length]);
+  const isEmpty = useMemo(() => icons.length === 0, [icons.length]);
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const { width: editorWidth = 0 } = useResizeObserver({ ref: editor });
 
-  // items が変わったら選択位置を 0 番目に戻す。ただし空なら null にセットする。
+  // icons が変わったら選択位置を 0 番目に戻す。ただし空なら null にセットする。
   useEffect(() => {
     setSelectedIndex(isEmpty ? null : 0);
-  }, [isEmpty, items]);
+  }, [isEmpty, icons]);
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
@@ -66,13 +66,13 @@ export function PopupMenu({
       if (isEmpty || selectedIndex === null) {
         if (isClose) onClose?.();
       } else {
-        if (isTab) setSelectedIndex((selectedIndex + 1) % items.length);
-        if (isShiftTab) setSelectedIndex((selectedIndex - 1 + items.length) % items.length);
-        if (isEnter) onSelect?.(items[selectedIndex], selectedIndex);
+        if (isTab) setSelectedIndex((selectedIndex + 1) % icons.length);
+        if (isShiftTab) setSelectedIndex((selectedIndex - 1 + icons.length) % icons.length);
+        if (isEnter) onSelect?.(icons[selectedIndex], selectedIndex);
         if (isClose) onClose?.();
       }
     },
-    [isEmpty, isPopupCloseKeyDown, items, onClose, onSelect, open, selectedIndex],
+    [isEmpty, isPopupCloseKeyDown, icons, onClose, onSelect, open, selectedIndex],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 
@@ -80,9 +80,9 @@ export function PopupMenu({
   const triangleStyle = calcTriangleStyle(cursorPosition, isEmpty);
   const buttonContainerStyle = calcButtonContainerStyle(editorWidth, buttonContainerWidth, cursorPosition, isEmpty);
 
-  const itemListElement = items.map((item, i) => (
-    <PopupMenuButton key={item.key} selected={selectedIndex === i}>
-      {item.element}
+  const iconListElement = icons.map((icon, i) => (
+    <PopupMenuButton key={icon.key} selected={selectedIndex === i}>
+      {icon.element}
     </PopupMenuButton>
   ));
 
@@ -91,7 +91,7 @@ export function PopupMenu({
       {open && (
         <div className="popup-menu" style={popupMenuStyle} data-testid="popup-menu">
           <div ref={ref} className="button-container" style={buttonContainerStyle} data-testid="button-container">
-            {items.length === 0 ? emptyMessage ?? 'アイテムは空です' : itemListElement}
+            {icons.length === 0 ? emptyMessage ?? 'アイテムは空です' : iconListElement}
           </div>
           <div className="triangle" style={triangleStyle} />
         </div>

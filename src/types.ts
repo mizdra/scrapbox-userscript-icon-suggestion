@@ -32,4 +32,4 @@ export type Item<T> = {
 };
 
 /** SearchablePopupMenu 内でアイテムのフィルタに利用される matcher の型 */
-export type Matcher<T> = (query: string, items: Item<T>[]) => Item<T>[];
+export type Matcher<T> = (query: string, icons: Icon<T>[]) => Icon<T>[];

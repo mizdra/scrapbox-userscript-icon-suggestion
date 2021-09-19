@@ -7,7 +7,7 @@ import { hasDuplicatedPageTitle, Icon } from '../lib/icon';
 import { isComposing } from '../lib/key';
 import { calcCursorPosition, insertText, scanEmbeddedIcons } from '../lib/scrapbox';
 import { CursorPosition, Matcher } from '../types';
-import { SearchablePopupMenu, Item } from './SearchablePopupMenu';
+import { SearchablePopupMenu, Icon } from './SearchablePopupMenu';
 
 const DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN = (e: KeyboardEvent) => {
   return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
@@ -19,7 +19,7 @@ const DEFAULT_IS_INSERT_QUERY_KEY_DOWN = (e: KeyboardEvent) => {
   return false;
 };
 
-function toItem(icon: Icon, icons: Icon[]): Item<Icon> {
+function toIcon(icon: Icon, icons: Icon[]): Icon<Icon> {
   // 基本的にプロジェクト名は省略して表示。
   // 同名のページタイトルのアイコンが他にある場合は、プロジェクト名も括弧付きで表示。
   const label = hasDuplicatedPageTitle(icon, icons) ? `${icon.pageTitle} (${icon.projectName})` : icon.pageTitle;
@@ -64,18 +64,18 @@ export const App: FunctionComponent<AppProps> = ({
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
   const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultSuggestPresetIcons);
-  const items = useMemo(() => {
+  const icons = useMemo(() => {
     const icons = suggestPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons;
     const suggestedIcons = uniqBy(icons, (icon) => icon.getShortPagePath(projectName));
 
-    return suggestedIcons.map((icon) => toItem(icon, icons));
+    return suggestedIcons.map((icon) => toIcon(icon, icons));
   }, [suggestPresetIcons, embeddedIcons, presetIcons, projectName]);
   const [query, setQuery] = useState('');
 
   const handleSelect = useCallback(
-    (item: Item<Icon>) => {
+    (icon: Icon<Icon>) => {
       setOpen(false);
-      insertText(textInput, item.value.getNotation(projectName));
+      insertText(textInput, icon.value.getNotation(projectName));
     },
     [projectName, textInput],
   );
@@ -142,7 +142,7 @@ export const App: FunctionComponent<AppProps> = ({
     <SearchablePopupMenu
       open={open}
       emptyMessage="キーワードにマッチするアイコンがありません"
-      items={items}
+      icons={icons}
       cursorPosition={cursorPosition}
       matcher={matcher}
       onSelect={handleSelect}

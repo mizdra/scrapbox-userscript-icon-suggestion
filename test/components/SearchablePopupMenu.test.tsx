@@ -8,14 +8,14 @@ import { keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
 // ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
-const items = [
+const icons = [
   { key: 1, element: <span key="1">a</span>, searchableText: 'a', value: 'a' },
   { key: 2, element: <span key="2">ab</span>, searchableText: 'ab', value: 'ab' },
   { key: 3, element: <span key="3">abc</span>, searchableText: 'abc', value: 'abc' },
   { key: 4, element: <span key="4">z</span>, searchableText: 'z', value: 'z' },
 ];
 const matcher = forwardMatcher;
-const props = { cursorPosition, items, matcher };
+const props = { cursorPosition, icons, matcher };
 
 describe('SearchablePopupMenu', () => {
   describe('open === false の時', () => {
@@ -45,7 +45,7 @@ describe('SearchablePopupMenu', () => {
     describe('ポップアップに表示されるアイテムが空の時', () => {
       test('emptyMessage でアイテムが空の時のメッセージを変更できる', () => {
         const emptyMessage = datatype.string();
-        const { getByText } = render(<SearchablePopupMenu open {...props} items={[]} emptyMessage={emptyMessage} />);
+        const { getByText } = render(<SearchablePopupMenu open {...props} icons={[]} emptyMessage={emptyMessage} />);
         expect(getByText(emptyMessage)).toBeInTheDocument();
       });
     });

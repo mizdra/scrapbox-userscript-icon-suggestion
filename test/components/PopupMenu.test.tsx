@@ -1,6 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/preact';
 import { datatype } from 'faker';
-import { Item, PopupMenu } from '../../src/components/PopupMenu';
+import { Icon, PopupMenu } from '../../src/components/PopupMenu';
 import { CursorPosition } from '../../src/types';
 import {
   keydownEnterEvent,
@@ -14,12 +14,12 @@ import {
 
 // ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
-const items: Item[] = [
-  { key: 1, element: <span key="1">item1</span> },
-  { key: 2, element: <span key="2">item2</span> },
-  { key: 3, element: <span key="3">item3</span> },
+const icons: Icon[] = [
+  { key: 1, element: <span key="1">icon1</span> },
+  { key: 2, element: <span key="2">icon2</span> },
+  { key: 3, element: <span key="3">icon3</span> },
 ];
-const props = { cursorPosition, items };
+const props = { cursorPosition, icons };
 
 // keydown イベントが PopupMenu 側でキャンセルされずに突き抜けてきたことを確かめるための mock
 const keydownListener = jest.fn();
@@ -65,15 +65,15 @@ describe('PopupMenu', () => {
       expect(queryByTestId('popup-menu')).not.toBeNull();
     });
     describe('アイテムが1つも無い時', () => {
-      const items: Item[] = [];
+      const icons: Icon[] = [];
       test('空であることを表すメッセージが表示される', () => {
         const emptyMessage = datatype.string();
-        const { getByText } = render(<PopupMenu open {...props} items={items} emptyMessage={emptyMessage} />);
+        const { getByText } = render(<PopupMenu open {...props} icons={icons} emptyMessage={emptyMessage} />);
         expect(getByText(emptyMessage)).toBeVisible();
       });
       test('Enter を押下しても onSelect は呼び出されない', async () => {
         const onSelect = jest.fn();
-        render(<PopupMenu open {...props} items={items} onSelect={onSelect} />);
+        render(<PopupMenu open {...props} icons={icons} onSelect={onSelect} />);
         await act(() => {
           fireEvent(document, keydownEnterEvent);
         });
@@ -81,7 +81,7 @@ describe('PopupMenu', () => {
       });
       test('Escape 押下で onClose が呼び出される', async () => {
         const onClose = jest.fn();
-        render(<PopupMenu open {...props} items={items} onClose={onClose} />);
+        render(<PopupMenu open {...props} icons={icons} onClose={onClose} />);
 
         expect(onClose).toBeCalledTimes(0);
         await act(() => {
@@ -93,35 +93,35 @@ describe('PopupMenu', () => {
     describe('アイテムが1つ以上ある時', () => {
       test('Tab 押下で次のアイテムを選択できる', async () => {
         const { getByText } = render(<PopupMenu open {...props} />);
-        expect(getByText('item1').parentElement).toHaveClass('selected');
+        expect(getByText('icon1').parentElement).toHaveClass('selected');
         await act(() => {
           fireEvent(document, keydownTabEvent);
         });
-        expect(getByText('item2').parentElement).toHaveClass('selected');
+        expect(getByText('icon2').parentElement).toHaveClass('selected');
         await act(() => {
           fireEvent(document, keydownTabEvent);
         });
-        expect(getByText('item3').parentElement).toHaveClass('selected');
+        expect(getByText('icon3').parentElement).toHaveClass('selected');
         await act(() => {
           fireEvent(document, keydownTabEvent);
         });
-        expect(getByText('item1').parentElement).toHaveClass('selected');
+        expect(getByText('icon1').parentElement).toHaveClass('selected');
       });
       test('Shift+Tab 押下で前のアイテムを選択できる', async () => {
         const { getByText } = render(<PopupMenu open {...props} />);
-        expect(getByText('item1').parentElement).toHaveClass('selected');
+        expect(getByText('icon1').parentElement).toHaveClass('selected');
         await act(() => {
           fireEvent(document, keydownShiftTabEvent);
         });
-        expect(getByText('item3').parentElement).toHaveClass('selected');
+        expect(getByText('icon3').parentElement).toHaveClass('selected');
         await act(() => {
           fireEvent(document, keydownShiftTabEvent);
         });
-        expect(getByText('item2').parentElement).toHaveClass('selected');
+        expect(getByText('icon2').parentElement).toHaveClass('selected');
         await act(() => {
           fireEvent(document, keydownShiftTabEvent);
         });
-        expect(getByText('item1').parentElement).toHaveClass('selected');
+        expect(getByText('icon1').parentElement).toHaveClass('selected');
       });
       test('Enter 押下で onSelect が呼び出される', async () => {
         const onSelect = jest.fn();
@@ -135,7 +135,7 @@ describe('PopupMenu', () => {
           fireEvent(document, keydownEnterEvent);
         });
         expect(onSelect).toBeCalledTimes(1);
-        expect(onSelect).lastCalledWith(items[1], 1);
+        expect(onSelect).lastCalledWith(icons[1], 1);
 
         // ただし IME による変換中の Enter 押下では、 onSelect は呼び出されない
         await act(() => {

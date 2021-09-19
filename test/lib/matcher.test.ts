@@ -1,7 +1,7 @@
 import { forwardPartialFuzzyMatcher, fuzzyMatcher, partialMatcher, forwardMatcher } from '../../src/lib/matcher';
 
 describe('fuzzyMatcher', () => {
-  describe('query に曖昧一致する items のみが返る', () => {
+  describe('query に曖昧一致する icons のみが返る', () => {
     test('query の長さが 0〜2 なら 1 文字も誤字を許容しない', () => {
       expect(
         fuzzyMatcher('aa', [
@@ -120,7 +120,7 @@ describe('fuzzyMatcher', () => {
 });
 
 describe('forwardMatcher', () => {
-  test('query に前方一致する items のみが返る', () => {
+  test('query に前方一致する icons のみが返る', () => {
     expect(
       forwardMatcher('foo', [
         // マッチする
@@ -162,7 +162,7 @@ describe('forwardMatcher', () => {
 });
 
 describe('partialMatcher', () => {
-  test('query に部分一致する items のみが返る', () => {
+  test('query に部分一致する icons のみが返る', () => {
     expect(
       partialMatcher('foo', [
         // マッチする
