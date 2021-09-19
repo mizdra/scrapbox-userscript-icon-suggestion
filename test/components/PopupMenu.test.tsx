@@ -175,6 +175,25 @@ describe('PopupMenu', () => {
         });
         expect(keydownListener).toBeCalledTimes(2);
       });
+      test('同名のページタイトルのアイコンが suggest されている場合は、括弧付きでプロジェクト名が表示される', () => {
+        const { queryAllByTestId } = render(
+          <PopupMenu
+            {...props}
+            open={true}
+            icons={[
+              new Icon('project', 'a'),
+              new Icon('project', 'b'),
+              new Icon('external-project-1', 'b'),
+              new Icon('external-project-1', 'c'),
+            ]}
+          />,
+        );
+        const suggestedIconLabels = queryAllByTestId('suggested-icon-label');
+        expect(suggestedIconLabels[0]).toHaveTextContent(/^a$/);
+        expect(suggestedIconLabels[1]).toHaveTextContent(/^b \(project\)$/);
+        expect(suggestedIconLabels[2]).toHaveTextContent(/^b \(external-project-1\)$/);
+        expect(suggestedIconLabels[3]).toHaveTextContent(/^c$/);
+      });
     });
   });
 });
