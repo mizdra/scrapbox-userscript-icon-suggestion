@@ -42,13 +42,13 @@ export const App: FunctionComponent<AppProps> = ({
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
-  const [suggestPresetIcons, setSuggestPresetIcons] = useState(defaultShowPresetIcons);
+  const [showPresetIcons, setShowPresetIcons] = useState(defaultShowPresetIcons);
   const composedMatcher = useCallback(
     (query: string) => {
-      const composedIcons = uniqueIcons(suggestPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons);
+      const composedIcons = uniqueIcons(showPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons);
       return matcher({ query, composedIcons, presetIcons, embeddedIcons });
     },
-    [embeddedIcons, matcher, presetIcons, suggestPresetIcons],
+    [embeddedIcons, matcher, presetIcons, showPresetIcons],
   );
   const [query, setQuery] = useState('');
 
@@ -84,10 +84,10 @@ export const App: FunctionComponent<AppProps> = ({
 
         setEmbeddedIcons(newEmbeddedIcons);
         setOpen(true);
-        setSuggestPresetIcons(defaultShowPresetIcons);
+        setShowPresetIcons(defaultShowPresetIcons);
       } else {
         // ポップアップが開いていたら、preset icon の表示・非表示をトグルする
-        setSuggestPresetIcons((suggestPresetIcons) => !suggestPresetIcons);
+        setShowPresetIcons((showPresetIcons) => !showPresetIcons);
       }
     },
     [cursor, defaultShowPresetIcons, editor, open, layout, projectName, textInput],

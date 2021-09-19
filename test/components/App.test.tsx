@@ -138,7 +138,7 @@ describe('App', () => {
 
   describe('インテグレーションテスト', () => {
     describe('matcher', () => {
-      test('embeddedIcons や presetIcons、suggestPresetIcons の状態で matcher に渡される引数が変わる', async () => {
+      test('embeddedIcons や presetIcons、showPresetIcons の状態で matcher に渡される引数が変わる', async () => {
         const presetIcons = [new Icon('project', 'b'), new Icon('project', 'c'), new Icon('project', 'c')];
         const embeddedIcons = [new Icon('project', 'a'), new Icon('project', 'a'), new Icon('project', 'b')];
 
