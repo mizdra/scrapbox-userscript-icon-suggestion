@@ -14,7 +14,7 @@ type Options = {
    * ポップアップを閉じるキーかどうかを判定するコールバック。キーが押下される度に呼び出される。
    * `true` ならポップアップを閉じるキーだと判定される。
    * */
-  isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
+  isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
   /**
    * クエリを `[query.icon]` として挿入するかどうかを判定するコールバック。キーが押下される度に呼び出される。
    * */
@@ -50,7 +50,7 @@ export async function registerIconSuggestion(options?: Options) {
   render(
     <App
       isLaunchIconSuggestionKey={options?.isLaunchIconSuggestionKey}
-      isSuggestionCloseKeyDown={options?.isSuggestionCloseKeyDown}
+      isExitIconSuggestionKey={options?.isExitIconSuggestionKey}
       isInsertQueryKeyDown={options?.isInsertQueryKeyDown}
       presetIcons={presetIcons}
       defaultSuggestPresetIcons={options?.defaultSuggestPresetIcons}

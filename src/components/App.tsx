@@ -22,7 +22,7 @@ const DEFAULT_IS_INSERT_QUERY_KEY_DOWN = (e: KeyboardEvent) => {
 
 export type AppProps = {
   isLaunchIconSuggestionKey?: (e: KeyboardEvent) => boolean;
-  isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
+  isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
   isInsertQueryKeyDown?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
   defaultSuggestPresetIcons?: boolean;
@@ -31,7 +31,7 @@ export type AppProps = {
 
 export const App: FunctionComponent<AppProps> = ({
   isLaunchIconSuggestionKey = DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN,
-  isSuggestionCloseKeyDown,
+  isExitIconSuggestionKey,
   isInsertQueryKeyDown = DEFAULT_IS_INSERT_QUERY_KEY_DOWN,
   presetIcons = [],
   defaultSuggestPresetIcons = true,
@@ -127,7 +127,7 @@ export const App: FunctionComponent<AppProps> = ({
       onSelect={handleSelect}
       onClose={handleClose}
       onInputQuery={setQuery}
-      isSuggestionCloseKeyDown={isSuggestionCloseKeyDown}
+      isExitIconSuggestionKey={isExitIconSuggestionKey}
     />
   );
 };

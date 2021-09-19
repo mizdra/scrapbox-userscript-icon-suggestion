@@ -15,7 +15,7 @@ export type SearchablePopupMenuProps = {
   onSelect?: (icon: Icon) => void;
   onClose?: () => void;
   onInputQuery?: (query: string) => void;
-  isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
+  isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
 };
 
 export function SearchablePopupMenu({
@@ -26,7 +26,7 @@ export function SearchablePopupMenu({
   onSelect,
   onClose,
   onInputQuery,
-  isSuggestionCloseKeyDown,
+  isExitIconSuggestionKey,
 }: SearchablePopupMenuProps) {
   const [query, setQuery] = useState('');
   const matchedIcons = useMemo(() => matcher(query), [matcher, query]);
@@ -61,7 +61,7 @@ export function SearchablePopupMenu({
         cursorPosition={cursorPosition}
         onSelect={handleSelect}
         onClose={handleClose}
-        isPopupCloseKeyDown={isSuggestionCloseKeyDown}
+        isPopupCloseKeyDown={isExitIconSuggestionKey}
       />
       {open && (
         <SearchInput
