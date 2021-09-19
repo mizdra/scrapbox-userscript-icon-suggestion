@@ -39,7 +39,7 @@ export type MatcherOptions = {
    * `suggestPresetIcons` が真の時は `[...presetIcons, ...embeddedIcons]` を、
    * 偽の時は `embeddedIcons` を表すアイコンリスト。
    * */
-  icons: Icon[];
+  composedIcons: Icon[];
   /** プリセットアイコンのリスト */
   presetIcons: Icon[];
   /** ページに埋め込まれているアイコンのリスト */
