@@ -23,28 +23,72 @@ exports[`SearchablePopupMenu open === true の時 ポップアップと SearchIn
           class="button selected"
         >
           <span>
-            a
+            <img
+              alt="a"
+              src="/api/pages/project/a/icon"
+              style="width: 1.3em; height: 1.3em; object-fit: contain;"
+              title="a"
+            />
+             
+            <span
+              data-testid="suggested-icon-label"
+            >
+              a
+            </span>
           </span>
         </div>
         <div
           class="button"
         >
           <span>
-            ab
+            <img
+              alt="ab"
+              src="/api/pages/project/ab/icon"
+              style="width: 1.3em; height: 1.3em; object-fit: contain;"
+              title="ab"
+            />
+             
+            <span
+              data-testid="suggested-icon-label"
+            >
+              ab
+            </span>
           </span>
         </div>
         <div
           class="button"
         >
           <span>
-            abc
+            <img
+              alt="abc"
+              src="/api/pages/project/abc/icon"
+              style="width: 1.3em; height: 1.3em; object-fit: contain;"
+              title="abc"
+            />
+             
+            <span
+              data-testid="suggested-icon-label"
+            >
+              abc
+            </span>
           </span>
         </div>
         <div
           class="button"
         >
           <span>
-            z
+            <img
+              alt="z"
+              src="/api/pages/project/z/icon"
+              style="width: 1.3em; height: 1.3em; object-fit: contain;"
+              title="z"
+            />
+             
+            <span
+              data-testid="suggested-icon-label"
+            >
+              z
+            </span>
           </span>
         </div>
       </div>
