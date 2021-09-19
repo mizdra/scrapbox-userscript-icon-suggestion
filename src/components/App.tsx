@@ -5,7 +5,7 @@ import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqBy } from '../lib/collection';
 import { hasDuplicatedPageTitle, Icon } from '../lib/icon';
 import { isComposing } from '../lib/key';
-import { calcCursorPosition, insertText, scanIconsFromEditor } from '../lib/scrapbox';
+import { calcCursorPosition, insertText, scanEmbeddedIcons } from '../lib/scrapbox';
 import { CursorPosition, Matcher } from '../types';
 import { SuggestionBox, Item } from './SuggestionBox';
 
@@ -95,12 +95,12 @@ export const App: FunctionComponent<AppProps> = ({
         // ポップアップが閉じていたら開く
         setCursorPosition(calcCursorPosition(cursor));
 
-        // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanIconsFromEditor` で
+        // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanEmbeddedIcons` で
         // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった
         // 行のアイコン記法が画像化されるようにしておく。
         textInput.blur();
         // 画像化されたらエディタを走査してアイコンを収集
-        const newEditorIcons = scanIconsFromEditor(projectName, editor);
+        const newEditorIcons = scanEmbeddedIcons(projectName, editor);
 
         setEditorIcons(newEditorIcons);
         setOpen(true);
