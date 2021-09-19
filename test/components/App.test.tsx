@@ -119,7 +119,7 @@ describe('App', () => {
       });
       expect(buttonContainer.childElementCount).toEqual(3); // a, b, cccc の 3アイコンが表示される
     });
-    test('isInsertQueryKeyDown が真になるようなキーを押下したら、`[query.icon] が挿入される', async () => {
+    test('isInsertQueryAsIconKey が真になるようなキーを押下したら、`[query.icon] が挿入される', async () => {
       const { getByTestId } = await renderApp({});
       const searchInput = getByTestId('search-input');
 

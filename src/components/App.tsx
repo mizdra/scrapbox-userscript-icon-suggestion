@@ -23,7 +23,7 @@ const DEFAULT_IS_INSERT_QUERY_KEY_DOWN = (e: KeyboardEvent) => {
 export type AppProps = {
   isLaunchIconSuggestionKey?: (e: KeyboardEvent) => boolean;
   isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
-  isInsertQueryKeyDown?: (e: KeyboardEvent) => boolean;
+  isInsertQueryAsIconKey?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
   defaultSuggestPresetIcons?: boolean;
   matcher?: Matcher;
@@ -32,7 +32,7 @@ export type AppProps = {
 export const App: FunctionComponent<AppProps> = ({
   isLaunchIconSuggestionKey = DEFAULT_IS_SUGGESTION_OPEN_KEY_DOWN,
   isExitIconSuggestionKey,
-  isInsertQueryKeyDown = DEFAULT_IS_INSERT_QUERY_KEY_DOWN,
+  isInsertQueryAsIconKey = DEFAULT_IS_INSERT_QUERY_KEY_DOWN,
   presetIcons = [],
   defaultSuggestPresetIcons = true,
   matcher = forwardPartialFuzzyMatcher,
@@ -110,11 +110,11 @@ export const App: FunctionComponent<AppProps> = ({
       if (isComposing(e)) return; // IMEによる変換中は何もしない
       if (isLaunchIconSuggestionKey(e)) {
         handleSuggestionOpenKeyDown(e);
-      } else if (isInsertQueryKeyDown(e)) {
+      } else if (isInsertQueryAsIconKey(e)) {
         handleInsertQueryKeyDown(e);
       }
     },
-    [isLaunchIconSuggestionKey, isInsertQueryKeyDown, handleSuggestionOpenKeyDown, handleInsertQueryKeyDown],
+    [isLaunchIconSuggestionKey, isInsertQueryAsIconKey, handleSuggestionOpenKeyDown, handleInsertQueryKeyDown],
   );
   useDocumentEventListener('keydown', handleKeydown, { capture: true });
 

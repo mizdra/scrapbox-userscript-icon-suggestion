@@ -18,7 +18,7 @@ type Options = {
   /**
    * クエリを `[query.icon]` として挿入するかどうかを判定するコールバック。キーが押下される度に呼び出される。
    * */
-  isInsertQueryKeyDown?: (e: KeyboardEvent) => boolean;
+  isInsertQueryAsIconKey?: (e: KeyboardEvent) => boolean;
   /** suggest に含めたいプリセットアイコンのリスト */
   presetIcons?: PresetIconsItem[];
   /**
@@ -51,7 +51,7 @@ export async function registerIconSuggestion(options?: Options) {
     <App
       isLaunchIconSuggestionKey={options?.isLaunchIconSuggestionKey}
       isExitIconSuggestionKey={options?.isExitIconSuggestionKey}
-      isInsertQueryKeyDown={options?.isInsertQueryKeyDown}
+      isInsertQueryAsIconKey={options?.isInsertQueryAsIconKey}
       presetIcons={presetIcons}
       defaultSuggestPresetIcons={options?.defaultSuggestPresetIcons}
       matcher={options?.matcher}
