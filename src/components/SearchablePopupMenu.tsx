@@ -1,36 +1,35 @@
 import { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { Icon } from '../lib/icon';
-import { forwardPartialFuzzyMatcher } from '../lib/matcher';
-import { CursorPosition, Matcher } from '../types';
+import { CursorPosition } from '../types';
 import { PopupMenu } from './PopupMenu';
 import { SearchInput } from './SearchablePopupMenu/SearchInput';
 
-export type SearchablePopupMenuProps<T> = {
+export type SearchablePopupMenuMatcher = (query: string) => Icon[];
+
+export type SearchablePopupMenuProps = {
   open: boolean;
   emptyMessage?: string;
-  icons: Icon[];
   cursorPosition: CursorPosition;
-  matcher?: Matcher<T>;
+  matcher: SearchablePopupMenuMatcher;
   onSelect?: (icon: Icon) => void;
   onClose?: () => void;
   onInputQuery?: (query: string) => void;
   isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
 };
 
-export function SearchablePopupMenu<T>({
+export function SearchablePopupMenu({
   open,
   emptyMessage,
-  icons,
   cursorPosition,
-  matcher = forwardPartialFuzzyMatcher,
+  matcher,
   onSelect,
   onClose,
   onInputQuery,
   isSuggestionCloseKeyDown,
-}: SearchablePopupMenuProps<T>) {
+}: SearchablePopupMenuProps) {
   const [query, setQuery] = useState('');
-  const matchedIcons = useMemo(() => matcher(query, icons), [icons, matcher, query]);
+  const matchedIcons = useMemo(() => matcher(query), [matcher, query]);
 
   useEffect(() => {
     if (open === false) setQuery('');

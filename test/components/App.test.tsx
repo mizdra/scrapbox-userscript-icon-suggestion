@@ -6,8 +6,10 @@ import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { App as NativeApp, AppProps } from '../../src/components/App';
 import { ScrapboxContext } from '../../src/contexts/ScrapboxContext';
+import { uniqBy } from '../../src/lib/collection';
 import { Icon } from '../../src/lib/icon';
 import { forwardMatcher } from '../../src/lib/matcher';
+import { Matcher } from '../../src/types';
 import { createEditor, createScrapboxAPI } from '../helpers/html';
 import {
   keydownAEvent,
@@ -131,6 +133,45 @@ describe('App', () => {
       const { getByTestId } = await renderApp({ defaultSuggestPresetIcons: true });
       const buttonContainer = getByTestId('button-container');
       expect(buttonContainer.childElementCount).toEqual(3); // a, b, c の 3アイコンが表示される
+    });
+  });
+
+  describe('インテグレーションテスト', () => {
+    describe('matcher', () => {
+      test('embeddedIcons や presetIcons、suggestPresetIcons の状態で matcher に渡される引数が変わる', async () => {
+        const presetIcons = [new Icon('project', 'b'), new Icon('project', 'c'), new Icon('project', 'c')];
+        const embeddedIcons = [new Icon('project', 'a'), new Icon('project', 'a'), new Icon('project', 'b')];
+
+        const matcher: Matcher = jest.fn(() => []);
+        render(
+          <App
+            defaultSuggestPresetIcons={false}
+            presetIcons={presetIcons}
+            embeddedIcons={embeddedIcons}
+            matcher={matcher}
+          />,
+        );
+        await act(() => {
+          fireEvent(document, keydownCtrlLEvent);
+        });
+        expect(matcher).lastCalledWith({
+          query: '',
+          composedIcons: uniqBy(embeddedIcons, (icon) => icon.fullPagePath),
+          presetIcons: presetIcons,
+          embeddedIcons: embeddedIcons,
+        });
+
+        await act(() => {
+          fireEvent(document, keydownCtrlLEvent);
+        });
+
+        expect(matcher).lastCalledWith({
+          query: '',
+          composedIcons: uniqBy([...embeddedIcons, ...presetIcons], (icon) => icon.fullPagePath),
+          presetIcons: presetIcons,
+          embeddedIcons: embeddedIcons,
+        });
+      });
     });
   });
 });

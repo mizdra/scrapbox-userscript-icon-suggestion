@@ -31,5 +31,20 @@ export type Item<T> = {
   value: T;
 };
 
+/** matcher に渡すオプションの型 */
+export type MatcherOptions = {
+  /** 検索欄に入力された文字列 */
+  query: string;
+  /**
+   * `suggestPresetIcons` が真の時は `[...presetIcons, ...embeddedIcons]` を、
+   * 偽の時は `embeddedIcons` を表すアイコンリスト。
+   * */
+  composedIcons: Icon[];
+  /** プリセットアイコンのリスト */
+  presetIcons: Icon[];
+  /** ページに埋め込まれているアイコンのリスト */
+  embeddedIcons: Icon[];
+};
+
 /** SearchablePopupMenu 内でアイテムのフィルタに利用される matcher の型 */
-export type Matcher<T> = (query: string, icons: Icon[]) => Icon[];
+export type Matcher = (options: MatcherOptions) => Icon[];

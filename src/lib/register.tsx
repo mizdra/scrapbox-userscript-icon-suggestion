@@ -3,7 +3,6 @@ import { App } from '../components/App';
 import { evaluatePresetIconItemsToIcons } from '../lib/options';
 import { getEditor } from '../lib/scrapbox';
 import { Matcher, PresetIconsItem } from '../types';
-import { Icon } from './icon';
 
 type Options = {
   /**
@@ -31,7 +30,7 @@ type Options = {
   /**
    * suggest されたアイコンを絞り込むために利用される matcher。
    */
-  matcher?: Matcher<Icon>;
+  matcher?: Matcher;
   scrapbox?: Scrapbox;
   editor?: HTMLElement;
 };
