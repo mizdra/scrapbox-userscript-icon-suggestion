@@ -1,4 +1,5 @@
-import { uniqBy } from '../../src/lib/collection';
+import { Icon } from '../../src';
+import { uniqBy, uniqIcons } from '../../src/lib/collection';
 
 describe('uniqBy', () => {
   test('空配列が入力されたら空配列を返す', () => {
@@ -23,4 +24,22 @@ describe('uniqBy', () => {
       { key: 'c', value: 4 },
     ]);
   });
+});
+
+test('uniqIcons', () => {
+  expect(uniqIcons([])).toStrictEqual([]);
+  expect(
+    uniqIcons([
+      new Icon('project', 'a'),
+      new Icon('project', 'a'),
+      new Icon('project', 'b'),
+      new Icon('other-project', 'b'),
+      new Icon('other-project', 'c'),
+    ]),
+  ).toStrictEqual([
+    new Icon('project', 'a'),
+    new Icon('project', 'b'),
+    new Icon('other-project', 'b'),
+    new Icon('other-project', 'c'),
+  ]);
 });
