@@ -1,5 +1,6 @@
 import { render } from 'preact';
 import { App } from '../components/App';
+import { RenamedOptionsWarning } from '../components/Warning';
 import { evaluatePresetIconItemsToIcons } from '../lib/options';
 import { getEditor } from '../lib/scrapbox';
 import { Matcher, PresetIconsItem } from '../types';
@@ -19,6 +20,14 @@ type Options = {
    * クエリを `[query.icon]` として挿入するかどうかを判定するコールバック。キーが押下される度に呼び出される。
    * */
   isInsertQueryAsIconKey?: (e: KeyboardEvent) => boolean;
+  /** @deprecated use `isLaunchIconSuggestionKey` */
+  isSuggestionOpenKeyDown?: (e: KeyboardEvent) => boolean;
+  /** @deprecated use `isExitIconSuggestionKey` */
+  isSuggestionCloseKeyDown?: (e: KeyboardEvent) => boolean;
+  /** @deprecated use `isInsertQueryAsIconKey` */
+  isInsertQueryKeyDown?: (e: KeyboardEvent) => boolean;
+  /** @deprecated use `defaultIsShownPresetIcons` */
+  defaultSuggestPresetIcons?: boolean;
   /** suggest に含めたいプリセットアイコンのリスト */
   presetIcons?: PresetIconsItem[];
   /**
@@ -44,6 +53,16 @@ export async function registerIconSuggestion(options?: Options) {
 
   const warningMessageContainer = document.createElement('div');
   document.querySelector('.app')?.prepend(warningMessageContainer);
+
+  if (
+    options?.isSuggestionOpenKeyDown !== undefined ||
+    options?.isSuggestionCloseKeyDown !== undefined ||
+    options?.isInsertQueryKeyDown !== undefined ||
+    options?.defaultSuggestPresetIcons !== undefined
+  ) {
+    render(<RenamedOptionsWarning />, warningMessageContainer);
+    return;
+  }
 
   const presetIcons = options?.presetIcons ? await evaluatePresetIconItemsToIcons(options.presetIcons) : undefined;
 
