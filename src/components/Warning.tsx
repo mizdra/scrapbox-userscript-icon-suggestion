@@ -1,4 +1,5 @@
 import { ComponentChildren } from 'preact';
+import { JSXInternal } from 'preact/src/jsx';
 
 export type WarningProps = {
   children: ComponentChildren;
@@ -16,44 +17,45 @@ export function Warning({ children }: WarningProps) {
 }
 
 export function RenamedOptionsWarning() {
+  const tdStyle: JSXInternal.CSSProperties = { padding: '8px 8px', border: '1px solid #fff' };
   return (
     <Warning>
       <p>icon-suggestion のアップデートにより、いくつかのオプションの名前が変更されました。</p>
-      <table>
+      <table style={{ margin: '15px 0' }}>
         <thead>
-          <th>古いオプション名</th>
-          <th>新しいオプション名</th>
+          <th style={tdStyle}>古いオプション名</th>
+          <th style={tdStyle}>新しいオプション名</th>
         </thead>
         <tbody>
           <tr>
-            <td>
+            <td style={tdStyle}>
               <code>isSuggestionOpenKeyDown</code>
             </td>
-            <td>
+            <td style={tdStyle}>
               <code>isLaunchIconSuggestionKey</code>
             </td>
           </tr>
           <tr>
-            <td>
+            <td style={tdStyle}>
               <code>isSuggestionCloseKeyDown</code>
             </td>
-            <td>
+            <td style={tdStyle}>
               <code>isExitIconSuggestionKey</code>
             </td>
           </tr>
           <tr>
-            <td>
+            <td style={tdStyle}>
               <code>isInsertQueryKeyDown</code>
             </td>
-            <td>
+            <td style={tdStyle}>
               <code>isInsertQueryAsIconKey</code>
             </td>
           </tr>
           <tr>
-            <td>
+            <td style={tdStyle}>
               <code>defaultSuggestPresetIcons</code>
             </td>
-            <td>
+            <td style={tdStyle}>
               <code>defaultIsShownPresetIcons</code>
             </td>
           </tr>
