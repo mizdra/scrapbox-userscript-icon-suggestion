@@ -24,7 +24,7 @@ module.exports = {
       ...SHARED_CONFIG,
       displayName: 'unit',
       testEnvironment: 'jsdom',
-      testMatch: ['<rootDir>/test/**/*.test.(ts|tsx)', '!<rootDir>/test/e2e/**'],
+      testMatch: ['<rootDir>/test/**/*.test.(ts|tsx)'],
       setupFilesAfterEnv: ['<rootDir>/test/setup/jest.setup.ts'],
     },
     {
@@ -38,7 +38,7 @@ module.exports = {
           launchOptions: { slowMo: 500 },
         },
       },
-      testMatch: ['<rootDir>/test/e2e/*.test.(ts|tsx)'],
+      testMatch: ['<rootDir>/e2e-test/**/*.test.(ts|tsx)'],
     },
   ],
 };
