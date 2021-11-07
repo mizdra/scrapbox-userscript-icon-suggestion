@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import { resolve, sep } from 'path';
 
 // E2E テストにはそれなりに時間が掛かるので、タイムアウトを 1 分に延長する
@@ -7,10 +6,6 @@ jest.setTimeout(60 * 1000);
 jest.retryTimes(2);
 
 const dist = resolve(__dirname, '../e2e-dist');
-
-// dist/e2e.js が無いとテストできないので、yarn run build する
-process.stdout.write('Running `yarn run build`...');
-execSync('yarn run build');
 
 beforeEach(async () => {
   await jestPlaywright.resetContext({
