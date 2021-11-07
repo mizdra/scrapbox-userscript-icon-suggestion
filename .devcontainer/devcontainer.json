@@ -19,9 +19,9 @@
   //
   // ref: https://www.keisuke69.net/entry/2021/09/15/104532
   "mounts": [
-    "source=node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume",
-    "source=dist,target=${containerWorkspaceFolder}/dist,type=volume",
-    "source=e2e-dist,target=${containerWorkspaceFolder}/e2e-dist,type=volume"
+    "source=scrapbox-userscript-icon-suggestion-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume",
+    "source=scrapbox-userscript-icon-suggestion-dist,target=${containerWorkspaceFolder}/dist,type=volume",
+    "source=scrapbox-userscript-icon-suggestion-e2e-dist,target=${containerWorkspaceFolder}/e2e-dist,type=volume"
   ],
 
   // Set *default* container specific settings.json values on container create.
