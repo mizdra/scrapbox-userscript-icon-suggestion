@@ -3,8 +3,6 @@
 
 /** @type import('@jest/types').Config.InitialOptions */
 const SHARED_CONFIG = {
-  roots: ['<rootDir>/test'],
-
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
@@ -26,8 +24,8 @@ module.exports = {
       ...SHARED_CONFIG,
       displayName: 'unit',
       testEnvironment: 'jsdom',
-      testMatch: ['**/*.test.(ts|tsx)', '!**/e2e/**'],
-      setupFilesAfterEnv: ['./test/setup/jest.setup.ts'],
+      testMatch: ['<rootDir>/test/**/*.test.(ts|tsx)'],
+      setupFilesAfterEnv: ['<rootDir>/test/setup/jest.setup.ts'],
     },
     {
       ...SHARED_CONFIG,
@@ -40,7 +38,7 @@ module.exports = {
           launchOptions: { slowMo: 500 },
         },
       },
-      testMatch: ['**/e2e/*.test.(ts|tsx)'],
+      testMatch: ['<rootDir>/e2e-test/**/*.test.(ts|tsx)'],
     },
   ],
 };

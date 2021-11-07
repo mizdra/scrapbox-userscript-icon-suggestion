@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
+    "watch": "NODE_ENV=production rollup -c -w",
     "dev": "./bin/dev.ts",
     "lint": "run-s -c lint:*",
     "lint:tsc": "run-s -c lint:tsc:*",
@@ -13,9 +14,8 @@
     "lint:tsc:bin": "tsc -p tsconfig.bin.json --noEmit",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier --check .",
-    "test": "jest",
-    "test:unit": "jest --selectProjects unit",
-    "test:e2e": "jest --selectProjects e2e"
+    "test": "jest --selectProjects unit",
+    "postbuild:e2e-test": "jest --selectProjects e2e"
   },
   "repository": {
     "type": "git",

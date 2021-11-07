@@ -4,5 +4,7 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+  // E2E テストが走らないよう、`yarn run postbuild:e2e-test` 抜きで実行する
+  "jest.jestCommandLine": "yarn run test"
 }

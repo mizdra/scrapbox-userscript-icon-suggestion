@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import { resolve, sep } from 'path';
 
 // E2E テストにはそれなりに時間が掛かるので、タイムアウトを 1 分に延長する
@@ -6,11 +5,7 @@ jest.setTimeout(60 * 1000);
 // 確率的に失敗するのでリトライするように
 jest.retryTimes(2);
 
-const dist = resolve(__dirname, '../../e2e-dist');
-
-// dist/e2e.js が無いとテストできないので、yarn run build する
-process.stdout.write('Running `yarn run build`...');
-execSync('yarn run build');
+const dist = resolve(__dirname, '../e2e-dist');
 
 beforeEach(async () => {
   await jestPlaywright.resetContext({
@@ -32,7 +27,7 @@ async function goto(url: string) {
   // icon-suggestion は .editor に依存しているため、
   // .editor のマウントを待ってから UserScript を実行する
   await page.waitForSelector('.editor', { state: 'attached' });
-  await page.addScriptTag({ path: resolve(__dirname, '../../dist/e2e.js'), type: 'module' });
+  await page.addScriptTag({ path: resolve(__dirname, '../dist/e2e.js'), type: 'module' });
 }
 
 test('エディタのあるページで Ctrl+L を押下すると、icon-suggestion が開く', async () => {
