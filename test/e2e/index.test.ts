@@ -3,6 +3,8 @@ import { resolve, sep } from 'path';
 
 // E2E テストにはそれなりに時間が掛かるので、タイムアウトを 1 分に延長する
 jest.setTimeout(60 * 1000);
+// 確率的に失敗するのでリトライするように
+jest.retryTimes(2);
 
 const dist = resolve(__dirname, '../../e2e-dist');
 
