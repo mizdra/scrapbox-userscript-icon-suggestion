@@ -31,8 +31,8 @@ jobs:
       - name: yarn run build
         run: yarn run build
 
-      - name: yarn run e2e-test
-        run: yarn run e2e-test
+      - name: yarn run postbuild:e2e-test
+        run: yarn run postbuild:e2e-test
 
       - uses: actions/upload-artifact@v2
         if: ${{ always() }}

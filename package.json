@@ -14,7 +14,7 @@
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier --check .",
     "test": "jest --selectProjects unit",
-    "e2e-test": "jest --selectProjects e2e"
+    "postbuild:e2e-test": "jest --selectProjects e2e"
   },
   "repository": {
     "type": "git",
