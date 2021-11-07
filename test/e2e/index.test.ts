@@ -3,6 +3,8 @@ import { resolve, sep } from 'path';
 
 // E2E テストにはそれなりに時間が掛かるので、タイムアウトを 1 分に延長する
 jest.setTimeout(60 * 1000);
+// 確率的に失敗するのでリトライするように
+jest.retryTimes(2);
 
 const dist = resolve(__dirname, '../../e2e-dist');
 
@@ -27,6 +29,9 @@ afterEach(async () => {
 
 async function goto(url: string) {
   await page.goto(url, { waitUntil: 'networkidle' });
+  // icon-suggestion は .editor に依存しているため、
+  // .editor のマウントを待ってから UserScript を実行する
+  await page.waitForSelector('.editor', { state: 'attached' });
   await page.addScriptTag({ path: resolve(__dirname, '../../dist/e2e.js'), type: 'module' });
 }
 
@@ -46,7 +51,7 @@ test('エディタのあるページで Ctrl+L を押下すると、icon-suggest
 test('プロジェクトのホームからエディタのあるページに smooth transition した時であっても、icon-suggestion が開く', async () => {
   await goto('https://scrapbox.io/icon-suggestion-example');
 
-  await page.click('a[href="/icon-suggestion-example/mizdra"]');
+  await page.click('.page-list a[href="/icon-suggestion-example/mizdra"]');
   await page.waitForSelector('.editor', { state: 'visible' });
 
   // Ctrl + L 押下
