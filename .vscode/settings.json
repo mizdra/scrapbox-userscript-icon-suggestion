@@ -6,5 +6,7 @@
     "source.fixAll.eslint": true
   },
   // E2E テストが走らないよう、`yarn run postbuild:e2e-test` 抜きで実行する
-  "jest.jestCommandLine": "yarn run test"
+  "jest.jestCommandLine": "yarn run test",
+  // ファイル変更時のテストの自動実行はしつつも、起動時にテストを走らせないように
+  "jest.autoRun": { "watch": true }
 }

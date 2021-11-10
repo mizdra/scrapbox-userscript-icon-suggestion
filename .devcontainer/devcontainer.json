@@ -1,0 +1,51 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.205.1/containers/typescript-node
+{
+  "name": "Node.js & TypeScript",
+  "build": {
+    "dockerfile": "Dockerfile",
+    // Update 'VARIANT' to pick a Node version: 16, 14, 12.
+    // Append -bullseye or -buster to pin to an OS version.
+    // Use -bullseye variants on local on arm64/Apple Silicon.
+    "args": {
+      "VARIANT": "16-bullseye"
+    }
+  },
+  // Mac では OS のファイルシステムと Docker の相性が悪く、Docker コンテナ内からのホストのファイルの読み書きが
+  // 非常に遅い。そこで、頻繁に読み書きされるディレクトリは named volume にして、コンテナ内で読み書きするようにする。
+  //
+  // NOTE: named volume にしてしまうとコンテナ側のファイルとホスト側のファイルで変更が同期されないため、
+  // node_modules や dist など、.gitignore で ignore されていて同期されなくても良いものだけ named volume にしている。
+  //
+  // ref: https://www.keisuke69.net/entry/2021/09/15/104532
+  "mounts": [
+    "source=scrapbox-userscript-icon-suggestion-yarn-cache,target=/usr/local/share/.cache/yarn,type=volume",
+    "source=scrapbox-userscript-icon-suggestion-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume",
+    "source=scrapbox-userscript-icon-suggestion-dist,target=${containerWorkspaceFolder}/dist,type=volume",
+    "source=scrapbox-userscript-icon-suggestion-e2e-dist,target=${containerWorkspaceFolder}/e2e-dist,type=volume"
+  ],
+
+  // playwright が動くように
+  "containerEnv": {
+    "DISPLAY": "host.docker.internal:0.0"
+  },
+
+  // Set *default* container specific settings.json values on container create.
+  "settings": {},
+
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode", "Orta.vscode-jest"],
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [],
+
+  // コンテナの起動が終わった後、拡張機能のロードが始まる前の瞬間に `yarn install` を実行する
+  "onCreateCommand": "yarn install",
+
+  // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  // "remoteUser": "node",
+  "features": {
+    "git": "latest",
+    "github-cli": "latest"
+  }
+}
