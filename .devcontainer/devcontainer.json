@@ -19,6 +19,7 @@
   //
   // ref: https://www.keisuke69.net/entry/2021/09/15/104532
   "mounts": [
+    "source=scrapbox-userscript-icon-suggestion-yarn-cache,target=/usr/local/share/.cache/yarn,type=volume",
     "source=scrapbox-userscript-icon-suggestion-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume",
     "source=scrapbox-userscript-icon-suggestion-dist,target=${containerWorkspaceFolder}/dist,type=volume",
     "source=scrapbox-userscript-icon-suggestion-e2e-dist,target=${containerWorkspaceFolder}/e2e-dist,type=volume"
