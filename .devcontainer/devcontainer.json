@@ -8,7 +8,7 @@
     // Append -bullseye or -buster to pin to an OS version.
     // Use -bullseye variants on local on arm64/Apple Silicon.
     "args": {
-      "VARIANT": "16-bullseye"
+      "VARIANT": "hirsute"
     }
   },
   // Mac では OS のファイルシステムと Docker の相性が悪く、Docker コンテナ内からのホストのファイルの読み書きが
@@ -46,6 +46,7 @@
   // "remoteUser": "node",
   "features": {
     "git": "latest",
-    "github-cli": "latest"
+    "github-cli": "latest",
+    "node": "16.13.1"
   }
 }
