@@ -1,5 +1,4 @@
-import { ComponentChildren } from 'preact';
-import { JSXInternal } from 'preact/src/jsx';
+import { ComponentChildren, JSX } from 'preact';
 
 export type WarningProps = {
   children: ComponentChildren;
@@ -17,7 +16,7 @@ export function Warning({ children }: WarningProps) {
 }
 
 export function RenamedOptionsWarning() {
-  const tdStyle: JSXInternal.CSSProperties = { padding: '8px 8px', border: '1px solid #fff' };
+  const tdStyle: JSX.CSSProperties = { padding: '8px 8px', border: '1px solid #fff' };
   return (
     <Warning>
       <p>icon-suggestion のアップデートにより、いくつかのオプションの名前が変更されました。</p>

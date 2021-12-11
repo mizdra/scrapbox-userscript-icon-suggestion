@@ -1,13 +1,13 @@
-import { JSXInternal } from 'preact/src/jsx';
+import { JSX } from 'preact';
 import { CursorPosition } from '../types';
 
 /** .popup-menu のスタイルを計算する */
-export function calcPopupMenuStyle(cursorPosition: CursorPosition): JSXInternal.CSSProperties {
+export function calcPopupMenuStyle(cursorPosition: CursorPosition): JSX.CSSProperties {
   return { top: cursorPosition.styleTop };
 }
 
 /** .triangle のスタイルを計算する */
-export function calcTriangleStyle(cursorPosition: CursorPosition, isEmpty: boolean): JSXInternal.CSSProperties {
+export function calcTriangleStyle(cursorPosition: CursorPosition, isEmpty: boolean): JSX.CSSProperties {
   return {
     left: cursorPosition.styleLeft,
     ...(isEmpty
@@ -24,7 +24,7 @@ export function calcButtonContainerStyle(
   buttonContainerWidth: number,
   cursorPosition: CursorPosition,
   isEmpty: boolean,
-): JSXInternal.CSSProperties {
+): JSX.CSSProperties {
   const translateX = (cursorPosition.styleLeft / editorWidth) * 100;
   // 端に寄り過ぎないように、translateX の上限・下限を設定しておく。
   // 値はフィーリングで決めており、何かに裏打ちされたものではないので、変えたかったら適当に変える。
@@ -48,7 +48,7 @@ export function calcButtonContainerStyle(
 }
 
 /** <SearchInput> のスタイルを計算する */
-export function calcSearchInputStyle(editorWidth: number, cursorPosition: CursorPosition): JSXInternal.CSSProperties {
+export function calcSearchInputStyle(editorWidth: number, cursorPosition: CursorPosition): JSX.CSSProperties {
   const translateX = (cursorPosition.styleLeft / editorWidth) * 100;
 
   return {
