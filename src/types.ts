@@ -1,5 +1,4 @@
-import { ComponentChild } from 'preact';
-import { JSXInternal } from 'preact/src/jsx';
+import { ComponentChild, JSX } from 'preact';
 import { Icon } from './lib/icon';
 
 export type FormData = {
@@ -25,7 +24,7 @@ export type PresetIconsItem =
  * SearchablePopupMenu 内で利用している suggest 対象のデータを表す型
  * */
 export type Item<T> = {
-  key: JSXInternal.IntrinsicAttributes['key'];
+  key: JSX.IntrinsicAttributes['key'];
   element: ComponentChild;
   searchableText: string;
   value: T;
