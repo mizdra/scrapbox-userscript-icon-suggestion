@@ -15,7 +15,9 @@
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier --check .",
     "test": "jest --selectProjects unit",
-    "postbuild:e2e-test": "jest --selectProjects e2e"
+    "postbuild:e2e-test": "jest --selectProjects e2e",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "repository": {
     "type": "git",
@@ -35,12 +37,17 @@
     "use-resize-observer": "^7.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.17.9",
     "@mizdra/eslint-config-mizdra": "^0.8.0",
     "@mizdra/prettier-config-mizdra": "^0.3.0",
     "@rollup/plugin-alias": "^3.1.2",
     "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
     "@rollup/plugin-typescript": "^8.2.1",
+    "@storybook/addon-actions": "^6.4.22",
+    "@storybook/addon-essentials": "^6.4.22",
+    "@storybook/addon-links": "^6.4.22",
+    "@storybook/preact": "^6.4.22",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/preact": "^2.0.1",
     "@testing-library/preact-hooks": "^1.1.0",
@@ -51,6 +58,8 @@
     "@types/react-dom": "^17.0.5",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
+    "babel-loader": "^8.2.4",
+    "core-js": "^3.22.0",
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.3",
