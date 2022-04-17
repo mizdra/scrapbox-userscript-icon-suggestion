@@ -33,7 +33,7 @@
   "renovate": "github>mizdra/renovate-config-mizdra",
   "dependencies": {
     "asearch": "^1.0.1",
-    "preact": "^10.5.13",
+    "preact": "^10.7.1",
     "use-resize-observer": "^7.0.0"
   },
   "devDependencies": {
