@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/mizdra/scrapbox-userscript-icon-suggestion#readme",
   "prettier": "@mizdra/prettier-config-mizdra",
-  "renovate": "github>mizdra/renovate-config-mizdra",
+  "renovate": "github>mizdra/renovate-config-mizdra:default.json5",
   "dependencies": {
     "asearch": "^1.0.1",
     "preact": "^10.5.13",
