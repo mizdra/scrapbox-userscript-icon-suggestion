@@ -27,18 +27,5 @@ module.exports = {
       testMatch: ['<rootDir>/test/**/*.test.(ts|tsx)'],
       setupFilesAfterEnv: ['<rootDir>/test/setup/jest.setup.ts'],
     },
-    {
-      ...SHARED_CONFIG,
-      displayName: 'e2e',
-      preset: 'jest-playwright-preset',
-      testEnvironmentOptions: {
-        'jest-playwright': {
-          // launchType: 'LAUNCH',
-          // launchOptions: { headless: false, slowMo: 1000 },
-          launchOptions: { slowMo: 500 },
-        },
-      },
-      testMatch: ['<rootDir>/e2e-test/**/*.test.(ts|tsx)'],
-    },
   ],
 };

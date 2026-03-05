@@ -1,7 +1,5 @@
 /* eslint-env node */
 
-/// <reference types="jest-playwright-preset" />
-
 import '@testing-library/jest-dom';
 import '../mocks/resize-observer';
 import '../mocks/ScrapboxContext';
