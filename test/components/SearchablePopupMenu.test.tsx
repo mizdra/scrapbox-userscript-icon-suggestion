@@ -1,6 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { datatype } from 'faker';
 import { SearchablePopupMenu } from '../../src/components/SearchablePopupMenu';
 import { Icon } from '../../src/lib/icon';
 import { forwardMatcher } from '../../src/lib/matcher';
@@ -45,7 +44,7 @@ describe('SearchablePopupMenu', () => {
     });
     describe('ポップアップに表示されるアイテムが空の時', () => {
       test('emptyMessage でアイテムが空の時のメッセージを変更できる', () => {
-        const emptyMessage = datatype.string();
+        const emptyMessage = 'test';
         const { getByText } = render(
           <SearchablePopupMenu open {...props} matcher={() => []} emptyMessage={emptyMessage} />,
         );

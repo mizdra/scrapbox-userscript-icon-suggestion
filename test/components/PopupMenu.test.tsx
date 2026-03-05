@@ -1,5 +1,4 @@
 import { act, fireEvent, render } from '@testing-library/preact';
-import { datatype } from 'faker';
 import { PopupMenu } from '../../src/components/PopupMenu';
 import { Icon } from '../../src/lib/icon';
 import { CursorPosition } from '../../src/types';
@@ -64,7 +63,7 @@ describe('PopupMenu', () => {
     describe('アイテムが1つも無い時', () => {
       const icons: Icon[] = [];
       test('空であることを表すメッセージが表示される', () => {
-        const emptyMessage = datatype.string();
+        const emptyMessage = 'test';
         const { getByText } = render(<PopupMenu open {...props} icons={icons} emptyMessage={emptyMessage} />);
         expect(getByText(emptyMessage)).toBeVisible();
       });

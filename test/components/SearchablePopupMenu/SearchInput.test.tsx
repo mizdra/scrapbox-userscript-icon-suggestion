@@ -1,5 +1,4 @@
 import { fireEvent, render, waitFor } from '@testing-library/preact';
-import faker from 'faker';
 import { SearchInput } from '../../../src/components/SearchablePopupMenu/SearchInput';
 import { ScrapboxContext } from '../../../src/contexts/ScrapboxContext';
 import { calcSearchInputStyle } from '../../../src/lib/calc-style';
@@ -40,7 +39,7 @@ describe('SearchInput', () => {
   });
   test('文字を入力すると onInput が発火する', async () => {
     const onInput = jest.fn();
-    const query = faker.helpers.randomize(['', faker.datatype.string()]);
+    const query = 'test';
 
     const { getByTestId } = render(<SearchInput {...props} onInput={onInput} />);
     const input = getByTestId('search-input');
