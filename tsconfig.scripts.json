@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.base.json",
-  "include": ["typings/**/*", "src/**/*", "bin/**/*"],
+  "include": ["typings/**/*", "src/**/*", "scripts/**/*"],
   "compilerOptions": {
     "module": "CommonJS"
   }

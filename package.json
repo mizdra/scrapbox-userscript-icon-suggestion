@@ -6,12 +6,12 @@
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
     "watch": "NODE_ENV=production rollup -c -w",
-    "dev": "./bin/dev.ts",
+    "dev": "node scripts/dev.ts",
     "lint": "run-s -c lint:*",
     "lint:tsc": "run-s -c lint:tsc:*",
     "lint:tsc:src": "tsc -p tsconfig.src.json --noEmit",
     "lint:tsc:test": "tsc -p tsconfig.test.json --noEmit",
-    "lint:tsc:bin": "tsc -p tsconfig.bin.json --noEmit",
+    "lint:tsc:scripts": "tsc -p tsconfig.scripts.json --noEmit",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier --check .",
     "test": "jest --selectProjects unit"

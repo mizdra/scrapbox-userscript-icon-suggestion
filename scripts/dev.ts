@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { resolve, join } from 'path';
 import { BrowserContext, chromium } from 'playwright';
 import * as rollup from 'rollup';
