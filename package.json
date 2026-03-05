@@ -20,6 +20,9 @@
     "lint": "run-s -c lint:*",
     "lint:oxlint": "oxlint",
     "lint:oxfmt": "oxfmt --check",
+    "lint-fix": "run-s -c lint-fix:*",
+    "lint-fix:oxfmt": "oxfmt --write",
+    "lint-fix:oxlint": "npm run lint:oxlint -- --fix",
     "test": "jest --selectProjects unit"
   },
   "dependencies": {
