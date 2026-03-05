@@ -34,7 +34,7 @@ describe('SearchablePopupMenu', () => {
       expect(asFragment()).toMatchSnapshot();
     });
     test('Esc 押下で onClose が呼び出される', async () => {
-      const onClose = jest.fn();
+      const onClose = vi.fn();
       render(<SearchablePopupMenu open {...props} onClose={onClose} />);
       expect(onClose).toBeCalledTimes(0);
       await act(() => {
@@ -68,7 +68,7 @@ describe('SearchablePopupMenu', () => {
         expect(buttonContainer.childElementCount).toEqual(0);
       });
       test('Enter 押下で onSelect が呼び出される', async () => {
-        const onSelect = jest.fn();
+        const onSelect = vi.fn();
         render(<SearchablePopupMenu open {...props} onSelect={onSelect} />);
         expect(onSelect).toBeCalledTimes(0);
         await act(() => {

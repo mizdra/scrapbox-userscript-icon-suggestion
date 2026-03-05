@@ -1,7 +1,3 @@
-// jest.mock より先に定義したいので先頭に書く
-// ref: https://github.com/facebook/jest/issues/11153#issuecomment-803639307
-const mockInsertText = jest.fn();
-
 import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import type { AppProps } from '../../src/components/App';
@@ -20,9 +16,12 @@ import {
   keydownEscapeEvent,
 } from '../helpers/key';
 
-jest.mock('../../src/lib/scrapbox', () => {
+const mockInsertText = vi.fn();
+vi.doMock('../../src/lib/scrapbox', async (importOriginal) => {
+  // oxlint-disable-next-line typescript/consistent-type-imports
+  const mod: typeof import('../../src/lib/scrapbox') = await importOriginal();
   return {
-    ...jest.requireActual('../../src/lib/scrapbox'),
+    ...mod,
     insertText: mockInsertText,
   };
 });
@@ -143,7 +142,7 @@ describe('App', () => {
         const presetIcons = [new Icon('project', 'b'), new Icon('project', 'c'), new Icon('project', 'c')];
         const embeddedIcons = [new Icon('project', 'a'), new Icon('project', 'a'), new Icon('project', 'b')];
 
-        const matcher: Matcher = jest.fn(() => []);
+        const matcher: Matcher = vi.fn(() => []);
         render(
           <App
             defaultIsShownPresetIcons={false}

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`SearchablePopupMenu open === false の時 ポップアップも SearchInput も表示されない 1`] = `
 <DocumentFragment>

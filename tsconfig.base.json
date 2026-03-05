@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     // Environment Settings
-    "types": ["node", "jest"],
+    "types": ["node", "vitest/globals"],
 
     // Other Outputs
     "incremental": false,

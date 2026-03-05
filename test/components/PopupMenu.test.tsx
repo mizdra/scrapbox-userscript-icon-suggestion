@@ -18,7 +18,7 @@ const icons: Icon[] = [new Icon('project', 'icon1'), new Icon('project', 'icon2'
 const props = { cursorPosition, icons };
 
 // keydown イベントが PopupMenu 側でキャンセルされずに突き抜けてきたことを確かめるための mock
-const keydownListener = jest.fn();
+const keydownListener = vi.fn();
 document.addEventListener('keydown', keydownListener);
 beforeEach(() => {
   keydownListener.mockClear();
@@ -31,8 +31,8 @@ describe('PopupMenu', () => {
       expect(queryByTestId('popup-menu')).toBeNull();
     });
     test('Enter や Escape を押下しても、onSelect / onClose は呼び出されない', async () => {
-      const onSelect = jest.fn();
-      const onClose = jest.fn();
+      const onSelect = vi.fn();
+      const onClose = vi.fn();
       render(<PopupMenu open={false} {...props} onSelect={onSelect} onClose={onClose} />);
 
       await act(() => {
@@ -68,7 +68,7 @@ describe('PopupMenu', () => {
         expect(getByText(emptyMessage)).toBeVisible();
       });
       test('Enter を押下しても onSelect は呼び出されない', async () => {
-        const onSelect = jest.fn();
+        const onSelect = vi.fn();
         render(<PopupMenu open {...props} icons={icons} onSelect={onSelect} />);
         await act(() => {
           fireEvent(document, keydownEnterEvent);
@@ -76,7 +76,7 @@ describe('PopupMenu', () => {
         expect(onSelect).toBeCalledTimes(0);
       });
       test('Escape 押下で onClose が呼び出される', async () => {
-        const onClose = jest.fn();
+        const onClose = vi.fn();
         render(<PopupMenu open {...props} icons={icons} onClose={onClose} />);
 
         expect(onClose).toBeCalledTimes(0);
@@ -120,7 +120,7 @@ describe('PopupMenu', () => {
         expect(getByText('icon1').closest('.selected')).not.toBeNull();
       });
       test('Enter 押下で onSelect が呼び出される', async () => {
-        const onSelect = jest.fn();
+        const onSelect = vi.fn();
         render(<PopupMenu open {...props} onSelect={onSelect} />);
 
         expect(onSelect).toBeCalledTimes(0);
@@ -140,7 +140,7 @@ describe('PopupMenu', () => {
         expect(onSelect).toBeCalledTimes(1);
       });
       test('Escape 押下で onClose が呼び出される', async () => {
-        const onClose = jest.fn();
+        const onClose = vi.fn();
         render(<PopupMenu open {...props} onClose={onClose} />);
 
         expect(onClose).toBeCalledTimes(0);
@@ -153,7 +153,7 @@ describe('PopupMenu', () => {
         const isClosePopupKey = (e: KeyboardEvent) => {
           return e.key === 'g' && e.ctrlKey && !e.shiftKey && !e.altKey;
         };
-        const onClose = jest.fn();
+        const onClose = vi.fn();
         render(<PopupMenu open {...props} onClose={onClose} isClosePopupKey={isClosePopupKey} />);
 
         expect(onClose).toBeCalledTimes(0);

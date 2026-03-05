@@ -41,7 +41,7 @@ describe('SearchInput', () => {
     expect(input).toHaveValue('text');
   });
   test('文字を入力すると onInput が発火する', async () => {
-    const onInput = jest.fn();
+    const onInput = vi.fn();
     const query = 'test';
 
     const { getByTestId } = render(<SearchInput {...props} onInput={onInput} />);
@@ -56,7 +56,7 @@ describe('SearchInput', () => {
     });
   });
   test('フォーカスを外すと onBlur が発火する', async () => {
-    const onBlur = jest.fn();
+    const onBlur = vi.fn();
     const { getByTestId } = render(<SearchInput {...props} onBlur={onBlur} />);
     const input = getByTestId('search-input');
 
