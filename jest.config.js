@@ -18,7 +18,7 @@ const SHARED_CONFIG = {
 };
 
 /** @type import('@jest/types').Config.InitialOptions */
-module.exports = {
+export default {
   projects: [
     {
       ...SHARED_CONFIG,
