@@ -48,9 +48,9 @@ export async function fetchMemberPageIcons(projectName: string): Promise<Icon[]>
 export async function fetchRelatedPageIconsByHashTag(projectName: string, hashTag: string): Promise<Icon[]> {
   const { origin } = window.location;
 
-  const pageJson: PageJson = await fetch(
-    `${origin}/api/pages/${projectName}/${encodeURIComponent(hashTag)}`,
-  ).then(async (res) => res.json());
+  const pageJson: PageJson = await fetch(`${origin}/api/pages/${projectName}/${encodeURIComponent(hashTag)}`).then(
+    async (res) => res.json(),
+  );
 
   // プロジェクトのメンバーでない場合など、各種情報にアクセスできない場合は例外を投げる
   // NOTE: 本当はプロジェクトが無い場合は `Project not found.` のようなエラーメッセージを出してほしいけど、

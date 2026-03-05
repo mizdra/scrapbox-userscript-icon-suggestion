@@ -99,7 +99,7 @@ export function PopupMenu({
       {open && (
         <div className="popup-menu" style={popupMenuStyle} data-testid="popup-menu">
           <div ref={ref} className="button-container" style={buttonContainerStyle} data-testid="button-container">
-            {icons.length === 0 ? emptyMessage ?? 'アイテムは空です' : iconListElement}
+            {icons.length === 0 ? (emptyMessage ?? 'アイテムは空です') : iconListElement}
           </div>
           <div className="triangle" style={triangleStyle} />
         </div>

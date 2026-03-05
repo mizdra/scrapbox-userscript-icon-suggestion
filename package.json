@@ -2,6 +2,16 @@
   "name": "scrapbox-userscript-icon-suggestion",
   "version": "5.0.0",
   "description": "Scrapbox's UserScript to suggest and insert icons.",
+  "homepage": "https://github.com/mizdra/scrapbox-userscript-icon-suggestion#readme",
+  "bugs": {
+    "url": "https://github.com/mizdra/scrapbox-userscript-icon-suggestion/issues"
+  },
+  "license": "MIT",
+  "author": "mizdra",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mizdra/scrapbox-userscript-icon-suggestion.git"
+  },
   "main": "index.js",
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
@@ -16,18 +26,6 @@
     "lint:oxfmt": "oxfmt --check",
     "test": "jest --selectProjects unit"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mizdra/scrapbox-userscript-icon-suggestion.git"
-  },
-  "author": "mizdra",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/mizdra/scrapbox-userscript-icon-suggestion/issues"
-  },
-  "homepage": "https://github.com/mizdra/scrapbox-userscript-icon-suggestion#readme",
-  "prettier": "@mizdra/prettier-config-mizdra",
-  "renovate": "github>mizdra/renovate-config-mizdra:default.json5",
   "dependencies": {
     "asearch": "^1.0.1",
     "preact": "^10.5.13",
@@ -58,5 +56,7 @@
     "rollup-plugin-visualizer": "^5.4.1",
     "ts-jest": "^27.0.7",
     "typescript": "^4.2.4"
-  }
+  },
+  "prettier": "@mizdra/prettier-config-mizdra",
+  "renovate": "github>mizdra/renovate-config-mizdra:default.json5"
 }
