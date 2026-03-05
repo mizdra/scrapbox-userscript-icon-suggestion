@@ -1,10 +1,9 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env node
 
 import { resolve, join } from 'path';
 import { BrowserContext, chromium } from 'playwright';
 import * as rollup from 'rollup';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import loadConfigFile = require('rollup/dist/loadConfigFile');
+import loadConfigFile from 'rollup/dist/loadConfigFile.js';
 
 const userScriptPath = join(__dirname, '../dist/e2e.js');
 
