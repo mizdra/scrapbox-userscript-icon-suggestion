@@ -18,10 +18,7 @@
     "watch": "NODE_ENV=production rollup -c -w",
     "dev": "node scripts/dev.ts",
     "lint": "run-s -c lint:*",
-    "lint:tsc": "run-s -c lint:tsc:*",
-    "lint:tsc:src": "tsc -p tsconfig.src.json --noEmit",
-    "lint:tsc:test": "tsc -p tsconfig.test.json --noEmit",
-    "lint:tsc:scripts": "tsc -p tsconfig.scripts.json --noEmit",
+    "lint:tsc": "tsc -b",
     "lint:oxlint": "oxlint",
     "lint:oxfmt": "oxfmt --check",
     "test": "jest --selectProjects unit"

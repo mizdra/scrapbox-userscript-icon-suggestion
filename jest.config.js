@@ -1,4 +1,3 @@
-// @ts-check
 /* eslint-env node */
 
 /** @type import('@jest/types').Config.InitialOptions */
@@ -12,7 +11,8 @@ const SHARED_CONFIG = {
   },
   globals: {
     'ts-jest': {
-      tsconfig: '<rootDir>/tsconfig.test.json',
+      tsconfig: '<rootDir>/tsconfig.src.json',
+      isolatedModules: true,
     },
   },
 };

@@ -1,5 +1,10 @@
 {
   "extends": "./tsconfig.base.json",
-  "include": ["typings/**/*", "src/**/*"],
-  "compilerOptions": {}
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "lib": ["esnext", "dom"],
+    "noEmit": true
+  }
 }
