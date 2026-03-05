@@ -9,15 +9,7 @@ jobs:
         with:
           node-version: '16.x'
           cache: 'npm'
-
-      - name: npm install
-        run: npm install
-
-      - name: npm run lint
-        run: npm run lint
-
-      - name: npm run build
-        run: npm run build
-
-      - name: npm run test
-        run: npm run test
+      - run: npm install
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run test
