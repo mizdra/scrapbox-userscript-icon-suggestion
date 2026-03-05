@@ -51,7 +51,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-visualizer": "^5.4.1",
     "ts-jest": "^27.0.7",
-    "typescript": "^4.2.4"
+    "typescript": "^5.9.3"
   },
   "prettier": "@mizdra/prettier-config-mizdra",
   "renovate": "github>mizdra/renovate-config-mizdra:default.json5"
