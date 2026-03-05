@@ -1,9 +1,9 @@
-import { FunctionComponent, JSX } from 'preact';
+import type { FunctionComponent, JSX } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
 import { useScrapbox } from '../../hooks/useScrapbox';
 import { calcSearchInputStyle } from '../../lib/calc-style';
-import { CursorPosition } from '../../types';
+import type { CursorPosition } from '../../types';
 
 export type SearchInputProps = {
   defaultQuery?: string;

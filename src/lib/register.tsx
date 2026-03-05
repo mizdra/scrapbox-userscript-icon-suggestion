@@ -3,7 +3,7 @@ import { App } from '../components/App';
 import { RenamedOptionsWarning } from '../components/Warning';
 import { evaluatePresetIconItemsToIcons } from '../lib/options';
 import { getEditor } from '../lib/scrapbox';
-import { Matcher, PresetIconsItem } from '../types';
+import type { Matcher, PresetIconsItem } from '../types';
 
 type Options = {
   /**

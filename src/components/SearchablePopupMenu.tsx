@@ -1,7 +1,7 @@
-import { ComponentChild } from 'preact';
+import type { ComponentChild } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { Icon } from '../lib/icon';
-import { CursorPosition } from '../types';
+import type { Icon } from '../lib/icon';
+import type { CursorPosition } from '../types';
 import { PopupMenu } from './PopupMenu';
 import { SearchInput } from './SearchablePopupMenu/SearchInput';
 

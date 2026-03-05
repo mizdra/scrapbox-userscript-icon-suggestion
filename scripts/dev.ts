@@ -1,5 +1,6 @@
-import { resolve, join } from 'path';
-import { BrowserContext, chromium } from 'playwright';
+import { resolve, join } from 'node:path';
+import type { BrowserContext} from 'playwright';
+import { chromium } from 'playwright';
 import * as rollup from 'rollup';
 import loadConfigFile from 'rollup/dist/loadConfigFile.js';
 

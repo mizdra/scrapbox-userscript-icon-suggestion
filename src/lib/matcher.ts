@@ -1,7 +1,7 @@
 import Asearch from 'asearch';
-import { MatcherOptions } from '../types';
+import type { MatcherOptions } from '../types';
 import { uniqueIcons } from './collection';
-import { Icon } from './icon';
+import type { Icon } from './icon';
 
 /**
  * 曖昧一致による matcher。

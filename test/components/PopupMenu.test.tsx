@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/preact';
 import { PopupMenu } from '../../src/components/PopupMenu';
 import { Icon } from '../../src/lib/icon';
-import { CursorPosition } from '../../src/types';
+import type { CursorPosition } from '../../src/types';
 import {
   keydownEnterEvent,
   keydownEscapeEvent,
@@ -163,7 +163,7 @@ describe('PopupMenu', () => {
         expect(onClose).toBeCalledTimes(1);
       });
       test('Tab / Shift+Tab / Enter / Escape 以外が押下された時はイベントがキャンセルされるが、それ以外ではキャンセルされない', async () => {
-        render(<PopupMenu open={true} {...props} />);
+        render(<PopupMenu open {...props} />);
         await act(() => {
           fireEvent(document, keydownEnterEvent);
           fireEvent(document, keydownEscapeEvent);
@@ -178,7 +178,7 @@ describe('PopupMenu', () => {
         const { queryAllByTestId } = render(
           <PopupMenu
             {...props}
-            open={true}
+            open
             icons={[
               new Icon('project', 'a'),
               new Icon('project', 'b'),

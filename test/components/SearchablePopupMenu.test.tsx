@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { SearchablePopupMenu } from '../../src/components/SearchablePopupMenu';
 import { Icon } from '../../src/lib/icon';
 import { forwardMatcher } from '../../src/lib/matcher';
-import { CursorPosition } from '../../src/types';
+import type { CursorPosition } from '../../src/types';
 import { keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
 
 // ダミーの props

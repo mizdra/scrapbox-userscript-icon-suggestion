@@ -1,5 +1,5 @@
-import { JSX } from 'preact';
-import { CursorPosition } from '../types';
+import type { JSX } from 'preact';
+import type { CursorPosition } from '../types';
 
 /** .popup-menu のスタイルを計算する */
 export function calcPopupMenuStyle(cursorPosition: CursorPosition): JSX.CSSProperties {

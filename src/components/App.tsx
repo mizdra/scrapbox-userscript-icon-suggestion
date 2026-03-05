@@ -1,13 +1,13 @@
-import { FunctionComponent } from 'preact';
+import type { FunctionComponent } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 import { forwardPartialFuzzyMatcher } from '..';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqueIcons } from '../lib/collection';
-import { Icon } from '../lib/icon';
+import type { Icon } from '../lib/icon';
 import { isComposing } from '../lib/key';
 import { calcCursorPosition, insertText, scanEmbeddedIcons } from '../lib/scrapbox';
-import { CursorPosition, Matcher } from '../types';
+import type { CursorPosition, Matcher } from '../types';
 import { SearchablePopupMenu } from './SearchablePopupMenu';
 
 const DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY = (e: KeyboardEvent) => {

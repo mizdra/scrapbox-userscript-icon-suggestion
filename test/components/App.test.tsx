@@ -4,12 +4,13 @@ const mockInsertText = jest.fn();
 
 import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { App as NativeApp, AppProps } from '../../src/components/App';
+import type { AppProps } from '../../src/components/App';
+import { App as NativeApp } from '../../src/components/App';
 import { ScrapboxContext } from '../../src/contexts/ScrapboxContext';
 import { uniqueIcons } from '../../src/lib/collection';
 import { Icon } from '../../src/lib/icon';
 import { forwardMatcher } from '../../src/lib/matcher';
-import { Matcher } from '../../src/types';
+import type { Matcher } from '../../src/types';
 import { createEditor, createScrapboxAPI } from '../helpers/html';
 import {
   keydownAEvent,

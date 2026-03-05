@@ -2,7 +2,7 @@ import { fireEvent, render, waitFor } from '@testing-library/preact';
 import { SearchInput } from '../../../src/components/SearchablePopupMenu/SearchInput';
 import { ScrapboxContext } from '../../../src/contexts/ScrapboxContext';
 import { calcSearchInputStyle } from '../../../src/lib/calc-style';
-import { CursorPosition } from '../../../src/types';
+import type { CursorPosition } from '../../../src/types';
 import { createEditor, createScrapboxAPI } from '../../helpers/html';
 
 const waitRaf = async () => new Promise((resolve) => requestAnimationFrame(resolve));
@@ -33,7 +33,7 @@ describe('SearchInput', () => {
     expect(input).toHaveFocus();
   });
   test('defaultQuery が設定できる', () => {
-    const { getByTestId } = render(<SearchInput {...props} defaultQuery={'text'} />);
+    const { getByTestId } = render(<SearchInput {...props} defaultQuery="text" />);
     const input = getByTestId('search-input');
     expect(input).toHaveValue('text');
   });

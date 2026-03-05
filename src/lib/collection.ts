@@ -1,4 +1,4 @@
-import { Icon } from './icon';
+import type { Icon } from './icon';
 
 export function uniqueBy<T, U>(arr: T[], fn: (el: T) => U): T[] {
   const result: T[] = [];

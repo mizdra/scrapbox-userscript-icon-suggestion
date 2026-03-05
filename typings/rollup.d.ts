@@ -1,5 +1,5 @@
 declare module 'rollup/dist/loadConfigFile' {
-  import { RollupWatchOptions } from 'rollup';
+  import type { RollupWatchOptions } from 'rollup';
 
   interface LoadConfigFileResult {
     options: RollupWatchOptions[];

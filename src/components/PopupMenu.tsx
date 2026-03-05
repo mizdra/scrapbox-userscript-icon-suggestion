@@ -3,9 +3,10 @@ import useResizeObserver from 'use-resize-observer';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { calcButtonContainerStyle, calcPopupMenuStyle, calcTriangleStyle } from '../lib/calc-style';
-import { hasDuplicatedPageTitle, Icon } from '../lib/icon';
+import type { Icon } from '../lib/icon';
+import { hasDuplicatedPageTitle } from '../lib/icon';
 import { isComposing } from '../lib/key';
-import { CursorPosition } from '../types';
+import type { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
 const DEFAULT_IS_CLOSE_POPUP_KEY = (e: KeyboardEvent) => {
