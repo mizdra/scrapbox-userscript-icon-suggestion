@@ -5,7 +5,10 @@ import { calcSearchInputStyle } from '../../../src/lib/calc-style';
 import type { CursorPosition } from '../../../src/types';
 import { createEditor, createScrapboxAPI } from '../../helpers/html';
 
-const waitRaf = async () => new Promise((resolve) => requestAnimationFrame(resolve));
+const waitRaf = async () =>
+  new Promise((resolve) => {
+    requestAnimationFrame(resolve);
+  });
 
 // ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };

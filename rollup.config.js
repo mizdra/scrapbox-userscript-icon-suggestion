@@ -31,7 +31,7 @@ function createConfig(input) {
       typescript({
         tsconfig: 'tsconfig.src.json',
         // ref: https://github.com/rollup/plugins/issues/260#issuecomment-601551228
-        inlineSources: process.env.NODE_ENV === 'production' ? false : true,
+        inlineSources: process.env.NODE_ENV !== 'production',
       }),
       // scrapbox はクリップボードのサイズ上限があり、上限を超えたサイズのテキストを貼り付けようとすると、
       // 上限値で切り捨て貼り付けられてしまう。icon-suggestion はコピペでデプロイしており、

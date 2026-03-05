@@ -55,9 +55,13 @@ export async function registerIconSuggestion(options?: Options) {
   document.querySelector('.app')?.prepend(warningMessageContainer);
 
   if (
+    // oxlint-disable-next-line typescript/no-deprecated
     options?.isSuggestionOpenKeyDown !== undefined ||
+    // oxlint-disable-next-line typescript/no-deprecated
     options?.isSuggestionCloseKeyDown !== undefined ||
+    // oxlint-disable-next-line typescript/no-deprecated
     options?.isInsertQueryKeyDown !== undefined ||
+    // oxlint-disable-next-line typescript/no-deprecated
     options?.defaultSuggestPresetIcons !== undefined
   ) {
     render(<RenamedOptionsWarning />, warningMessageContainer);

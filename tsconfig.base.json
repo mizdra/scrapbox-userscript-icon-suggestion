@@ -25,7 +25,6 @@
     "noUnusedParameters": false, // oxlint のほうが警告レベルやルールを柔軟に設定できるので、oxlint に任せる
 
     /* Debug Options */
-    "sourceMap": true, // for ts-loader (ref: https://github.com/TypeStrong/ts-loader#devtool--sourcemaps)
-    "locale": "ja"
+    "sourceMap": true // for ts-loader (ref: https://github.com/TypeStrong/ts-loader#devtool--sourcemaps)
   }
 }

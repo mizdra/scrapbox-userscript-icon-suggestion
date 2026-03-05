@@ -1,4 +1,4 @@
-import type { FunctionComponent, JSX } from 'preact';
+import type { FunctionComponent, TargetedEvent } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
 import useResizeObserver from 'use-resize-observer';
 import { useScrapbox } from '../../hooks/useScrapbox';
@@ -27,7 +27,7 @@ export const SearchInput: FunctionComponent<SearchInputProps> = ({ defaultQuery,
   }, []);
 
   const handleInput = useCallback(
-    (e: JSX.TargetedEvent<HTMLInputElement, Event>) => {
+    (e: TargetedEvent<HTMLInputElement, Event>) => {
       if (e.currentTarget) onInput?.(e.currentTarget.value);
     },
     [onInput],

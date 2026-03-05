@@ -11,6 +11,7 @@ export function fuzzyMatcher({ query, composedIcons }: MatcherOptions): Icon[] {
   // query の長さが 0〜2 なら 0 文字まで、3〜5 なら 1 文字まで、
   // 6〜8 なら 2 文字まで、9 以上なら 3 文字まで誤字を許容する
   const maxAambig = Math.min(Math.floor(query.length / 3), 3);
+  // oxlint-disable-next-line new-cap
   const match = Asearch(` ${query} `); // 部分一致できるように、両端をスペースで囲む
   // あいまい度の少ない項目から順に並べる
   const newIcons: Icon[] = [];

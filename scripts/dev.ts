@@ -1,5 +1,5 @@
 import { resolve, join } from 'node:path';
-import type { BrowserContext} from 'playwright';
+import type { BrowserContext } from 'playwright';
 import { chromium } from 'playwright';
 import * as rollup from 'rollup';
 import loadConfigFile from 'rollup/dist/loadConfigFile.js';
@@ -43,8 +43,8 @@ async function reloadPage(context: BrowserContext) {
   console.log('✅ Successfully launched debugging tool!');
 
   function gracefulShutdown() {
-    watcher.close();
-    browser.close().catch(console.error);
+    void watcher.close();
+    void browser.close();
   }
   process.on('SIGTERM', gracefulShutdown); // for kill
   process.on('SIGINT', gracefulShutdown); // for Ctrl+C
