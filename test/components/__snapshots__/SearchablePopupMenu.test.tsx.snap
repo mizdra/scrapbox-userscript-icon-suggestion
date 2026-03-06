@@ -103,8 +103,8 @@ exports[`SearchablePopupMenu > open === true の時 > ポップアップと Sear
       <input
         class="form-control"
         data-testid="search-input"
-        default="true"
         style="position: absolute; top: 0px; left: 0px;"
+        value=""
       />
     </form>
   </div>

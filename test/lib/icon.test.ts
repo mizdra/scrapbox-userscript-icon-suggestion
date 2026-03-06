@@ -92,8 +92,8 @@ test('hasDuplicatedPageTitle', () => {
     new Icon('other-project', 'b'),
     new Icon('other-project', 'c'),
   ];
-  expect(hasDuplicatedPageTitle(suggestedIcons[0], suggestedIcons)).toEqual(false);
-  expect(hasDuplicatedPageTitle(suggestedIcons[1], suggestedIcons)).toEqual(true);
-  expect(hasDuplicatedPageTitle(suggestedIcons[2], suggestedIcons)).toEqual(true);
-  expect(hasDuplicatedPageTitle(suggestedIcons[3], suggestedIcons)).toEqual(false);
+  expect(hasDuplicatedPageTitle(suggestedIcons[0]!, suggestedIcons)).toEqual(false);
+  expect(hasDuplicatedPageTitle(suggestedIcons[1]!, suggestedIcons)).toEqual(true);
+  expect(hasDuplicatedPageTitle(suggestedIcons[2]!, suggestedIcons)).toEqual(true);
+  expect(hasDuplicatedPageTitle(suggestedIcons[3]!, suggestedIcons)).toEqual(false);
 });

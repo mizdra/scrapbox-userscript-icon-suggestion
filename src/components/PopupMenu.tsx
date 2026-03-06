@@ -68,7 +68,7 @@ export function PopupMenu({
       } else {
         if (isTab) setSelectedIndex((selectedIndex + 1) % icons.length);
         if (isShiftTab) setSelectedIndex((selectedIndex - 1 + icons.length) % icons.length);
-        if (isEnter) onSelect?.(icons[selectedIndex], selectedIndex);
+        if (isEnter) onSelect?.(icons[selectedIndex]!, selectedIndex);
         if (isClose) onClose?.();
       }
     },

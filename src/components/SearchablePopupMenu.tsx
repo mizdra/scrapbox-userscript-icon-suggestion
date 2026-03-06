@@ -37,7 +37,7 @@ export function SearchablePopupMenu({
 
   const handleSelect = useCallback(
     (_icon: ComponentChild, index: number) => {
-      onSelect?.(matchedIcons[index]);
+      onSelect?.(matchedIcons[index]!);
     },
     [matchedIcons, onSelect],
   );

@@ -14,7 +14,7 @@ export type SearchInputProps = {
 
 export const SearchInput: FunctionComponent<SearchInputProps> = ({ defaultQuery, cursorPosition, onInput, onBlur }) => {
   const { editor } = useScrapbox();
-  const ref = useRef<HTMLInputElement>();
+  const ref = useRef<HTMLInputElement>(null);
   const editorRef = useRef(editor);
   const { width: editorWidth = 0 } = useResizeObserver(editorRef);
   const searchInputStyle = calcSearchInputStyle(editorWidth, cursorPosition);
@@ -40,8 +40,7 @@ export const SearchInput: FunctionComponent<SearchInputProps> = ({ defaultQuery,
         ref={ref}
         className="form-control"
         style={searchInputStyle}
-        value={defaultQuery}
-        default
+        defaultValue={defaultQuery}
         onInput={handleInput}
         onBlur={onBlur}
         data-testid="search-input"
