@@ -2,7 +2,7 @@ import { useEffect } from 'preact/hooks';
 
 export function useDocumentEventListener<K extends keyof DocumentEventMap>(
   type: K,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any
   listener: (this: Document, ev: DocumentEventMap[K]) => any,
   options?: boolean | AddEventListenerOptions,
 ) {

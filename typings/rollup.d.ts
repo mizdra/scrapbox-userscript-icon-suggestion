@@ -3,7 +3,7 @@ declare module 'rollup/dist/loadConfigFile' {
 
   interface LoadConfigFileResult {
     options: RollupWatchOptions[];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any
     warning: any;
   }
   const loadConfigFile: (fileName: string, commandOptions: Record<string, unknown>) => Promise<LoadConfigFileResult>;

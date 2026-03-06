@@ -35,7 +35,7 @@ export function useScrapbox(): UseScrapboxResult {
         setLayout(scrapbox.Layout);
         setProjectName(scrapbox.Project.name);
       });
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // oxlint-disable-next-line @typescript-eslint/no-non-null-assertion
       observer.observe(document.querySelector('title')!, { childList: true });
       return () => observer.disconnect();
     }

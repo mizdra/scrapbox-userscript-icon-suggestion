@@ -21,7 +21,7 @@ export function fuzzyMatcher({ query, composedIcons }: MatcherOptions): Icon[] {
     }
   }
   // 重複は除く
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  // oxlint-disable-next-line @typescript-eslint/no-unsafe-return
   return uniqueIcons(newIcons);
 }
 
@@ -47,6 +47,6 @@ export function partialMatcher({ query, composedIcons }: MatcherOptions): Icon[]
  * */
 export function forwardPartialFuzzyMatcher(options: MatcherOptions): Icon[] {
   const newIcons = [...forwardMatcher(options), ...partialMatcher(options), ...fuzzyMatcher(options)];
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  // oxlint-disable-next-line @typescript-eslint/no-unsafe-return
   return uniqueIcons(newIcons);
 }

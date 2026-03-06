@@ -1,5 +1,3 @@
-/* eslint-env node */
-
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
@@ -53,5 +51,5 @@ function createConfig(input) {
   return config;
 }
 
-// eslint-disable-next-line import/no-default-export
+// oxlint-disable-next-line import/no-default-export
 export default [createConfig('src/index.ts')];
