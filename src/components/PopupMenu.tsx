@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import useResizeObserver from 'use-resize-observer';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
+import { useResizeObserver } from '../hooks/useResizeObserver';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { calcButtonContainerStyle, calcPopupMenuStyle, calcTriangleStyle } from '../lib/calc-style';
 import type { Icon } from '../lib/icon';
@@ -33,11 +33,13 @@ export function PopupMenu({
   isClosePopupKey = DEFAULT_IS_CLOSE_POPUP_KEY,
 }: PopupMenuProps) {
   const { editor } = useScrapbox();
-  const { ref, width: buttonContainerWidth = 0 } = useResizeObserver<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
+  const { width: buttonContainerWidth = 0 } = useResizeObserver(ref);
   const isEmpty = useMemo(() => icons.length === 0, [icons.length]);
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const { width: editorWidth = 0 } = useResizeObserver({ ref: editor });
+  const editorRef = useRef(editor);
+  const { width: editorWidth = 0 } = useResizeObserver(editorRef);
 
   // icons が変わったら選択位置を 0 番目に戻す。ただし空なら null にセットする。
   useEffect(() => {

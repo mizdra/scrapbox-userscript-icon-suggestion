@@ -52,19 +52,19 @@ describe('SearchablePopupMenu', () => {
       });
     });
     describe('ポップアップに表示されるアイテムが空でない時', () => {
-      test('SearchInput に文字を入力するとアイテムがフィルタされる', () => {
+      test('SearchInput に文字を入力するとアイテムがフィルタされる', async () => {
         const { getByTestId } = render(<SearchablePopupMenu open {...props} />);
         const buttonContainer = getByTestId('button-container');
         const searchInput = getByTestId('search-input');
 
         expect(buttonContainer.childElementCount).toEqual(4);
-        userEvent.type(searchInput, 'a');
+        await userEvent.type(searchInput, 'a');
         expect(buttonContainer.childElementCount).toEqual(3);
-        userEvent.type(searchInput, 'b');
+        await userEvent.type(searchInput, 'b');
         expect(buttonContainer.childElementCount).toEqual(2);
-        userEvent.type(searchInput, 'c');
+        await userEvent.type(searchInput, 'c');
         expect(buttonContainer.childElementCount).toEqual(1);
-        userEvent.type(searchInput, 'd');
+        await userEvent.type(searchInput, 'd');
         expect(buttonContainer.childElementCount).toEqual(0);
       });
       test('Enter 押下で onSelect が呼び出される', async () => {
@@ -78,10 +78,10 @@ describe('SearchablePopupMenu', () => {
       });
     });
   });
-  test('open === true になった時に、 SearchInput に入力された文字がリセットされる', () => {
+  test('open === true になった時に、 SearchInput に入力された文字がリセットされる', async () => {
     const { rerender, getByTestId } = render(<SearchablePopupMenu open {...props} />);
 
-    userEvent.type(getByTestId('search-input'), 'a');
+    await userEvent.type(getByTestId('search-input'), 'a');
     expect(getByTestId('search-input')).toHaveValue('a');
 
     rerender(<SearchablePopupMenu open={false} {...props} />);

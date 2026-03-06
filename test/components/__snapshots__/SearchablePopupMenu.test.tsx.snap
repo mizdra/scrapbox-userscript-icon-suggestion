@@ -1,12 +1,12 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SearchablePopupMenu open === false の時 ポップアップも SearchInput も表示されない 1`] = `
+exports[`SearchablePopupMenu > open === false の時 > ポップアップも SearchInput も表示されない 1`] = `
 <DocumentFragment>
   <div />
 </DocumentFragment>
 `;
 
-exports[`SearchablePopupMenu open === true の時 ポップアップと SearchInput が表示される 1`] = `
+exports[`SearchablePopupMenu > open === true の時 > ポップアップと SearchInput が表示される 1`] = `
 <DocumentFragment>
   <div>
     <div
@@ -17,7 +17,7 @@ exports[`SearchablePopupMenu open === true の時 ポップアップと SearchIn
       <div
         class="button-container"
         data-testid="button-container"
-        style="left: 0px; transform: translateX(-NaN%);"
+        style="left: 0px;"
       >
         <div
           class="button selected"
@@ -104,7 +104,7 @@ exports[`SearchablePopupMenu open === true の時 ポップアップと SearchIn
         class="form-control"
         data-testid="search-input"
         default="true"
-        style="position: absolute; top: 0px; left: 0px; transform: translateX(-NaN%);"
+        style="position: absolute; top: 0px; left: 0px;"
       />
     </form>
   </div>

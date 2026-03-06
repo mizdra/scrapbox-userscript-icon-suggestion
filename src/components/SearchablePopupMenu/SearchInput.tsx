@@ -1,6 +1,6 @@
 import type { FunctionComponent, TargetedEvent } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
-import useResizeObserver from 'use-resize-observer';
+import { useResizeObserver } from '../../hooks/useResizeObserver';
 import { useScrapbox } from '../../hooks/useScrapbox';
 import { calcSearchInputStyle } from '../../lib/calc-style';
 import type { CursorPosition } from '../../types';
@@ -15,7 +15,8 @@ export type SearchInputProps = {
 export const SearchInput: FunctionComponent<SearchInputProps> = ({ defaultQuery, cursorPosition, onInput, onBlur }) => {
   const { editor } = useScrapbox();
   const ref = useRef<HTMLInputElement>();
-  const { width: editorWidth = 0 } = useResizeObserver({ ref: editor });
+  const editorRef = useRef(editor);
+  const { width: editorWidth = 0 } = useResizeObserver(editorRef);
   const searchInputStyle = calcSearchInputStyle(editorWidth, cursorPosition);
 
   // mount されたら即 focus する
