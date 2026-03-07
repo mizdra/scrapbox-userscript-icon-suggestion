@@ -1,5 +1,6 @@
 {
   "extends": "./tsconfig.base.json",
+  "exclude": ["dist", "scripts"],
   "compilerOptions": {
     "target": "esnext",
     "module": "preserve",
