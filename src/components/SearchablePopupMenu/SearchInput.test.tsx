@@ -1,9 +1,9 @@
 import { fireEvent, render, waitFor } from '@testing-library/preact';
-import { SearchInput } from '../../../src/components/SearchablePopupMenu/SearchInput';
-import { ScrapboxContext } from '../../../src/contexts/ScrapboxContext';
-import { calcSearchInputStyle } from '../../../src/lib/calc-style';
-import type { CursorPosition } from '../../../src/types';
-import { createEditor, createScrapboxAPI } from '../../helpers/html';
+import { ScrapboxContext } from '../../contexts/ScrapboxContext';
+import { calcSearchInputStyle } from '../../lib/calc-style';
+import { createEditor, createScrapboxAPI } from '../../test/helpers/html';
+import type { CursorPosition } from '../../types';
+import { SearchInput } from './SearchInput';
 
 const waitRaf = async () =>
   new Promise((resolve) => {

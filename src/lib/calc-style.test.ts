@@ -3,7 +3,7 @@ import {
   calcPopupMenuStyle,
   calcSearchInputStyle,
   calcTriangleStyle,
-} from '../../src/lib/calc-style';
+} from '../lib/calc-style';
 
 describe('calcPopupMenuStyle', () => {
   test('.cursor の top プロパティがそのまま .popup-menu の top プロパティになる', () => {

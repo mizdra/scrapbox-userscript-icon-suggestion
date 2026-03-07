@@ -1,6 +1,4 @@
 // @ts-nocheck
-import { fetchMemberPageIcons, Icon } from '../../src';
-import { fetchRelatedPageIconsByHashTag } from '../../src/lib/preset-icon';
 import {
   DUMMY_PROJECT_JSON_FOR_PUBLIC_AND_GUEST,
   DUMMY_MEMBER_PAGE_JSON_FOR_PUBLIC_AND_GUEST,
@@ -16,7 +14,9 @@ import {
   DUMMY_MEMBER_PAGE_JSON_FOR_PUBLIC_AND_MEMBER,
   DUMMY_NON_EXIST_PAGE_JSON,
   NON_EXIST_PAGE_JSON_URL_RE,
-} from '../fixtures/scrapbox-api';
+} from '../test/fixtures/scrapbox-api';
+import { Icon } from './icon';
+import { fetchMemberPageIcons, fetchRelatedPageIconsByHashTag } from './preset-icon';
 
 describe.skip('fetchMemberPageIcons', () => {
   test('プロジェクトが存在しない時', async () => {

@@ -1,5 +1,5 @@
-import { Icon } from '../../src';
-import { uniqueBy, uniqueIcons } from '../../src/lib/collection';
+import { uniqueBy, uniqueIcons } from './collection';
+import { Icon } from './icon';
 
 describe('uniqueBy', () => {
   test('空配列が入力されたら空配列を返す', () => {

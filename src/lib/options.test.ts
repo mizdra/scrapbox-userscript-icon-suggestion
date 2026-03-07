@@ -1,5 +1,5 @@
-import { Icon } from '../../src/lib/icon';
-import { evaluatePresetIconItemsToIcons } from '../../src/lib/options';
+import { Icon } from './icon';
+import { evaluatePresetIconItemsToIcons } from './options';
 
 describe('evaluatePresetIconItemsToIcons', () => {
   test('色んな型が入れ子になっていても、評価して flat して返してくれる', async () => {

@@ -1,5 +1,5 @@
-import { hasDuplicatedPageTitle, Icon, iconLinkElementToIcon } from '../../src/lib/icon';
-import { createIconLinkElement } from '../helpers/html';
+import { createIconLinkElement } from '../test/helpers/html';
+import { hasDuplicatedPageTitle, Icon, iconLinkElementToIcon } from './icon';
 
 describe('iconLinkElementToIcon', () => {
   test('カレントプロジェクトのアイコンを表す要素が与えられた時', () => {

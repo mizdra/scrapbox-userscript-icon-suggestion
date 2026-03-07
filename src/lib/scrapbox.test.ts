@@ -1,5 +1,5 @@
-import { calcCursorPosition, scanEmbeddedIcons } from '../../src/lib/scrapbox';
-import { createEditor, createIconLinkElement, createCursor } from '../helpers/html';
+import { createEditor, createIconLinkElement, createCursor } from '../test/helpers/html';
+import { calcCursorPosition, scanEmbeddedIcons } from './scrapbox';
 
 const editor = createEditor();
 editor.appendChild(createIconLinkElement('project', 'foo'));

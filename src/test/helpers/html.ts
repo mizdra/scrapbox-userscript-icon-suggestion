@@ -1,5 +1,5 @@
-import type { Icon } from '../../src/lib/icon';
-import type { CursorPosition } from '../../src/types';
+import type { Icon } from '../../lib/icon';
+import type { CursorPosition } from '../../types';
 
 // scrapbox のアイコンの a タグを再現したものを返す関数
 export function createIconLinkElement(projectName: string, pageName: string): HTMLAnchorElement {
