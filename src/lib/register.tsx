@@ -31,15 +31,13 @@ type Options = {
    * suggest されたアイコンを絞り込むために利用される matcher。
    */
   matcher?: Matcher;
-  scrapbox?: Scrapbox;
-  editor?: HTMLElement;
 };
 
 export async function registerIconSuggestion(options?: Options) {
   // 直接 editor に mount すると scrapbox 側の react renderer と干渉して壊れるので、
   // editor 内に差し込んだ container に mount する
   const container = document.createElement('div');
-  const editor = options?.editor ?? getEditor();
+  const editor = getEditor();
   editor.appendChild(container);
 
   const presetIcons = options?.presetIcons ? await evaluatePresetIconItemsToIcons(options.presetIcons) : undefined;
