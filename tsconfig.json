@@ -1,6 +1,4 @@
-// 🙏 "Solution Style" tsconfig.json 🙏
-// ref: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-9.html#support-for-solution-style-tsconfigjson-files
 {
   "files": [],
-  "references": [{ "path": "./tsconfig.src.json" }, { "path": "./tsconfig.test.json" }]
+  "references": [{ "path": "./tsconfig.app.json" }]
 }

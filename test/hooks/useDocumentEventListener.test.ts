@@ -1,11 +1,11 @@
 import { fireEvent } from '@testing-library/dom';
-import { renderHook, act } from '@testing-library/preact-hooks';
+import { renderHook, act } from '@testing-library/preact';
 import { useDocumentEventListener } from '../../src/hooks/useDocumentEventListener';
 
 describe('useDocumentEventListener', () => {
   const event = new KeyboardEvent('keydown', { key: 'Tab' });
   test('イベントリスナが設定できる', async () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     renderHook(() => useDocumentEventListener('keydown', listener));
 
     await act(() => {
@@ -17,7 +17,7 @@ describe('useDocumentEventListener', () => {
     expect(listener).toHaveBeenCalledWith(event);
   });
   test('コンポーネントが unmount されるとイベントリスナが削除される', async () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     const { unmount } = renderHook(() => useDocumentEventListener('keydown', listener));
 
     unmount();

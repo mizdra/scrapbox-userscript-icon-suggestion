@@ -1,5 +1,5 @@
-import { ComponentChild, JSX } from 'preact';
-import { Icon } from './lib/icon';
+import type { ComponentChild, JSX } from 'preact';
+import type { Icon } from './lib/icon';
 
 export type FormData = {
   query: string;

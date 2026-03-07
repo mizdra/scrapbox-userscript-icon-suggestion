@@ -1,12 +1,14 @@
 import { fireEvent, render, waitFor } from '@testing-library/preact';
-import faker from 'faker';
 import { SearchInput } from '../../../src/components/SearchablePopupMenu/SearchInput';
 import { ScrapboxContext } from '../../../src/contexts/ScrapboxContext';
 import { calcSearchInputStyle } from '../../../src/lib/calc-style';
-import { CursorPosition } from '../../../src/types';
+import type { CursorPosition } from '../../../src/types';
 import { createEditor, createScrapboxAPI } from '../../helpers/html';
 
-const waitRaf = async () => new Promise((resolve) => requestAnimationFrame(resolve));
+const waitRaf = async () =>
+  new Promise((resolve) => {
+    requestAnimationFrame(resolve);
+  });
 
 // ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
@@ -34,13 +36,13 @@ describe('SearchInput', () => {
     expect(input).toHaveFocus();
   });
   test('defaultQuery が設定できる', () => {
-    const { getByTestId } = render(<SearchInput {...props} defaultQuery={'text'} />);
+    const { getByTestId } = render(<SearchInput {...props} defaultQuery="text" />);
     const input = getByTestId('search-input');
     expect(input).toHaveValue('text');
   });
   test('文字を入力すると onInput が発火する', async () => {
-    const onInput = jest.fn();
-    const query = faker.helpers.randomize(['', faker.datatype.string()]);
+    const onInput = vi.fn();
+    const query = 'test';
 
     const { getByTestId } = render(<SearchInput {...props} onInput={onInput} />);
     const input = getByTestId('search-input');
@@ -54,7 +56,7 @@ describe('SearchInput', () => {
     });
   });
   test('フォーカスを外すと onBlur が発火する', async () => {
-    const onBlur = jest.fn();
+    const onBlur = vi.fn();
     const { getByTestId } = render(<SearchInput {...props} onBlur={onBlur} />);
     const input = getByTestId('search-input');
 

@@ -1,4 +1,4 @@
-import { PresetIconsItem } from '../types';
+import type { PresetIconsItem } from '../types';
 import { Icon } from './icon';
 
 async function evaluatePresetIconItemToPagePaths(presetIconItem: PresetIconsItem): Promise<Icon[]> {

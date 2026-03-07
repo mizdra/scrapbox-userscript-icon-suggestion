@@ -73,7 +73,7 @@ describe('fuzzyMatcher', () => {
       ]);
     });
   });
-  describe('曖昧度の昇順で返ってくる', () => {
+  test('曖昧度の昇順で返ってくる', () => {
     expect(
       fuzzyMatcher({
         ...args,
@@ -98,7 +98,7 @@ describe('fuzzyMatcher', () => {
       new Icon('project', 'aaaaaaaaaccc'),
     ]);
   });
-  describe('部分一致する', () => {
+  test('部分一致する', () => {
     expect(
       fuzzyMatcher({
         ...args,

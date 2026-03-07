@@ -1,8 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/preact';
-import { datatype } from 'faker';
 import { PopupMenu } from '../../src/components/PopupMenu';
 import { Icon } from '../../src/lib/icon';
-import { CursorPosition } from '../../src/types';
+import type { CursorPosition } from '../../src/types';
 import {
   keydownEnterEvent,
   keydownEscapeEvent,
@@ -19,7 +18,7 @@ const icons: Icon[] = [new Icon('project', 'icon1'), new Icon('project', 'icon2'
 const props = { cursorPosition, icons };
 
 // keydown イベントが PopupMenu 側でキャンセルされずに突き抜けてきたことを確かめるための mock
-const keydownListener = jest.fn();
+const keydownListener = vi.fn();
 document.addEventListener('keydown', keydownListener);
 beforeEach(() => {
   keydownListener.mockClear();
@@ -32,8 +31,8 @@ describe('PopupMenu', () => {
       expect(queryByTestId('popup-menu')).toBeNull();
     });
     test('Enter や Escape を押下しても、onSelect / onClose は呼び出されない', async () => {
-      const onSelect = jest.fn();
-      const onClose = jest.fn();
+      const onSelect = vi.fn();
+      const onClose = vi.fn();
       render(<PopupMenu open={false} {...props} onSelect={onSelect} onClose={onClose} />);
 
       await act(() => {
@@ -64,12 +63,12 @@ describe('PopupMenu', () => {
     describe('アイテムが1つも無い時', () => {
       const icons: Icon[] = [];
       test('空であることを表すメッセージが表示される', () => {
-        const emptyMessage = datatype.string();
+        const emptyMessage = 'test';
         const { getByText } = render(<PopupMenu open {...props} icons={icons} emptyMessage={emptyMessage} />);
         expect(getByText(emptyMessage)).toBeVisible();
       });
       test('Enter を押下しても onSelect は呼び出されない', async () => {
-        const onSelect = jest.fn();
+        const onSelect = vi.fn();
         render(<PopupMenu open {...props} icons={icons} onSelect={onSelect} />);
         await act(() => {
           fireEvent(document, keydownEnterEvent);
@@ -77,7 +76,7 @@ describe('PopupMenu', () => {
         expect(onSelect).toBeCalledTimes(0);
       });
       test('Escape 押下で onClose が呼び出される', async () => {
-        const onClose = jest.fn();
+        const onClose = vi.fn();
         render(<PopupMenu open {...props} icons={icons} onClose={onClose} />);
 
         expect(onClose).toBeCalledTimes(0);
@@ -121,7 +120,7 @@ describe('PopupMenu', () => {
         expect(getByText('icon1').closest('.selected')).not.toBeNull();
       });
       test('Enter 押下で onSelect が呼び出される', async () => {
-        const onSelect = jest.fn();
+        const onSelect = vi.fn();
         render(<PopupMenu open {...props} onSelect={onSelect} />);
 
         expect(onSelect).toBeCalledTimes(0);
@@ -141,7 +140,7 @@ describe('PopupMenu', () => {
         expect(onSelect).toBeCalledTimes(1);
       });
       test('Escape 押下で onClose が呼び出される', async () => {
-        const onClose = jest.fn();
+        const onClose = vi.fn();
         render(<PopupMenu open {...props} onClose={onClose} />);
 
         expect(onClose).toBeCalledTimes(0);
@@ -154,7 +153,7 @@ describe('PopupMenu', () => {
         const isClosePopupKey = (e: KeyboardEvent) => {
           return e.key === 'g' && e.ctrlKey && !e.shiftKey && !e.altKey;
         };
-        const onClose = jest.fn();
+        const onClose = vi.fn();
         render(<PopupMenu open {...props} onClose={onClose} isClosePopupKey={isClosePopupKey} />);
 
         expect(onClose).toBeCalledTimes(0);
@@ -164,7 +163,7 @@ describe('PopupMenu', () => {
         expect(onClose).toBeCalledTimes(1);
       });
       test('Tab / Shift+Tab / Enter / Escape 以外が押下された時はイベントがキャンセルされるが、それ以外ではキャンセルされない', async () => {
-        render(<PopupMenu open={true} {...props} />);
+        render(<PopupMenu open {...props} />);
         await act(() => {
           fireEvent(document, keydownEnterEvent);
           fireEvent(document, keydownEscapeEvent);
@@ -179,7 +178,7 @@ describe('PopupMenu', () => {
         const { queryAllByTestId } = render(
           <PopupMenu
             {...props}
-            open={true}
+            open
             icons={[
               new Icon('project', 'a'),
               new Icon('project', 'b'),

@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import useResizeObserver from 'use-resize-observer';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
+import { useResizeObserver } from '../hooks/useResizeObserver';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { calcButtonContainerStyle, calcPopupMenuStyle, calcTriangleStyle } from '../lib/calc-style';
-import { hasDuplicatedPageTitle, Icon } from '../lib/icon';
+import type { Icon } from '../lib/icon';
+import { hasDuplicatedPageTitle } from '../lib/icon';
 import { isComposing } from '../lib/key';
-import { CursorPosition } from '../types';
+import type { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
 const DEFAULT_IS_CLOSE_POPUP_KEY = (e: KeyboardEvent) => {
@@ -32,11 +33,13 @@ export function PopupMenu({
   isClosePopupKey = DEFAULT_IS_CLOSE_POPUP_KEY,
 }: PopupMenuProps) {
   const { editor } = useScrapbox();
-  const { ref, width: buttonContainerWidth = 0 } = useResizeObserver<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
+  const { width: buttonContainerWidth = 0 } = useResizeObserver(ref);
   const isEmpty = useMemo(() => icons.length === 0, [icons.length]);
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const { width: editorWidth = 0 } = useResizeObserver({ ref: editor });
+  const editorRef = useRef(editor);
+  const { width: editorWidth = 0 } = useResizeObserver(editorRef);
 
   // icons が変わったら選択位置を 0 番目に戻す。ただし空なら null にセットする。
   useEffect(() => {
@@ -65,7 +68,7 @@ export function PopupMenu({
       } else {
         if (isTab) setSelectedIndex((selectedIndex + 1) % icons.length);
         if (isShiftTab) setSelectedIndex((selectedIndex - 1 + icons.length) % icons.length);
-        if (isEnter) onSelect?.(icons[selectedIndex], selectedIndex);
+        if (isEnter) onSelect?.(icons[selectedIndex]!, selectedIndex);
         if (isClose) onClose?.();
       }
     },
@@ -98,7 +101,7 @@ export function PopupMenu({
       {open && (
         <div className="popup-menu" style={popupMenuStyle} data-testid="popup-menu">
           <div ref={ref} className="button-container" style={buttonContainerStyle} data-testid="button-container">
-            {icons.length === 0 ? emptyMessage ?? 'アイテムは空です' : iconListElement}
+            {icons.length === 0 ? (emptyMessage ?? 'アイテムは空です') : iconListElement}
           </div>
           <div className="triangle" style={triangleStyle} />
         </div>

@@ -9,13 +9,13 @@ describe('evaluatePresetIconItemsToIcons', () => {
       Promise.resolve(new Icon('project', 'page4')),
       Promise.resolve([new Icon('project', 'page5'), new Icon('project', 'page6')]),
       () => [new Icon('project', 'page7'), new Icon('project', 'page8')],
-      // eslint-disable-next-line @typescript-eslint/require-await
+      // oxlint-disable-next-line @typescript-eslint/require-await
       async () => [new Icon('project', 'page9'), new Icon('project', 'page10')],
       () => [
         new Icon('project', 'page11'),
         [new Icon('project', 'page12'), new Icon('project', 'page13')],
         () => [new Icon('project', 'page14')],
-        // eslint-disable-next-line @typescript-eslint/require-await
+        // oxlint-disable-next-line @typescript-eslint/require-await
         async () => [new Icon('project', 'page15')],
       ],
     ]);

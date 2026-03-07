@@ -9,23 +9,23 @@
 ## ビルド方法 (for contributor)
 
 ```console
-$ yarn install
-$ yarn run build
+$ npm install
+$ npm run build
 ```
 
 ### npm-scripts (for contributor)
 
-- `yarn run build`: JS のビルドを実行
-- `yarn run lint`: lint や format を実行
-- `yarn run test`: テストを実行
+- ` run build`: JS のビルドを実行
+- ` run lint`: lint や format を実行
+- ` run test`: テストを実行
 
 ## リリース方法 (for maintainer)
 
 ```console
 $ git switch master
 $ git pull
-$ yarn version
-$ rm -rf dist && yarn run build
+$ npm version
+$ rm -rf dist &&  run build
 
 $ cat dist/index.js | pbcopy
 $ open https://scrapbox.io/customize/icon-suggestion

@@ -1,9 +1,9 @@
-import { FunctionComponent, JSX } from 'preact';
+import type { FunctionComponent, TargetedEvent } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
-import useResizeObserver from 'use-resize-observer';
+import { useResizeObserver } from '../../hooks/useResizeObserver';
 import { useScrapbox } from '../../hooks/useScrapbox';
 import { calcSearchInputStyle } from '../../lib/calc-style';
-import { CursorPosition } from '../../types';
+import type { CursorPosition } from '../../types';
 
 export type SearchInputProps = {
   defaultQuery?: string;
@@ -14,8 +14,9 @@ export type SearchInputProps = {
 
 export const SearchInput: FunctionComponent<SearchInputProps> = ({ defaultQuery, cursorPosition, onInput, onBlur }) => {
   const { editor } = useScrapbox();
-  const ref = useRef<HTMLInputElement>();
-  const { width: editorWidth = 0 } = useResizeObserver({ ref: editor });
+  const ref = useRef<HTMLInputElement>(null);
+  const editorRef = useRef(editor);
+  const { width: editorWidth = 0 } = useResizeObserver(editorRef);
   const searchInputStyle = calcSearchInputStyle(editorWidth, cursorPosition);
 
   // mount されたら即 focus する
@@ -27,7 +28,7 @@ export const SearchInput: FunctionComponent<SearchInputProps> = ({ defaultQuery,
   }, []);
 
   const handleInput = useCallback(
-    (e: JSX.TargetedEvent<HTMLInputElement, Event>) => {
+    (e: TargetedEvent<HTMLInputElement, Event>) => {
       if (e.currentTarget) onInput?.(e.currentTarget.value);
     },
     [onInput],
@@ -39,8 +40,7 @@ export const SearchInput: FunctionComponent<SearchInputProps> = ({ defaultQuery,
         ref={ref}
         className="form-control"
         style={searchInputStyle}
-        value={defaultQuery}
-        default
+        defaultValue={defaultQuery}
         onInput={handleInput}
         onBlur={onBlur}
         data-testid="search-input"

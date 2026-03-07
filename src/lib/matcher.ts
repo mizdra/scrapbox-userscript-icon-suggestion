@@ -1,7 +1,7 @@
 import Asearch from 'asearch';
-import { MatcherOptions } from '../types';
+import type { MatcherOptions } from '../types';
 import { uniqueIcons } from './collection';
-import { Icon } from './icon';
+import type { Icon } from './icon';
 
 /**
  * 曖昧一致による matcher。
@@ -11,6 +11,7 @@ export function fuzzyMatcher({ query, composedIcons }: MatcherOptions): Icon[] {
   // query の長さが 0〜2 なら 0 文字まで、3〜5 なら 1 文字まで、
   // 6〜8 なら 2 文字まで、9 以上なら 3 文字まで誤字を許容する
   const maxAambig = Math.min(Math.floor(query.length / 3), 3);
+  // oxlint-disable-next-line new-cap
   const match = Asearch(` ${query} `); // 部分一致できるように、両端をスペースで囲む
   // あいまい度の少ない項目から順に並べる
   const newIcons: Icon[] = [];
@@ -20,7 +21,7 @@ export function fuzzyMatcher({ query, composedIcons }: MatcherOptions): Icon[] {
     }
   }
   // 重複は除く
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  // oxlint-disable-next-line @typescript-eslint/no-unsafe-return
   return uniqueIcons(newIcons);
 }
 
@@ -46,6 +47,6 @@ export function partialMatcher({ query, composedIcons }: MatcherOptions): Icon[]
  * */
 export function forwardPartialFuzzyMatcher(options: MatcherOptions): Icon[] {
   const newIcons = [...forwardMatcher(options), ...partialMatcher(options), ...fuzzyMatcher(options)];
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  // oxlint-disable-next-line @typescript-eslint/no-unsafe-return
   return uniqueIcons(newIcons);
 }
