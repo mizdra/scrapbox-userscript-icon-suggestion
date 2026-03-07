@@ -6,34 +6,6 @@
 
 [icon-suggestion - Scrapbox カスタマイズコレクション](https://scrapbox.io/customize/icon-suggestion) を参照。
 
-## ビルド方法 (for contributor)
-
-```console
-$ npm install
-$ npm run build
-```
-
-### npm-scripts (for contributor)
-
-- ` run build`: JS のビルドを実行
-- ` run lint`: lint や format を実行
-- ` run test`: テストを実行
-
-## リリース方法 (for maintainer)
-
-```console
-$ git switch master
-$ git pull
-$ npm version
-$ rm -rf dist &&  run build
-
-$ cat dist/index.js | pbcopy
-$ open https://scrapbox.io/customize/icon-suggestion
-$ # ソースコードコーナーにクリップボードの中身をペースト
-
-$ git push --follow-tags
-```
-
 ## 著作権情報
 
 - `function insertText` は [scrapbox-insert-text - Scrapbox カスタマイズコレクション](https://scrapbox.io/customize/scrapbox-insert-text) を [@takker99](https://github.com/takker99) 氏の許諾を経て複製・改変しており、その著作権は[@takker99](https://github.com/takker99) 氏に帰属します
