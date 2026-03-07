@@ -1,5 +1,5 @@
 import { render } from '@testing-library/preact';
-import { PopupMenuButton } from '../../../src/components/PopupMenu/Button';
+import { PopupMenuButton } from './Button';
 
 describe('Button', () => {
   test('children が表示される', () => {

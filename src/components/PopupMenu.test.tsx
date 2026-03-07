@@ -1,7 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/preact';
-import { PopupMenu } from '../../src/components/PopupMenu';
-import { Icon } from '../../src/lib/icon';
-import type { CursorPosition } from '../../src/types';
+import { Icon } from '../lib/icon';
 import {
   keydownEnterEvent,
   keydownEscapeEvent,
@@ -10,7 +8,9 @@ import {
   keydownEnterWithComposingEvent,
   keydownAEvent,
   keydownCtrlGEvent,
-} from '../helpers/key';
+} from '../test/helpers/key';
+import type { CursorPosition } from '../types';
+import { PopupMenu } from './PopupMenu';
 
 // ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };

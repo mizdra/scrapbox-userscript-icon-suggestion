@@ -1,6 +1,6 @@
 import { fireEvent } from '@testing-library/dom';
 import { renderHook, act } from '@testing-library/preact';
-import { useDocumentEventListener } from '../../src/hooks/useDocumentEventListener';
+import { useDocumentEventListener } from './useDocumentEventListener';
 
 describe('useDocumentEventListener', () => {
   const event = new KeyboardEvent('keydown', { key: 'Tab' });

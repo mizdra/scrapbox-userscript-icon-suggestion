@@ -1,10 +1,10 @@
 import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { SearchablePopupMenu } from '../../src/components/SearchablePopupMenu';
-import { Icon } from '../../src/lib/icon';
-import { forwardMatcher } from '../../src/lib/matcher';
-import type { CursorPosition } from '../../src/types';
-import { keydownEnterEvent, keydownEscapeEvent } from '../helpers/key';
+import { Icon } from '../lib/icon';
+import { forwardMatcher } from '../lib/matcher';
+import { keydownEnterEvent, keydownEscapeEvent } from '../test/helpers/key';
+import type { CursorPosition } from '../types';
+import { SearchablePopupMenu } from './SearchablePopupMenu';
 
 // ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };

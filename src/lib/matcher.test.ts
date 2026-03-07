@@ -1,5 +1,5 @@
-import { Icon } from '../../src/lib/icon';
-import { forwardPartialFuzzyMatcher, fuzzyMatcher, partialMatcher, forwardMatcher } from '../../src/lib/matcher';
+import { Icon } from './icon';
+import { forwardPartialFuzzyMatcher, fuzzyMatcher, partialMatcher, forwardMatcher } from './matcher';
 
 const args = { presetIcons: [], embeddedIcons: [] };
 

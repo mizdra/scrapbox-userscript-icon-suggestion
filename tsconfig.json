@@ -1,4 +1,36 @@
 {
-  "files": [],
-  "references": [{ "path": "./tsconfig.app.json" }]
+  "exclude": ["dist"],
+  "compilerOptions": {
+    // Environment Settings
+    "target": "esnext",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "lib": ["esnext", "dom"],
+    "types": ["node", "vitest/globals"],
+    "noEmit": true,
+
+    // Other Outputs
+    "incremental": false,
+
+    // Stricter Typechecking Options
+    "noUncheckedIndexedAccess": true,
+
+    // Style Options
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "checkJs": true,
+    "jsxImportSource": "preact",
+
+    // Recommended Options
+    "strict": true,
+    "jsx": "react-jsx",
+    "verbatimModuleSyntax": false,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true
+  }
 }

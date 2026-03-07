@@ -1,25 +1,25 @@
 import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import type { AppProps } from '../../src/components/App';
-import { App as NativeApp } from '../../src/components/App';
-import { ScrapboxContext } from '../../src/contexts/ScrapboxContext';
-import { uniqueIcons } from '../../src/lib/collection';
-import { Icon } from '../../src/lib/icon';
-import { forwardMatcher } from '../../src/lib/matcher';
-import { insertText } from '../../src/lib/scrapbox';
-import type { Matcher } from '../../src/types';
-import { createEditor, createScrapboxAPI } from '../helpers/html';
+import { ScrapboxContext } from '../contexts/ScrapboxContext';
+import { uniqueIcons } from '../lib/collection';
+import { Icon } from '../lib/icon';
+import { forwardMatcher } from '../lib/matcher';
+import { insertText } from '../lib/scrapbox';
+import { createEditor, createScrapboxAPI } from '../test/helpers/html';
 import {
   keydownAEvent,
   keydownAltEnterEvent,
   keydownCtrlLEvent,
   keydownEnterEvent,
   keydownEscapeEvent,
-} from '../helpers/key';
+} from '../test/helpers/key';
+import type { Matcher } from '../types';
+import type { AppProps } from './App';
+import { App as NativeApp } from './App';
 
-vi.mock('../../src/lib/scrapbox', async (importOriginal) => {
+vi.mock('../lib/scrapbox', async (importOriginal) => {
   // oxlint-disable-next-line typescript/consistent-type-imports
-  const mod: typeof import('../../src/lib/scrapbox') = await importOriginal();
+  const mod: typeof import('../lib/scrapbox') = await importOriginal();
   return {
     ...mod,
     insertText: vi.fn(),
