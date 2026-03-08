@@ -67,6 +67,7 @@ export const App: FunctionComponent<AppProps> = ({
     (icon: Icon) => {
       setOpen(false);
       insertText(textInput, icon.getNotation(projectName));
+      textInput.focus();
     },
     [projectName, textInput],
   );

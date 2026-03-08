@@ -3,7 +3,6 @@ import { useCallback, useMemo, useState } from 'preact/hooks';
 import type { Icon } from '../lib/icon';
 import type { CursorPosition } from '../types';
 import { PopupMenu } from './PopupMenu';
-import { SearchInput } from './SearchInput';
 
 export type ComboBoxProps = {
   cursorPosition: CursorPosition;
@@ -30,7 +29,7 @@ export function ComboBox({ cursorPosition, matcher, onSelect, onBlur }: ComboBox
   return (
     <div>
       <PopupMenu icons={matchedIcons} cursorPosition={cursorPosition} onSelect={handleSelect} />
-      <SearchInput defaultQuery={query} cursorPosition={cursorPosition} onInput={setQuery} onBlur={onBlur} />
+      {/* <SearchInput defaultQuery={query} cursorPosition={cursorPosition} onInput={setQuery} onBlur={onBlur} /> */}
     </div>
   );
 }
