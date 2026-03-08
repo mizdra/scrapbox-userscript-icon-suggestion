@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useResizeObserver } from '../hooks/useResizeObserver';
 import { useScrapbox } from '../hooks/useScrapbox';
@@ -14,7 +14,6 @@ const DEFAULT_IS_CLOSE_POPUP_KEY = (e: KeyboardEvent) => {
 };
 
 export type PopupMenuProps = {
-  open: boolean;
   emptyMessage?: string;
   cursorPosition: CursorPosition;
   icons: Icon[];
@@ -24,7 +23,6 @@ export type PopupMenuProps = {
 };
 
 export function PopupMenu({
-  open,
   emptyMessage,
   cursorPosition,
   icons,
@@ -35,46 +33,45 @@ export function PopupMenu({
   const { editor } = useScrapbox();
   const ref = useRef<HTMLDivElement>(null);
   const { width: buttonContainerWidth = 0 } = useResizeObserver(ref);
-  const isEmpty = useMemo(() => icons.length === 0, [icons.length]);
+  const isEmpty = icons.length === 0;
 
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(icons.length === 0 ? null : 0);
+  const [prevIcons, setPrevIcons] = useState(icons);
   const editorRef = useRef(editor);
   const { width: editorWidth = 0 } = useResizeObserver(editorRef);
 
   // icons が変わったら選択位置を 0 番目に戻す。ただし空なら null にセットする。
-  useEffect(() => {
+  if (prevIcons !== icons) {
+    setPrevIcons(icons);
     setSelectedIndex(isEmpty ? null : 0);
-  }, [isEmpty, icons]);
+  }
 
-  const handleKeydown = useCallback(
-    (e: KeyboardEvent) => {
-      // 閉じている時は何もしない
-      if (!open) return;
-      // IMEによる変換中は何もしない
-      if (isComposing(e)) return;
+  const handleKeydown = (e: KeyboardEvent) => {
+    // 閉じている時は何もしない
+    if (!open) return;
+    // IMEによる変換中は何もしない
+    if (isComposing(e)) return;
 
-      const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-      const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
-      const isEnter = e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-      const isClose = isClosePopupKey(e);
+    const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+    const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
+    const isEnter = e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+    const isClose = isClosePopupKey(e);
 
-      if (isTab || isShiftTab || isEnter || isClose) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+    if (isTab || isShiftTab || isEnter || isClose) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
-      if (isEmpty || selectedIndex === null) {
-        if (isClose) onClose?.();
-      } else {
-        if (isTab) setSelectedIndex((selectedIndex + 1) % icons.length);
-        if (isShiftTab) setSelectedIndex((selectedIndex - 1 + icons.length) % icons.length);
-        if (isEnter) onSelect?.(icons[selectedIndex]!, selectedIndex);
-        if (isClose) onClose?.();
-      }
-    },
-    [isEmpty, isClosePopupKey, icons, onClose, onSelect, open, selectedIndex],
-  );
-  useDocumentEventListener('keydown', handleKeydown, { capture: true });
+    if (isEmpty || selectedIndex === null) {
+      if (isClose) onClose?.();
+    } else {
+      if (isTab) setSelectedIndex((prev) => (prev !== null ? (prev + 1) % icons.length : 0));
+      if (isShiftTab) setSelectedIndex((prev) => (prev !== null ? (prev - 1 + icons.length) % icons.length : 0));
+      if (isEnter) onSelect?.(icons[selectedIndex]!, selectedIndex);
+      if (isClose) onClose?.();
+    }
+  };
+  useDocumentEventListener('keydown', handleKeydown);
 
   const popupMenuStyle = calcPopupMenuStyle(cursorPosition);
   const triangleStyle = calcTriangleStyle(cursorPosition, isEmpty);
@@ -97,15 +94,11 @@ export function PopupMenu({
   });
 
   return (
-    <>
-      {open && (
-        <div className="popup-menu" style={popupMenuStyle} data-testid="popup-menu">
-          <div ref={ref} className="button-container" style={buttonContainerStyle} data-testid="button-container">
-            {icons.length === 0 ? (emptyMessage ?? 'アイテムは空です') : iconListElement}
-          </div>
-          <div className="triangle" style={triangleStyle} />
-        </div>
-      )}
-    </>
+    <div className="popup-menu" style={popupMenuStyle} data-testid="popup-menu">
+      <div ref={ref} className="button-container" style={buttonContainerStyle} data-testid="button-container">
+        {icons.length === 0 ? (emptyMessage ?? 'アイテムは空です') : iconListElement}
+      </div>
+      <div className="triangle" style={triangleStyle} />
+    </div>
   );
 }

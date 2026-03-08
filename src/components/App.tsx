@@ -113,11 +113,11 @@ export const App: FunctionComponent<AppProps> = ({
       handleInsertQueryAsIconKeyDown,
     ],
   );
-  useDocumentEventListener('keydown', handleKeydown, { capture: true });
+  useDocumentEventListener('keydown', handleKeydown);
 
+  if (!open) return null;
   return (
     <SearchablePopupMenu
-      open={open}
       emptyMessage="キーワードにマッチするアイコンがありません"
       cursorPosition={cursorPosition}
       matcher={composedMatcher}

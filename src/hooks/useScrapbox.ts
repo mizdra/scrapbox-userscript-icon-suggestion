@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'preact/hooks';
+import { useContext, useEffect, useMemo, useState } from 'preact/hooks';
 import { ScrapboxContext } from '../contexts/ScrapboxContext';
 
 export type UseScrapboxResult = {
@@ -27,9 +27,15 @@ export function useScrapbox(): UseScrapboxResult {
     };
   }, [scrapbox]);
 
-  const cursor = editor.querySelector<HTMLDivElement>('.cursor');
-  const textInput = editor.querySelector<HTMLTextAreaElement>('#text-input');
-  if (!cursor) throw new Error('.cursor が存在しません');
-  if (!textInput) throw new Error('#text-input が存在しません');
+  const cursor = useMemo(() => {
+    const el = editor.querySelector<HTMLDivElement>('.cursor');
+    if (!el) throw new Error('.cursor が存在しません');
+    return el;
+  }, [editor]);
+  const textInput = useMemo(() => {
+    const el = editor.querySelector<HTMLTextAreaElement>('#text-input');
+    if (!el) throw new Error('#text-input が存在しません');
+    return el;
+  }, [editor]);
   return { layout, projectName, editor, cursor, textInput };
 }

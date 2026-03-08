@@ -1,12 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SearchablePopupMenu > open === false の時 > ポップアップも SearchInput も表示されない 1`] = `
-<DocumentFragment>
-  <div />
-</DocumentFragment>
-`;
-
-exports[`SearchablePopupMenu > open === true の時 > ポップアップと SearchInput が表示される 1`] = `
+exports[`SearchablePopupMenu > ポップアップと SearchInput が表示される 1`] = `
 <DocumentFragment>
   <div>
     <div
