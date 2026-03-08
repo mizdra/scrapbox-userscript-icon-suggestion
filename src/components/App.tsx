@@ -25,40 +25,15 @@ export const App: FunctionComponent<AppProps> = ({
   presetIcons,
 }) => {
   const { textInput, cursor, editor, layout, projectName } = useScrapbox();
-
   const [open, setOpen] = useState(false);
-  const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
-  const composedMatcher = useCallback(
-    (query: string) => {
-      const composedIcons = uniqueIcons([...embeddedIcons, ...presetIcons]);
-      return matcher({ query, composedIcons, presetIcons, embeddedIcons });
-    },
-    [embeddedIcons, matcher, presetIcons],
-  );
-  const [query, setQuery] = useState('');
-
-  const handleSelect = useCallback(
-    (icon: Icon) => {
-      setOpen(false);
-      insertText(textInput, icon.getNotation(projectName));
-    },
-    [projectName, textInput],
-  );
-
-  const handleClose = useCallback(() => {
-    setOpen(false);
-    textInput.focus();
-  }, [textInput]);
+  const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
 
   const handleLaunchIconSuggestionKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
+      if (open || layout !== 'page') return;
       e.preventDefault();
       e.stopPropagation();
-
-      // すでにポップアップが開いていたら何もしない
-      if (open) return;
 
       setCursorPosition(calcCursorPosition(cursor));
       // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanEmbeddedIcons` で
@@ -74,46 +49,112 @@ export const App: FunctionComponent<AppProps> = ({
     [cursor, editor, open, layout, projectName, textInput],
   );
 
+  const handleKeydown = useCallback(
+    (e: KeyboardEvent) => {
+      if (isComposing(e)) return;
+      if (isLaunchIconSuggestionKey(e)) {
+        handleLaunchIconSuggestionKeyDown(e);
+      }
+    },
+    [isLaunchIconSuggestionKey, handleLaunchIconSuggestionKeyDown],
+  );
+  useDocumentEventListener('keydown', handleKeydown);
+
+  const handleClose = useCallback(() => {
+    setOpen(false);
+    textInput.focus();
+  }, [textInput]);
+
+  const handleInsertText = useCallback(
+    (text: string) => {
+      setOpen(false);
+      insertText(textInput, text);
+    },
+    [textInput],
+  );
+
+  if (!open || layout !== 'page') return null;
+  return (
+    <Inner
+      isExitIconSuggestionKey={isExitIconSuggestionKey}
+      isInsertQueryAsIconKey={isInsertQueryAsIconKey}
+      presetIcons={presetIcons}
+      matcher={matcher}
+      embeddedIcons={embeddedIcons}
+      cursorPosition={cursorPosition}
+      onClose={handleClose}
+      onInsertText={handleInsertText}
+    />
+  );
+};
+
+type InnerProps = {
+  isExitIconSuggestionKey: (e: KeyboardEvent) => boolean;
+  isInsertQueryAsIconKey: (e: KeyboardEvent) => boolean;
+  presetIcons: Icon[];
+  matcher: Matcher;
+  embeddedIcons: Icon[];
+  cursorPosition: CursorPosition;
+  onClose: () => void;
+  onInsertText: (text: string) => void;
+};
+
+function Inner({
+  isExitIconSuggestionKey,
+  isInsertQueryAsIconKey,
+  presetIcons,
+  matcher,
+  embeddedIcons,
+  cursorPosition,
+  onClose,
+  onInsertText,
+}: InnerProps) {
+  const { projectName } = useScrapbox();
+  const [query, setQuery] = useState('');
+  const composedMatcher = useCallback(
+    (query: string) => {
+      const composedIcons = uniqueIcons([...embeddedIcons, ...presetIcons]);
+      return matcher({ query, composedIcons, presetIcons, embeddedIcons });
+    },
+    [embeddedIcons, matcher, presetIcons],
+  );
+
+  const handleSelect = useCallback(
+    (icon: Icon) => {
+      onInsertText(icon.getNotation(projectName));
+    },
+    [projectName, onInsertText],
+  );
+
   const handleInsertQueryAsIconKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (layout !== 'page') return; // エディタのあるページ以外ではキー入力を無視する
-      if (!open) return; // ポップアップが閉じていたら無視する
       e.preventDefault();
       e.stopPropagation();
-      setOpen(false);
-      insertText(textInput, `[${query}.icon]`);
+      onInsertText(`[${query}.icon]`);
     },
-    [layout, open, textInput, query],
+    [query, onInsertText],
   );
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
-      if (isComposing(e)) return; // IMEによる変換中は何もしない
-      if (isLaunchIconSuggestionKey(e)) {
-        handleLaunchIconSuggestionKeyDown(e);
-      } else if (isInsertQueryAsIconKey(e)) {
+      if (isComposing(e)) return;
+      if (isInsertQueryAsIconKey(e)) {
         handleInsertQueryAsIconKeyDown(e);
       }
     },
-    [
-      isLaunchIconSuggestionKey,
-      isInsertQueryAsIconKey,
-      handleLaunchIconSuggestionKeyDown,
-      handleInsertQueryAsIconKeyDown,
-    ],
+    [isInsertQueryAsIconKey, handleInsertQueryAsIconKeyDown],
   );
   useDocumentEventListener('keydown', handleKeydown);
 
-  if (!open) return null;
   return (
     <SearchablePopupMenu
       emptyMessage="キーワードにマッチするアイコンがありません"
       cursorPosition={cursorPosition}
       matcher={composedMatcher}
       onSelect={handleSelect}
-      onClose={handleClose}
+      onClose={onClose}
       onInputQuery={setQuery}
       isExitIconSuggestionKey={isExitIconSuggestionKey}
     />
   );
-};
+}
