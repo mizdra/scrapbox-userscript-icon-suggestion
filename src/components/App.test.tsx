@@ -47,7 +47,7 @@ function App(props: AppProps & Options) {
   const matcher = forwardMatcher;
   return (
     <ScrapboxContext.Provider value={{ editor, scrapbox }}>
-      <NativeApp presetIcons={presetIcons} defaultIsShownPresetIcons={false} matcher={matcher} {...props} />
+      <NativeApp presetIcons={presetIcons} matcher={matcher} {...props} />
     </ScrapboxContext.Provider>
   );
 }
@@ -103,7 +103,7 @@ describe('App', () => {
         const buttonContainer = getByTestId('button-container');
         const searchInput = getByTestId('search-input');
 
-        expect(buttonContainer.childElementCount).toEqual(2); // a, b の 2アイコンが表示される
+        expect(buttonContainer.childElementCount).toEqual(3); // a, b, c の 3アイコンが表示される
         await userEvent.type(searchInput, 'b');
         expect(buttonContainer.childElementCount).toEqual(1); // b だけ表示される
         await act(() => {
@@ -111,16 +111,6 @@ describe('App', () => {
         });
         expect(mockInsertText).toBeCalledWith(expect.anything(), '[b.icon]');
       });
-    });
-    test('isLaunchIconSuggestionKey が真になるようなキーを押下したら、presetIcons が suggest される', async () => {
-      const { getByTestId } = await renderApp({});
-      const buttonContainer = getByTestId('button-container');
-
-      expect(buttonContainer.childElementCount).toEqual(2); // a, b の 2アイコンが表示される
-      await act(() => {
-        fireEvent(document, keydownCtrlLEvent);
-      });
-      expect(buttonContainer.childElementCount).toEqual(3); // a, b, cccc の 3アイコンが表示される
     });
     // FIXME
     test.fails('isInsertQueryAsIconKey が真になるようなキーを押下したら、`[query.icon] が挿入される', async () => {
@@ -133,42 +123,19 @@ describe('App', () => {
       });
       expect(mockInsertText).toBeCalledWith(expect.anything(), '[mizdra.icon]');
     });
-    test('defaultIsShownPresetIcons が真なら最初からプリセットアイコンが suggest される', async () => {
-      const { getByTestId } = await renderApp({ defaultIsShownPresetIcons: true });
-      const buttonContainer = getByTestId('button-container');
-      expect(buttonContainer.childElementCount).toEqual(3); // a, b, c の 3アイコンが表示される
-    });
   });
 
   describe('インテグレーションテスト', () => {
     describe('matcher', () => {
-      test('embeddedIcons や presetIcons、isShownPresetIcons の状態で matcher に渡される引数が変わる', async () => {
+      test('embeddedIcons や presetIcons の状態で matcher に渡される引数が変わる', async () => {
         const presetIcons = [new Icon('project', 'b'), new Icon('project', 'c'), new Icon('project', 'c')];
         const embeddedIcons = [new Icon('project', 'a'), new Icon('project', 'a'), new Icon('project', 'b')];
 
         const matcher: Matcher = vi.fn(() => []);
-        render(
-          <App
-            defaultIsShownPresetIcons={false}
-            presetIcons={presetIcons}
-            embeddedIcons={embeddedIcons}
-            matcher={matcher}
-          />,
-        );
+        render(<App presetIcons={presetIcons} embeddedIcons={embeddedIcons} matcher={matcher} />);
         await act(() => {
           fireEvent(document, keydownCtrlLEvent);
         });
-        expect(matcher).lastCalledWith({
-          query: '',
-          composedIcons: uniqueIcons(embeddedIcons),
-          presetIcons: presetIcons,
-          embeddedIcons: embeddedIcons,
-        });
-
-        await act(() => {
-          fireEvent(document, keydownCtrlLEvent);
-        });
-
         expect(matcher).lastCalledWith({
           query: '',
           composedIcons: uniqueIcons([...embeddedIcons, ...presetIcons]),
