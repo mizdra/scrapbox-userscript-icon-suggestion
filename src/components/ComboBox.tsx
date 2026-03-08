@@ -2,8 +2,8 @@ import type { ComponentChild } from 'preact';
 import { useCallback, useMemo, useState } from 'preact/hooks';
 import type { Icon } from '../lib/icon';
 import type { CursorPosition } from '../types';
-import { SearchInput } from './ComboBox/SearchInput';
 import { PopupMenu } from './PopupMenu';
+import { SearchInput } from './SearchInput';
 
 export type ComboBoxProps = {
   cursorPosition: CursorPosition;
