@@ -134,15 +134,24 @@ function Inner({
     },
     [query, onInsertText],
   );
-
+  const handleExitIconSuggestionKey = useCallback(
+    (e: KeyboardEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onClose();
+    },
+    [onClose],
+  );
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
       if (isComposing(e)) return;
       if (isInsertQueryAsIconKey(e)) {
         handleInsertQueryAsIconKeyDown(e);
+      } else if (isExitIconSuggestionKey(e)) {
+        handleExitIconSuggestionKey(e);
       }
     },
-    [isInsertQueryAsIconKey, handleInsertQueryAsIconKeyDown],
+    [isInsertQueryAsIconKey, handleInsertQueryAsIconKeyDown, isExitIconSuggestionKey, handleExitIconSuggestionKey],
   );
   useDocumentEventListener('keydown', handleKeydown);
 
@@ -152,9 +161,8 @@ function Inner({
       cursorPosition={cursorPosition}
       matcher={composedMatcher}
       onSelect={handleSelect}
-      onClose={onClose}
+      onBlur={onClose}
       onInputQuery={setQuery}
-      isExitIconSuggestionKey={isExitIconSuggestionKey}
     />
   );
 }

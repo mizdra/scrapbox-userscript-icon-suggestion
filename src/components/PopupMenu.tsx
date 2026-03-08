@@ -14,11 +14,9 @@ export type PopupMenuProps = {
   cursorPosition: CursorPosition;
   icons: Icon[];
   onSelect?: (icon: Icon, index: number) => void;
-  onClose?: () => void;
-  isClosePopupKey: (e: KeyboardEvent) => boolean;
 };
 
-export function PopupMenu({ emptyMessage, cursorPosition, icons, onSelect, onClose, isClosePopupKey }: PopupMenuProps) {
+export function PopupMenu({ emptyMessage, cursorPosition, icons, onSelect }: PopupMenuProps) {
   const { editor } = useScrapbox();
   const ref = useRef<HTMLDivElement>(null);
   const { width: buttonContainerWidth = 0 } = useResizeObserver(ref);
@@ -40,25 +38,20 @@ export function PopupMenu({ emptyMessage, cursorPosition, icons, onSelect, onClo
     if (!open) return;
     // IMEによる変換中は何もしない
     if (isComposing(e)) return;
+    if (isEmpty || selectedIndex === null) return;
 
     const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
     const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
     const isEnter = e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-    const isClose = isClosePopupKey(e);
 
-    if (isTab || isShiftTab || isEnter || isClose) {
+    if (isTab || isShiftTab || isEnter) {
       e.preventDefault();
       e.stopPropagation();
     }
 
-    if (isEmpty || selectedIndex === null) {
-      if (isClose) onClose?.();
-    } else {
-      if (isTab) setSelectedIndex((prev) => (prev !== null ? (prev + 1) % icons.length : 0));
-      if (isShiftTab) setSelectedIndex((prev) => (prev !== null ? (prev - 1 + icons.length) % icons.length : 0));
-      if (isEnter) onSelect?.(icons[selectedIndex]!, selectedIndex);
-      if (isClose) onClose?.();
-    }
+    if (isTab) setSelectedIndex((prev) => (prev !== null ? (prev + 1) % icons.length : 0));
+    if (isShiftTab) setSelectedIndex((prev) => (prev !== null ? (prev - 1 + icons.length) % icons.length : 0));
+    if (isEnter) onSelect?.(icons[selectedIndex]!, selectedIndex);
   };
   useDocumentEventListener('keydown', handleKeydown);
 

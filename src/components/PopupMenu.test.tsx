@@ -2,12 +2,10 @@ import { act, fireEvent, render } from '@testing-library/preact';
 import { Icon } from '../lib/icon';
 import {
   keydownEnterEvent,
-  keydownEscapeEvent,
   keydownTabEvent,
   keydownShiftTabEvent,
   keydownEnterWithComposingEvent,
   keydownAEvent,
-  keydownCtrlGEvent,
 } from '../test/helpers/key';
 import type { CursorPosition } from '../types';
 import type { PopupMenuProps } from './PopupMenu';
@@ -19,9 +17,6 @@ const icons: Icon[] = [new Icon('project', 'icon1'), new Icon('project', 'icon2'
 const props: PopupMenuProps = {
   cursorPosition,
   icons,
-  isClosePopupKey: (e) => {
-    return e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-  },
 };
 
 // keydown イベントが PopupMenu 側でキャンセルされずに突き抜けてきたことを確かめるための mock
@@ -50,16 +45,6 @@ describe('PopupMenu', () => {
         fireEvent(document, keydownEnterEvent);
       });
       expect(onSelect).toBeCalledTimes(0);
-    });
-    test('Escape 押下で onClose が呼び出される', async () => {
-      const onClose = vi.fn();
-      render(<PopupMenu {...props} icons={icons} onClose={onClose} />);
-
-      expect(onClose).toBeCalledTimes(0);
-      await act(() => {
-        fireEvent(document, keydownEscapeEvent);
-      });
-      expect(onClose).toBeCalledTimes(1);
     });
   });
   describe('アイテムが1つ以上ある時', () => {
@@ -115,34 +100,10 @@ describe('PopupMenu', () => {
       });
       expect(onSelect).toBeCalledTimes(1);
     });
-    test('Escape 押下で onClose が呼び出される', async () => {
-      const onClose = vi.fn();
-      render(<PopupMenu {...props} onClose={onClose} />);
-
-      expect(onClose).toBeCalledTimes(0);
-      await act(() => {
-        fireEvent(document, keydownEscapeEvent);
-      });
-      expect(onClose).toBeCalledTimes(1);
-    });
-    test('ポップアップを閉じるキーは isClosePopupKey でカスタマイズできる', async () => {
-      const isClosePopupKey = (e: KeyboardEvent) => {
-        return e.key === 'g' && e.ctrlKey && !e.shiftKey && !e.altKey;
-      };
-      const onClose = vi.fn();
-      render(<PopupMenu {...props} onClose={onClose} isClosePopupKey={isClosePopupKey} />);
-
-      expect(onClose).toBeCalledTimes(0);
-      await act(() => {
-        fireEvent(document, keydownCtrlGEvent);
-      });
-      expect(onClose).toBeCalledTimes(1);
-    });
-    test('Tab / Shift+Tab / Enter / Escape 以外が押下された時はイベントがキャンセルされるが、それ以外ではキャンセルされない', async () => {
+    test('Tab / Shift+Tab / Enter 以外が押下された時はイベントがキャンセルされるが、それ以外ではキャンセルされない', async () => {
       render(<PopupMenu {...props} />);
       await act(() => {
         fireEvent(document, keydownEnterEvent);
-        fireEvent(document, keydownEscapeEvent);
         fireEvent(document, keydownTabEvent);
         fireEvent(document, keydownShiftTabEvent);
         fireEvent(document, keydownEnterWithComposingEvent); // キャンセルされない

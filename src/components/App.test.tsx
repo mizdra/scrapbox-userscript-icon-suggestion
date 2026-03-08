@@ -88,8 +88,9 @@ describe('App', () => {
       });
       return renderResult;
     }
-    test('Escape 押下で SuggestBox が閉じる', async () => {
-      const { queryByTestId } = await renderApp(<App {...props} />);
+    test('isExitIconSuggestionKey が真になるようなキーを押すと SuggestBox が閉じる', async () => {
+      const isExitIconSuggestionKey = (e: KeyboardEvent) => e.key === 'Escape';
+      const { queryByTestId } = await renderApp(<App {...props} isExitIconSuggestionKey={isExitIconSuggestionKey} />);
       expect(queryByTestId('popup-menu')).toBeInTheDocument();
       await act(() => {
         fireEvent(document, keydownEscapeEvent);

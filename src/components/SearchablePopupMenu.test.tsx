@@ -2,7 +2,7 @@ import { act, fireEvent, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { Icon } from '../lib/icon';
 import { forwardMatcher } from '../lib/matcher';
-import { keydownEnterEvent, keydownEscapeEvent } from '../test/helpers/key';
+import { keydownEnterEvent } from '../test/helpers/key';
 import type { CursorPosition } from '../types';
 import type { SearchablePopupMenuProps } from './SearchablePopupMenu';
 import { SearchablePopupMenu } from './SearchablePopupMenu';
@@ -19,9 +19,6 @@ const matcher = (query: string) => forwardMatcher({ query, composedIcons: icons,
 const props: SearchablePopupMenuProps = {
   cursorPosition,
   matcher,
-  isExitIconSuggestionKey: (e: KeyboardEvent) => {
-    return e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-  },
 };
 
 describe('SearchablePopupMenu', () => {
@@ -30,15 +27,6 @@ describe('SearchablePopupMenu', () => {
     expect(queryByTestId('popup-menu')).not.toBeNull();
     expect(queryByTestId('search-input')).not.toBeNull();
     expect(asFragment()).toMatchSnapshot();
-  });
-  test('Esc 押下で onClose が呼び出される', async () => {
-    const onClose = vi.fn();
-    render(<SearchablePopupMenu {...props} onClose={onClose} />);
-    expect(onClose).toBeCalledTimes(0);
-    await act(() => {
-      fireEvent(document, keydownEscapeEvent);
-    });
-    expect(onClose).toBeCalledTimes(1);
   });
   describe('ポップアップに表示されるアイテムが空の時', () => {
     test('emptyMessage でアイテムが空の時のメッセージを変更できる', () => {
