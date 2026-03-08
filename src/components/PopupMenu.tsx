@@ -74,7 +74,7 @@ export function PopupMenu({
     },
     [isEmpty, isClosePopupKey, icons, onClose, onSelect, open, selectedIndex],
   );
-  useDocumentEventListener('keydown', handleKeydown, { capture: true });
+  useDocumentEventListener('keydown', handleKeydown);
 
   const popupMenuStyle = calcPopupMenuStyle(cursorPosition);
   const triangleStyle = calcTriangleStyle(cursorPosition, isEmpty);

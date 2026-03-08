@@ -113,7 +113,7 @@ export const App: FunctionComponent<AppProps> = ({
       handleInsertQueryAsIconKeyDown,
     ],
   );
-  useDocumentEventListener('keydown', handleKeydown, { capture: true });
+  useDocumentEventListener('keydown', handleKeydown);
 
   return (
     <SearchablePopupMenu
