@@ -18,75 +18,52 @@ const matcher = (query: string) => forwardMatcher({ query, composedIcons: icons,
 const props = { cursorPosition, matcher };
 
 describe('SearchablePopupMenu', () => {
-  describe('open === false の時', () => {
-    test('ポップアップも SearchInput も表示されない', () => {
-      const { asFragment, queryByTestId } = render(<SearchablePopupMenu open={false} {...props} />);
-      expect(queryByTestId('popup-menu')).toBeNull();
-      expect(queryByTestId('search-input')).toBeNull();
-      expect(asFragment()).toMatchSnapshot();
+  test('ポップアップと SearchInput が表示される', () => {
+    const { asFragment, queryByTestId } = render(<SearchablePopupMenu {...props} />);
+    expect(queryByTestId('popup-menu')).not.toBeNull();
+    expect(queryByTestId('search-input')).not.toBeNull();
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('Esc 押下で onClose が呼び出される', async () => {
+    const onClose = vi.fn();
+    render(<SearchablePopupMenu {...props} onClose={onClose} />);
+    expect(onClose).toBeCalledTimes(0);
+    await act(() => {
+      fireEvent(document, keydownEscapeEvent);
+    });
+    expect(onClose).toBeCalledTimes(1);
+  });
+  describe('ポップアップに表示されるアイテムが空の時', () => {
+    test('emptyMessage でアイテムが空の時のメッセージを変更できる', () => {
+      const emptyMessage = 'test';
+      const { getByText } = render(<SearchablePopupMenu {...props} matcher={() => []} emptyMessage={emptyMessage} />);
+      expect(getByText(emptyMessage)).toBeInTheDocument();
     });
   });
-  describe('open === true の時', () => {
-    test('ポップアップと SearchInput が表示される', () => {
-      const { asFragment, queryByTestId } = render(<SearchablePopupMenu open {...props} />);
-      expect(queryByTestId('popup-menu')).not.toBeNull();
-      expect(queryByTestId('search-input')).not.toBeNull();
-      expect(asFragment()).toMatchSnapshot();
+  describe('ポップアップに表示されるアイテムが空でない時', () => {
+    test('SearchInput に文字を入力するとアイテムがフィルタされる', async () => {
+      const { getByTestId } = render(<SearchablePopupMenu {...props} />);
+      const buttonContainer = getByTestId('button-container');
+      const searchInput = getByTestId('search-input');
+
+      expect(buttonContainer.childElementCount).toEqual(4);
+      await userEvent.type(searchInput, 'a');
+      expect(buttonContainer.childElementCount).toEqual(3);
+      await userEvent.type(searchInput, 'b');
+      expect(buttonContainer.childElementCount).toEqual(2);
+      await userEvent.type(searchInput, 'c');
+      expect(buttonContainer.childElementCount).toEqual(1);
+      await userEvent.type(searchInput, 'd');
+      expect(buttonContainer.childElementCount).toEqual(0);
     });
-    test('Esc 押下で onClose が呼び出される', async () => {
-      const onClose = vi.fn();
-      render(<SearchablePopupMenu open {...props} onClose={onClose} />);
-      expect(onClose).toBeCalledTimes(0);
+    test('Enter 押下で onSelect が呼び出される', async () => {
+      const onSelect = vi.fn();
+      render(<SearchablePopupMenu {...props} onSelect={onSelect} />);
+      expect(onSelect).toBeCalledTimes(0);
       await act(() => {
-        fireEvent(document, keydownEscapeEvent);
+        fireEvent(document, keydownEnterEvent);
       });
-      expect(onClose).toBeCalledTimes(1);
+      expect(onSelect).toBeCalledTimes(1);
     });
-    describe('ポップアップに表示されるアイテムが空の時', () => {
-      test('emptyMessage でアイテムが空の時のメッセージを変更できる', () => {
-        const emptyMessage = 'test';
-        const { getByText } = render(
-          <SearchablePopupMenu open {...props} matcher={() => []} emptyMessage={emptyMessage} />,
-        );
-        expect(getByText(emptyMessage)).toBeInTheDocument();
-      });
-    });
-    describe('ポップアップに表示されるアイテムが空でない時', () => {
-      test('SearchInput に文字を入力するとアイテムがフィルタされる', async () => {
-        const { getByTestId } = render(<SearchablePopupMenu open {...props} />);
-        const buttonContainer = getByTestId('button-container');
-        const searchInput = getByTestId('search-input');
-
-        expect(buttonContainer.childElementCount).toEqual(4);
-        await userEvent.type(searchInput, 'a');
-        expect(buttonContainer.childElementCount).toEqual(3);
-        await userEvent.type(searchInput, 'b');
-        expect(buttonContainer.childElementCount).toEqual(2);
-        await userEvent.type(searchInput, 'c');
-        expect(buttonContainer.childElementCount).toEqual(1);
-        await userEvent.type(searchInput, 'd');
-        expect(buttonContainer.childElementCount).toEqual(0);
-      });
-      test('Enter 押下で onSelect が呼び出される', async () => {
-        const onSelect = vi.fn();
-        render(<SearchablePopupMenu open {...props} onSelect={onSelect} />);
-        expect(onSelect).toBeCalledTimes(0);
-        await act(() => {
-          fireEvent(document, keydownEnterEvent);
-        });
-        expect(onSelect).toBeCalledTimes(1);
-      });
-    });
-  });
-  test('open === true になった時に、 SearchInput に入力された文字がリセットされる', async () => {
-    const { rerender, getByTestId } = render(<SearchablePopupMenu open {...props} />);
-
-    await userEvent.type(getByTestId('search-input'), 'a');
-    expect(getByTestId('search-input')).toHaveValue('a');
-
-    rerender(<SearchablePopupMenu open={false} {...props} />);
-    rerender(<SearchablePopupMenu open {...props} />);
-
-    expect(getByTestId('search-input')).toHaveValue('');
   });
 });

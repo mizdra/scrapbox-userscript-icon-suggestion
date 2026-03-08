@@ -14,7 +14,6 @@ const DEFAULT_IS_CLOSE_POPUP_KEY = (e: KeyboardEvent) => {
 };
 
 export type PopupMenuProps = {
-  open: boolean;
   emptyMessage?: string;
   cursorPosition: CursorPosition;
   icons: Icon[];
@@ -24,7 +23,6 @@ export type PopupMenuProps = {
 };
 
 export function PopupMenu({
-  open,
   emptyMessage,
   cursorPosition,
   icons,
@@ -96,15 +94,11 @@ export function PopupMenu({
   });
 
   return (
-    <>
-      {open && (
-        <div className="popup-menu" style={popupMenuStyle} data-testid="popup-menu">
-          <div ref={ref} className="button-container" style={buttonContainerStyle} data-testid="button-container">
-            {icons.length === 0 ? (emptyMessage ?? 'アイテムは空です') : iconListElement}
-          </div>
-          <div className="triangle" style={triangleStyle} />
-        </div>
-      )}
-    </>
+    <div className="popup-menu" style={popupMenuStyle} data-testid="popup-menu">
+      <div ref={ref} className="button-container" style={buttonContainerStyle} data-testid="button-container">
+        {icons.length === 0 ? (emptyMessage ?? 'アイテムは空です') : iconListElement}
+      </div>
+      <div className="triangle" style={triangleStyle} />
+    </div>
   );
 }

@@ -115,9 +115,9 @@ export const App: FunctionComponent<AppProps> = ({
   );
   useDocumentEventListener('keydown', handleKeydown);
 
+  if (!open) return null;
   return (
     <SearchablePopupMenu
-      open={open}
       emptyMessage="キーワードにマッチするアイコンがありません"
       cursorPosition={cursorPosition}
       matcher={composedMatcher}

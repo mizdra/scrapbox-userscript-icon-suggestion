@@ -1,5 +1,5 @@
 import type { ComponentChild } from 'preact';
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useMemo, useState } from 'preact/hooks';
 import type { Icon } from '../lib/icon';
 import type { CursorPosition } from '../types';
 import { PopupMenu } from './PopupMenu';
@@ -8,7 +8,6 @@ import { SearchInput } from './SearchablePopupMenu/SearchInput';
 export type SearchablePopupMenuMatcher = (query: string) => Icon[];
 
 export type SearchablePopupMenuProps = {
-  open: boolean;
   emptyMessage?: string;
   cursorPosition: CursorPosition;
   matcher: SearchablePopupMenuMatcher;
@@ -19,7 +18,6 @@ export type SearchablePopupMenuProps = {
 };
 
 export function SearchablePopupMenu({
-  open,
   emptyMessage,
   cursorPosition,
   matcher,
@@ -30,10 +28,6 @@ export function SearchablePopupMenu({
 }: SearchablePopupMenuProps) {
   const [query, setQuery] = useState('');
   const matchedIcons = useMemo(() => matcher(query), [matcher, query]);
-
-  useEffect(() => {
-    if (open === false) setQuery('');
-  }, [open]);
 
   const handleSelect = useCallback(
     (_icon: ComponentChild, index: number) => {
@@ -52,7 +46,6 @@ export function SearchablePopupMenu({
   return (
     <div>
       <PopupMenu
-        open={open}
         emptyMessage={emptyMessage}
         icons={matchedIcons}
         cursorPosition={cursorPosition}
@@ -60,9 +53,7 @@ export function SearchablePopupMenu({
         onClose={onClose}
         isClosePopupKey={isExitIconSuggestionKey}
       />
-      {open && (
-        <SearchInput defaultQuery={query} cursorPosition={cursorPosition} onInput={handleInputQuery} onBlur={onClose} />
-      )}
+      <SearchInput defaultQuery={query} cursorPosition={cursorPosition} onInput={handleInputQuery} onBlur={onClose} />
     </div>
   );
 }

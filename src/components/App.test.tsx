@@ -59,14 +59,14 @@ beforeEach(() => {
 describe('App', () => {
   describe('初期状態', () => {
     test('SuggestBox が表示されない', () => {
-      const { asFragment, queryByTestId } = render(<App />);
+      const { container, queryByTestId } = render(<App />);
       expect(queryByTestId('popup-menu')).toBeNull();
       expect(queryByTestId('search-input')).toBeNull();
-      expect(asFragment()).toMatchSnapshot();
+      expect(container).toBeEmptyDOMElement();
     });
     test('isLaunchIconSuggestionKey が真になるようなキーを押すと SuggestBox が表示される', async () => {
       const isLaunchIconSuggestionKey = (e: KeyboardEvent) => e.key === 'a';
-      const { asFragment, queryByTestId } = render(<App isLaunchIconSuggestionKey={isLaunchIconSuggestionKey} />);
+      const { container, queryByTestId } = render(<App isLaunchIconSuggestionKey={isLaunchIconSuggestionKey} />);
       await act(() => {
         fireEvent(document, keydownEscapeEvent);
       });
@@ -77,7 +77,7 @@ describe('App', () => {
       });
       expect(queryByTestId('popup-menu')).toBeInTheDocument();
       expect(queryByTestId('search-input')).toBeInTheDocument();
-      expect(asFragment()).toMatchSnapshot();
+      expect(container).not.toBeEmptyDOMElement();
     });
   });
   describe('SuggestBox が表示されている時', () => {
