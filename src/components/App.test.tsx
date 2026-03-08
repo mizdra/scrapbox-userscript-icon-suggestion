@@ -1,10 +1,12 @@
-import { act, fireEvent, render } from '@testing-library/preact';
+import { act, fireEvent, render as nativeRender } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
+import type { ComponentChild } from 'preact';
 import { ScrapboxContext } from '../contexts/ScrapboxContext';
 import { uniqueIcons } from '../lib/collection';
 import { Icon } from '../lib/icon';
 import { forwardMatcher } from '../lib/matcher';
 import { insertText } from '../lib/scrapbox';
+import { fakeResolvedOptions } from '../test/faker';
 import { createEditor, createScrapboxAPI } from '../test/helpers/html';
 import {
   keydownAEvent,
@@ -14,8 +16,7 @@ import {
   keydownEscapeEvent,
 } from '../test/helpers/key';
 import type { Matcher } from '../types';
-import type { AppProps } from './App';
-import { App as NativeApp } from './App';
+import { App, type AppProps } from './App';
 
 vi.mock('../lib/scrapbox', async (importOriginal) => {
   // oxlint-disable-next-line typescript/consistent-type-imports
@@ -28,28 +29,25 @@ vi.mock('../lib/scrapbox', async (importOriginal) => {
 
 const mockInsertText = vi.mocked(insertText);
 
-// editor 上に埋め込まれるアイコンをカスタマイズしたいので、Context でラップする
-type Options = { embeddedIcons?: Icon[] };
-function App(props: AppProps & Options) {
-  const presetIcons: Icon[] = props.presetIcons ?? [
-    new Icon('project', 'b'),
-    new Icon('project', 'c'),
-    new Icon('project', 'c'),
-  ];
+const props: AppProps = fakeResolvedOptions({
+  presetIcons: [new Icon('project', 'b'), new Icon('project', 'c'), new Icon('project', 'c')],
+  matcher: forwardMatcher,
+});
+
+function render(ui: ComponentChild, options?: { embeddedIcons?: Icon[] }) {
   const editor = createEditor({
-    embeddedIcons: props.embeddedIcons ?? [
+    embeddedIcons: options?.embeddedIcons ?? [
       new Icon('project', 'a'),
       new Icon('project', 'a'),
       new Icon('project', 'b'),
     ],
   });
   const scrapbox = createScrapboxAPI();
-  const matcher = forwardMatcher;
-  return (
-    <ScrapboxContext.Provider value={{ editor, scrapbox }}>
-      <NativeApp presetIcons={presetIcons} matcher={matcher} {...props} />
-    </ScrapboxContext.Provider>
-  );
+  return nativeRender(ui, {
+    wrapper: ({ children }: { children: ComponentChild }) => (
+      <ScrapboxContext.Provider value={{ editor, scrapbox }}>{children}</ScrapboxContext.Provider>
+    ),
+  });
 }
 
 beforeEach(() => {
@@ -59,14 +57,16 @@ beforeEach(() => {
 describe('App', () => {
   describe('初期状態', () => {
     test('SuggestBox が表示されない', () => {
-      const { container, queryByTestId } = render(<App />);
+      const { container, queryByTestId } = render(<App {...props} />);
       expect(queryByTestId('popup-menu')).toBeNull();
       expect(queryByTestId('search-input')).toBeNull();
       expect(container).toBeEmptyDOMElement();
     });
     test('isLaunchIconSuggestionKey が真になるようなキーを押すと SuggestBox が表示される', async () => {
       const isLaunchIconSuggestionKey = (e: KeyboardEvent) => e.key === 'a';
-      const { container, queryByTestId } = render(<App isLaunchIconSuggestionKey={isLaunchIconSuggestionKey} />);
+      const { container, queryByTestId } = render(
+        <App {...props} isLaunchIconSuggestionKey={isLaunchIconSuggestionKey} />,
+      );
       await act(() => {
         fireEvent(document, keydownEscapeEvent);
       });
@@ -81,15 +81,16 @@ describe('App', () => {
     });
   });
   describe('SuggestBox が表示されている時', () => {
-    async function renderApp(props: AppProps & Options) {
-      const renderResult = render(<App {...props} />);
+    async function renderApp(ui: ComponentChild, options?: { embeddedIcons?: Icon[] }) {
+      const renderResult = render(ui, options);
       await act(() => {
         fireEvent(document, keydownCtrlLEvent);
       });
       return renderResult;
     }
-    test('Escape 押下で SuggestBox が閉じる', async () => {
-      const { queryByTestId } = await renderApp({});
+    test('isExitIconSuggestionKey が真になるようなキーを押すと SuggestBox が閉じる', async () => {
+      const isExitIconSuggestionKey = (e: KeyboardEvent) => e.key === 'Escape';
+      const { queryByTestId } = await renderApp(<App {...props} isExitIconSuggestionKey={isExitIconSuggestionKey} />);
       expect(queryByTestId('popup-menu')).toBeInTheDocument();
       await act(() => {
         fireEvent(document, keydownEscapeEvent);
@@ -99,7 +100,7 @@ describe('App', () => {
     describe('Enter を押下した時', () => {
       // FIXME
       test.fails('アイテムがあれば選択中のアイコンが挿入される', async () => {
-        const { getByTestId } = await renderApp({});
+        const { getByTestId } = await renderApp(<App {...props} />);
         const buttonContainer = getByTestId('button-container');
         const searchInput = getByTestId('search-input');
 
@@ -114,7 +115,7 @@ describe('App', () => {
     });
     // FIXME
     test.fails('isInsertQueryAsIconKey が真になるようなキーを押下したら、`[query.icon] が挿入される', async () => {
-      const { getByTestId } = await renderApp({});
+      const { getByTestId } = await renderApp(<App {...props} />);
       const searchInput = getByTestId('search-input');
 
       await userEvent.type(searchInput, 'mizdra');
@@ -132,7 +133,7 @@ describe('App', () => {
         const embeddedIcons = [new Icon('project', 'a'), new Icon('project', 'a'), new Icon('project', 'b')];
 
         const matcher: Matcher = vi.fn(() => []);
-        render(<App presetIcons={presetIcons} embeddedIcons={embeddedIcons} matcher={matcher} />);
+        render(<App {...props} presetIcons={presetIcons} matcher={matcher} />, { embeddedIcons });
         await act(() => {
           fireEvent(document, keydownCtrlLEvent);
         });

@@ -1,3 +1,4 @@
+import type { ComponentChildren } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useResizeObserver } from '../hooks/useResizeObserver';
@@ -7,29 +8,14 @@ import type { Icon } from '../lib/icon';
 import { hasDuplicatedPageTitle } from '../lib/icon';
 import { isComposing } from '../lib/key';
 import type { CursorPosition } from '../types';
-import { PopupMenuButton } from './PopupMenu/Button';
-
-const DEFAULT_IS_CLOSE_POPUP_KEY = (e: KeyboardEvent) => {
-  return e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-};
 
 export type PopupMenuProps = {
-  emptyMessage?: string;
   cursorPosition: CursorPosition;
   icons: Icon[];
   onSelect?: (icon: Icon, index: number) => void;
-  onClose?: () => void;
-  isClosePopupKey?: (e: KeyboardEvent) => boolean;
 };
 
-export function PopupMenu({
-  emptyMessage,
-  cursorPosition,
-  icons,
-  onSelect,
-  onClose,
-  isClosePopupKey = DEFAULT_IS_CLOSE_POPUP_KEY,
-}: PopupMenuProps) {
+export function PopupMenu({ cursorPosition, icons, onSelect }: PopupMenuProps) {
   const { editor } = useScrapbox();
   const ref = useRef<HTMLDivElement>(null);
   const { width: buttonContainerWidth = 0 } = useResizeObserver(ref);
@@ -51,25 +37,20 @@ export function PopupMenu({
     if (!open) return;
     // IMEによる変換中は何もしない
     if (isComposing(e)) return;
+    if (isEmpty || selectedIndex === null) return;
 
     const isTab = e.key === 'Tab' && !e.ctrlKey && !e.shiftKey && !e.altKey;
     const isShiftTab = e.key === 'Tab' && !e.ctrlKey && e.shiftKey && !e.altKey;
     const isEnter = e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-    const isClose = isClosePopupKey(e);
 
-    if (isTab || isShiftTab || isEnter || isClose) {
+    if (isTab || isShiftTab || isEnter) {
       e.preventDefault();
       e.stopPropagation();
     }
 
-    if (isEmpty || selectedIndex === null) {
-      if (isClose) onClose?.();
-    } else {
-      if (isTab) setSelectedIndex((prev) => (prev !== null ? (prev + 1) % icons.length : 0));
-      if (isShiftTab) setSelectedIndex((prev) => (prev !== null ? (prev - 1 + icons.length) % icons.length : 0));
-      if (isEnter) onSelect?.(icons[selectedIndex]!, selectedIndex);
-      if (isClose) onClose?.();
-    }
+    if (isTab) setSelectedIndex((prev) => (prev !== null ? (prev + 1) % icons.length : 0));
+    if (isShiftTab) setSelectedIndex((prev) => (prev !== null ? (prev - 1 + icons.length) % icons.length : 0));
+    if (isEnter) onSelect?.(icons[selectedIndex]!, selectedIndex);
   };
   useDocumentEventListener('keydown', handleKeydown);
 
@@ -79,7 +60,7 @@ export function PopupMenu({
   const iconListElement = icons.map((icon, i) => {
     const label = hasDuplicatedPageTitle(icon, icons) ? `${icon.pageTitle} (${icon.projectName})` : icon.pageTitle;
     return (
-      <PopupMenuButton key={icon.fullPagePath} selected={selectedIndex === i}>
+      <Button key={icon.fullPagePath} selected={selectedIndex === i}>
         <span>
           <img
             alt={icon.imgAlt}
@@ -89,16 +70,20 @@ export function PopupMenu({
           />{' '}
           <span data-testid="suggested-icon-label">{label}</span>
         </span>
-      </PopupMenuButton>
+      </Button>
     );
   });
 
   return (
     <div className="popup-menu" style={popupMenuStyle} data-testid="popup-menu">
       <div ref={ref} className="button-container" style={buttonContainerStyle} data-testid="button-container">
-        {icons.length === 0 ? (emptyMessage ?? 'アイテムは空です') : iconListElement}
+        {icons.length === 0 ? 'キーワードにマッチするアイコンがありません' : iconListElement}
       </div>
       <div className="triangle" style={triangleStyle} />
     </div>
   );
+}
+
+function Button({ children, selected }: { selected?: boolean; children: ComponentChildren }) {
+  return <div className={selected ? 'button selected' : 'button'}>{children}</div>;
 }

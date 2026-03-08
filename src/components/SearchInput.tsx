@@ -1,9 +1,9 @@
 import type { FunctionComponent, TargetedEvent } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
-import { useResizeObserver } from '../../hooks/useResizeObserver';
-import { useScrapbox } from '../../hooks/useScrapbox';
-import { calcSearchInputStyle } from '../../lib/calc-style';
-import type { CursorPosition } from '../../types';
+import { useResizeObserver } from '../hooks/useResizeObserver';
+import { useScrapbox } from '../hooks/useScrapbox';
+import { calcSearchInputStyle } from '../lib/calc-style';
+import type { CursorPosition } from '../types';
 
 export type SearchInputProps = {
   defaultQuery?: string;

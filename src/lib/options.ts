@@ -1,5 +1,20 @@
-import type { PresetIconsItem } from '../types';
+import type { Options, PresetIconsItem, ResolvedOptions } from '../types';
 import { Icon } from './icon';
+import { forwardPartialFuzzyMatcher } from './matcher';
+
+export const DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY = (e: KeyboardEvent) => {
+  return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
+};
+
+export const DEFAULT_IS_EXIT_ICON_SUGGESTION_KEY = (e: KeyboardEvent) => {
+  return e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+};
+
+export const DEFAULT_IS_INSERT_QUERY_AS_ICON_KEY = (e: KeyboardEvent) => {
+  if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && e.altKey && !e.metaKey) return true;
+  if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey && e.metaKey) return true;
+  return false;
+};
 
 async function evaluatePresetIconItemToPagePaths(presetIconItem: PresetIconsItem): Promise<Icon[]> {
   if (presetIconItem instanceof Icon) return [presetIconItem];
@@ -22,4 +37,14 @@ async function evaluatePresetIconItemToPagePaths(presetIconItem: PresetIconsItem
 export async function evaluatePresetIconItemsToIcons(presetIconItems: PresetIconsItem[]): Promise<Icon[]> {
   const nestedPagePaths = await Promise.all(presetIconItems.map(evaluatePresetIconItemToPagePaths));
   return nestedPagePaths.flat();
+}
+
+export async function resolveOptions(options?: Options): Promise<ResolvedOptions> {
+  return {
+    isLaunchIconSuggestionKey: options?.isLaunchIconSuggestionKey ?? DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY,
+    isExitIconSuggestionKey: options?.isExitIconSuggestionKey ?? DEFAULT_IS_EXIT_ICON_SUGGESTION_KEY,
+    isInsertQueryAsIconKey: options?.isInsertQueryAsIconKey ?? DEFAULT_IS_INSERT_QUERY_AS_ICON_KEY,
+    presetIcons: await evaluatePresetIconItemsToIcons(options?.presetIcons ?? []),
+    matcher: options?.matcher ?? forwardPartialFuzzyMatcher,
+  };
 }
