@@ -11,10 +11,6 @@ export type Options = {
    * `true` ならポップアップを閉じるキーだと判定される。
    * */
   isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
-  /**
-   * クエリを `[query.icon]` として挿入するかどうかを判定するコールバック。キーが押下される度に呼び出される。
-   * */
-  isInsertQueryAsIconKey?: (e: KeyboardEvent) => boolean;
   /** suggest に含めたいプリセットアイコンのリスト */
   presetIcons?: PresetIconsItem[];
   /**
@@ -26,7 +22,6 @@ export type Options = {
 export type ResolvedOptions = {
   isLaunchIconSuggestionKey: (e: KeyboardEvent) => boolean;
   isExitIconSuggestionKey: (e: KeyboardEvent) => boolean;
-  isInsertQueryAsIconKey: (e: KeyboardEvent) => boolean;
   presetIcons: Icon[];
   matcher: Matcher;
 };

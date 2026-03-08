@@ -10,12 +10,6 @@ export const DEFAULT_IS_EXIT_ICON_SUGGESTION_KEY = (e: KeyboardEvent) => {
   return e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
 };
 
-export const DEFAULT_IS_INSERT_QUERY_AS_ICON_KEY = (e: KeyboardEvent) => {
-  if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && e.altKey && !e.metaKey) return true;
-  if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey && e.metaKey) return true;
-  return false;
-};
-
 async function evaluatePresetIconItemToPagePaths(presetIconItem: PresetIconsItem): Promise<Icon[]> {
   if (presetIconItem instanceof Icon) return [presetIconItem];
   if (Array.isArray(presetIconItem)) {
@@ -43,7 +37,6 @@ export async function resolveOptions(options?: Options): Promise<ResolvedOptions
   return {
     isLaunchIconSuggestionKey: options?.isLaunchIconSuggestionKey ?? DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY,
     isExitIconSuggestionKey: options?.isExitIconSuggestionKey ?? DEFAULT_IS_EXIT_ICON_SUGGESTION_KEY,
-    isInsertQueryAsIconKey: options?.isInsertQueryAsIconKey ?? DEFAULT_IS_INSERT_QUERY_AS_ICON_KEY,
     presetIcons: await evaluatePresetIconItemsToIcons(options?.presetIcons ?? []),
     matcher: options?.matcher ?? forwardPartialFuzzyMatcher,
   };
