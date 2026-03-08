@@ -2,30 +2,7 @@ import { render } from 'preact';
 import { App } from '../components/App';
 import { evaluatePresetIconItemsToIcons } from '../lib/options';
 import { getEditor } from '../lib/scrapbox';
-import type { Matcher, PresetIconsItem } from '../types';
-
-type Options = {
-  /**
-   * ポップアップを開くキーかどうかを判定するコールバック。キーが押下される度に呼び出される。
-   * `true` ならポップアップを開くキーだと判定される。
-   * */
-  isLaunchIconSuggestionKey?: (e: KeyboardEvent) => boolean;
-  /**
-   * ポップアップを閉じるキーかどうかを判定するコールバック。キーが押下される度に呼び出される。
-   * `true` ならポップアップを閉じるキーだと判定される。
-   * */
-  isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
-  /**
-   * クエリを `[query.icon]` として挿入するかどうかを判定するコールバック。キーが押下される度に呼び出される。
-   * */
-  isInsertQueryAsIconKey?: (e: KeyboardEvent) => boolean;
-  /** suggest に含めたいプリセットアイコンのリスト */
-  presetIcons?: PresetIconsItem[];
-  /**
-   * suggest されたアイコンを絞り込むために利用される matcher。
-   */
-  matcher?: Matcher;
-};
+import type { Options } from '../types';
 
 export async function registerIconSuggestion(options?: Options) {
   // 直接 editor に mount すると scrapbox 側の react renderer と干渉して壊れるので、
