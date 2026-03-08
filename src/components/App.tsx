@@ -63,12 +63,12 @@ export const App: FunctionComponent<AppProps> = ({
     textInput.focus();
   }, [textInput]);
 
-  const handleInsertText = useCallback(
-    (text: string) => {
+  const handleSelect = useCallback(
+    (icon: Icon) => {
       setOpen(false);
-      insertText(textInput, text);
+      insertText(textInput, icon.getNotation(projectName));
     },
-    [textInput],
+    [projectName, textInput],
   );
 
   if (!open || layout !== 'page') return null;
@@ -80,7 +80,7 @@ export const App: FunctionComponent<AppProps> = ({
       embeddedIcons={embeddedIcons}
       cursorPosition={cursorPosition}
       onClose={handleClose}
-      onInsertText={handleInsertText}
+      onSelect={handleSelect}
     />
   );
 };
@@ -92,7 +92,7 @@ type InnerProps = {
   embeddedIcons: Icon[];
   cursorPosition: CursorPosition;
   onClose: () => void;
-  onInsertText: (text: string) => void;
+  onSelect: (icon: Icon) => void;
 };
 
 function Inner({
@@ -102,22 +102,14 @@ function Inner({
   embeddedIcons,
   cursorPosition,
   onClose,
-  onInsertText,
+  onSelect,
 }: InnerProps) {
-  const { projectName } = useScrapbox();
   const composedMatcher = useCallback(
     (query: string) => {
       const composedIcons = uniqueIcons([...embeddedIcons, ...presetIcons]);
       return matcher({ query, composedIcons, presetIcons, embeddedIcons });
     },
     [embeddedIcons, matcher, presetIcons],
-  );
-
-  const handleSelect = useCallback(
-    (icon: Icon) => {
-      onInsertText(icon.getNotation(projectName));
-    },
-    [projectName, onInsertText],
   );
 
   const handleExitIconSuggestionKey = useCallback(
@@ -139,7 +131,5 @@ function Inner({
   );
   useDocumentEventListener('keydown', handleKeydown);
 
-  return (
-    <ComboBox cursorPosition={cursorPosition} matcher={composedMatcher} onSelect={handleSelect} onBlur={onClose} />
-  );
+  return <ComboBox cursorPosition={cursorPosition} matcher={composedMatcher} onSelect={onSelect} onBlur={onClose} />;
 }
