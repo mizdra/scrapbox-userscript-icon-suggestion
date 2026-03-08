@@ -55,6 +55,24 @@ exports[`App > 初期状態 > isLaunchIconSuggestionKey が真になるような
             </span>
           </span>
         </div>
+        <div
+          class="button"
+        >
+          <span>
+            <img
+              alt="c"
+              src="/api/pages/project/c/icon"
+              style="width: 1.3em; height: 1.3em; object-fit: contain;"
+              title="c"
+            />
+             
+            <span
+              data-testid="suggested-icon-label"
+            >
+              c
+            </span>
+          </span>
+        </div>
       </div>
       <div
         class="triangle"

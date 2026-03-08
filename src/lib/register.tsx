@@ -22,12 +22,6 @@ type Options = {
   /** suggest に含めたいプリセットアイコンのリスト */
   presetIcons?: PresetIconsItem[];
   /**
-   * ポップアップを開いた直後にプリセットアイコンを候補として表示するか。
-   * `true` なら表示、`false` なら非表示。
-   * @default true
-   * */
-  defaultIsShownPresetIcons?: boolean;
-  /**
    * suggest されたアイコンを絞り込むために利用される matcher。
    */
   matcher?: Matcher;
@@ -48,7 +42,6 @@ export async function registerIconSuggestion(options?: Options) {
       isExitIconSuggestionKey={options?.isExitIconSuggestionKey}
       isInsertQueryAsIconKey={options?.isInsertQueryAsIconKey}
       presetIcons={presetIcons}
-      defaultIsShownPresetIcons={options?.defaultIsShownPresetIcons}
       matcher={options?.matcher}
     />,
     container,

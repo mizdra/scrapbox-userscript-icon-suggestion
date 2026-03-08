@@ -25,7 +25,6 @@ export type AppProps = {
   isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
   isInsertQueryAsIconKey?: (e: KeyboardEvent) => boolean;
   presetIcons?: Icon[];
-  defaultIsShownPresetIcons?: boolean;
   matcher?: Matcher;
 };
 
@@ -34,7 +33,6 @@ export const App: FunctionComponent<AppProps> = ({
   isExitIconSuggestionKey,
   isInsertQueryAsIconKey = DEFAULT_IS_INSERT_QUERY_AS_ICON_KEY,
   presetIcons = [],
-  defaultIsShownPresetIcons = true,
   matcher = forwardPartialFuzzyMatcher,
 }) => {
   const { textInput, cursor, editor, layout, projectName } = useScrapbox();
@@ -42,13 +40,12 @@ export const App: FunctionComponent<AppProps> = ({
   const [open, setOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
-  const [isShownPresetIcons, setIsShownPresetIcons] = useState(defaultIsShownPresetIcons);
   const composedMatcher = useCallback(
     (query: string) => {
-      const composedIcons = uniqueIcons(isShownPresetIcons ? [...embeddedIcons, ...presetIcons] : embeddedIcons);
+      const composedIcons = uniqueIcons([...embeddedIcons, ...presetIcons]);
       return matcher({ query, composedIcons, presetIcons, embeddedIcons });
     },
-    [embeddedIcons, matcher, presetIcons, isShownPresetIcons],
+    [embeddedIcons, matcher, presetIcons],
   );
   const [query, setQuery] = useState('');
 
@@ -71,26 +68,21 @@ export const App: FunctionComponent<AppProps> = ({
       e.preventDefault();
       e.stopPropagation();
 
-      if (!open) {
-        // ポップアップが閉じていたら開く
-        setCursorPosition(calcCursorPosition(cursor));
+      // すでにポップアップが開いていたら何もしない
+      if (open) return;
 
-        // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanEmbeddedIcons` で
-        // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった
-        // 行のアイコン記法が画像化されるようにしておく。
-        textInput.blur();
-        // 画像化されたらエディタを走査してアイコンを収集
-        const newEmbeddedIcons = scanEmbeddedIcons(projectName, editor);
+      setCursorPosition(calcCursorPosition(cursor));
+      // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanEmbeddedIcons` で
+      // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった
+      // 行のアイコン記法が画像化されるようにしておく。
+      textInput.blur();
+      // 画像化されたらエディタを走査してアイコンを収集
+      const newEmbeddedIcons = scanEmbeddedIcons(projectName, editor);
 
-        setEmbeddedIcons(newEmbeddedIcons);
-        setOpen(true);
-        setIsShownPresetIcons(defaultIsShownPresetIcons);
-      } else {
-        // ポップアップが開いていたら、preset icon の表示・非表示をトグルする
-        setIsShownPresetIcons((isShownPresetIcons) => !isShownPresetIcons);
-      }
+      setEmbeddedIcons(newEmbeddedIcons);
+      setOpen(true);
     },
-    [cursor, defaultIsShownPresetIcons, editor, open, layout, projectName, textInput],
+    [cursor, editor, open, layout, projectName, textInput],
   );
 
   const handleInsertQueryAsIconKeyDown = useCallback(

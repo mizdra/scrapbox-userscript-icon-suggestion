@@ -34,10 +34,7 @@ export type Item<T> = {
 export type MatcherOptions = {
   /** 検索欄に入力された文字列 */
   query: string;
-  /**
-   * `isShownPresetIcons` が真の時は `[...presetIcons, ...embeddedIcons]` を、
-   * 偽の時は `embeddedIcons` を表すアイコンリスト。
-   * */
+  /** `[...presetIcons, ...embeddedIcons]` を表すアイコンリスト。 */
   composedIcons: Icon[];
   /** プリセットアイコンのリスト */
   presetIcons: Icon[];
