@@ -7,7 +7,7 @@ import type { Icon } from '../lib/icon';
 import { isComposing } from '../lib/key';
 import { calcCursorPosition, insertText, scanEmbeddedIcons } from '../lib/scrapbox';
 import type { CursorPosition, Matcher } from '../types';
-import { SearchablePopupMenu } from './SearchablePopupMenu';
+import { ComboBox } from './ComboBox';
 
 export type AppProps = {
   isLaunchIconSuggestionKey: (e: KeyboardEvent) => boolean;
@@ -156,7 +156,7 @@ function Inner({
   useDocumentEventListener('keydown', handleKeydown);
 
   return (
-    <SearchablePopupMenu
+    <ComboBox
       cursorPosition={cursorPosition}
       matcher={composedMatcher}
       onSelect={handleSelect}

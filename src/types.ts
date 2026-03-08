@@ -58,5 +58,5 @@ export type MatcherOptions = {
   embeddedIcons: Icon[];
 };
 
-/** SearchablePopupMenu 内でアイテムのフィルタに利用される matcher の型 */
+/** ComboBox 内でアイテムのフィルタに利用される matcher の型 */
 export type Matcher = (options: MatcherOptions) => Icon[];

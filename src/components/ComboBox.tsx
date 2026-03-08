@@ -2,26 +2,24 @@ import type { ComponentChild } from 'preact';
 import { useCallback, useMemo, useState } from 'preact/hooks';
 import type { Icon } from '../lib/icon';
 import type { CursorPosition } from '../types';
+import { SearchInput } from './ComboBox/SearchInput';
 import { PopupMenu } from './PopupMenu';
-import { SearchInput } from './SearchablePopupMenu/SearchInput';
 
-export type SearchablePopupMenuMatcher = (query: string) => Icon[];
+export type ComboBoxMatcher = (query: string) => Icon[];
 
-export type SearchablePopupMenuProps = {
+export type ComboBoxProps = {
   cursorPosition: CursorPosition;
-  matcher: SearchablePopupMenuMatcher;
+  matcher: ComboBoxMatcher;
   onSelect?: (icon: Icon) => void;
   onBlur?: () => void;
   onInputQuery?: (query: string) => void;
 };
 
-export function SearchablePopupMenu({
-  cursorPosition,
-  matcher,
-  onSelect,
-  onBlur,
-  onInputQuery,
-}: SearchablePopupMenuProps) {
+/**
+ * アイコンを検索・選択するためのコンボボックスコンポーネント。
+ * テキスト入力による検索と、ポップアップメニューによるアイコン選択を組み合わせたもの。
+ */
+export function ComboBox({ cursorPosition, matcher, onSelect, onBlur, onInputQuery }: ComboBoxProps) {
   const [query, setQuery] = useState('');
   const matchedIcons = useMemo(() => matcher(query), [matcher, query]);
 

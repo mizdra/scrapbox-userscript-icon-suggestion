@@ -4,8 +4,8 @@ import { Icon } from '../lib/icon';
 import { forwardMatcher } from '../lib/matcher';
 import { keydownEnterEvent } from '../test/helpers/key';
 import type { CursorPosition } from '../types';
-import type { SearchablePopupMenuProps } from './SearchablePopupMenu';
-import { SearchablePopupMenu } from './SearchablePopupMenu';
+import type { ComboBoxProps } from './ComboBox';
+import { ComboBox } from './ComboBox';
 
 // ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
@@ -16,20 +16,20 @@ const icons = [
   new Icon('project', 'z'),
 ];
 const matcher = (query: string) => forwardMatcher({ query, composedIcons: icons, embeddedIcons: [], presetIcons: [] });
-const props: SearchablePopupMenuProps = {
+const props: ComboBoxProps = {
   cursorPosition,
   matcher,
 };
 
-describe('SearchablePopupMenu', () => {
+describe('ComboBox', () => {
   test('ポップアップと SearchInput が表示される', () => {
-    const { asFragment, queryByTestId } = render(<SearchablePopupMenu {...props} />);
+    const { asFragment, queryByTestId } = render(<ComboBox {...props} />);
     expect(queryByTestId('popup-menu')).not.toBeNull();
     expect(queryByTestId('search-input')).not.toBeNull();
     expect(asFragment()).toMatchSnapshot();
   });
   test('SearchInput に文字を入力するとアイテムがフィルタされる', async () => {
-    const { getByTestId } = render(<SearchablePopupMenu {...props} />);
+    const { getByTestId } = render(<ComboBox {...props} />);
     const buttonContainer = getByTestId('button-container');
     const searchInput = getByTestId('search-input');
 
@@ -45,7 +45,7 @@ describe('SearchablePopupMenu', () => {
   });
   test('Enter 押下で onSelect が呼び出される', async () => {
     const onSelect = vi.fn();
-    render(<SearchablePopupMenu {...props} onSelect={onSelect} />);
+    render(<ComboBox {...props} onSelect={onSelect} />);
     expect(onSelect).toBeCalledTimes(0);
     await act(() => {
       fireEvent(document, keydownEnterEvent);
