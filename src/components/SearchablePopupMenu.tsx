@@ -41,9 +41,6 @@ export function SearchablePopupMenu({
     },
     [matchedIcons, onSelect],
   );
-  const handleClose = useCallback(() => {
-    onClose?.();
-  }, [onClose]);
   const handleInputQuery = useCallback(
     (query: string) => {
       setQuery(query);
@@ -60,16 +57,11 @@ export function SearchablePopupMenu({
         icons={matchedIcons}
         cursorPosition={cursorPosition}
         onSelect={handleSelect}
-        onClose={handleClose}
+        onClose={onClose}
         isClosePopupKey={isExitIconSuggestionKey}
       />
       {open && (
-        <SearchInput
-          defaultQuery={query}
-          cursorPosition={cursorPosition}
-          onInput={handleInputQuery}
-          onBlur={handleClose}
-        />
+        <SearchInput defaultQuery={query} cursorPosition={cursorPosition} onInput={handleInputQuery} onBlur={onClose} />
       )}
     </div>
   );
