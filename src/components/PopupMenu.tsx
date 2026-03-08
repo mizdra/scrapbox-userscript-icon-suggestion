@@ -10,13 +10,12 @@ import type { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
 export type PopupMenuProps = {
-  emptyMessage?: string;
   cursorPosition: CursorPosition;
   icons: Icon[];
   onSelect?: (icon: Icon, index: number) => void;
 };
 
-export function PopupMenu({ emptyMessage, cursorPosition, icons, onSelect }: PopupMenuProps) {
+export function PopupMenu({ cursorPosition, icons, onSelect }: PopupMenuProps) {
   const { editor } = useScrapbox();
   const ref = useRef<HTMLDivElement>(null);
   const { width: buttonContainerWidth = 0 } = useResizeObserver(ref);
@@ -78,7 +77,7 @@ export function PopupMenu({ emptyMessage, cursorPosition, icons, onSelect }: Pop
   return (
     <div className="popup-menu" style={popupMenuStyle} data-testid="popup-menu">
       <div ref={ref} className="button-container" style={buttonContainerStyle} data-testid="button-container">
-        {icons.length === 0 ? (emptyMessage ?? 'アイテムは空です') : iconListElement}
+        {icons.length === 0 ? 'キーワードにマッチするアイコンがありません' : iconListElement}
       </div>
       <div className="triangle" style={triangleStyle} />
     </div>

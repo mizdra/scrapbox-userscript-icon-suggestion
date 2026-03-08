@@ -8,7 +8,6 @@ import { SearchInput } from './SearchablePopupMenu/SearchInput';
 export type SearchablePopupMenuMatcher = (query: string) => Icon[];
 
 export type SearchablePopupMenuProps = {
-  emptyMessage?: string;
   cursorPosition: CursorPosition;
   matcher: SearchablePopupMenuMatcher;
   onSelect?: (icon: Icon) => void;
@@ -17,7 +16,6 @@ export type SearchablePopupMenuProps = {
 };
 
 export function SearchablePopupMenu({
-  emptyMessage,
   cursorPosition,
   matcher,
   onSelect,
@@ -43,12 +41,7 @@ export function SearchablePopupMenu({
 
   return (
     <div>
-      <PopupMenu
-        emptyMessage={emptyMessage}
-        icons={matchedIcons}
-        cursorPosition={cursorPosition}
-        onSelect={handleSelect}
-      />
+      <PopupMenu icons={matchedIcons} cursorPosition={cursorPosition} onSelect={handleSelect} />
       <SearchInput defaultQuery={query} cursorPosition={cursorPosition} onInput={handleInputQuery} onBlur={onBlur} />
     </div>
   );

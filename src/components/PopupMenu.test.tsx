@@ -34,9 +34,8 @@ describe('PopupMenu', () => {
   describe('アイテムが1つも無い時', () => {
     const icons: Icon[] = [];
     test('空であることを表すメッセージが表示される', () => {
-      const emptyMessage = 'test';
-      const { getByText } = render(<PopupMenu {...props} icons={icons} emptyMessage={emptyMessage} />);
-      expect(getByText(emptyMessage)).toBeVisible();
+      const { getByText } = render(<PopupMenu {...props} icons={icons} />);
+      expect(getByText('キーワードにマッチするアイコンがありません')).toBeVisible();
     });
     test('Enter を押下しても onSelect は呼び出されない', async () => {
       const onSelect = vi.fn();

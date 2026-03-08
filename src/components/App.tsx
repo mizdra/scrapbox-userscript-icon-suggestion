@@ -157,7 +157,6 @@ function Inner({
 
   return (
     <SearchablePopupMenu
-      emptyMessage="キーワードにマッチするアイコンがありません"
       cursorPosition={cursorPosition}
       matcher={composedMatcher}
       onSelect={handleSelect}
