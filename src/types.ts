@@ -23,6 +23,14 @@ export type Options = {
   matcher?: Matcher;
 };
 
+export type ResolvedOptions = {
+  isLaunchIconSuggestionKey: (e: KeyboardEvent) => boolean;
+  isExitIconSuggestionKey: (e: KeyboardEvent) => boolean;
+  isInsertQueryAsIconKey: (e: KeyboardEvent) => boolean;
+  presetIcons: Icon[];
+  matcher: Matcher;
+};
+
 export type CursorPosition = {
   styleTop: number;
   styleLeft: number;

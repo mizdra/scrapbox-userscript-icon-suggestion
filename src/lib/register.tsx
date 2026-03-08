@@ -1,6 +1,6 @@
 import { render } from 'preact';
 import { App } from '../components/App';
-import { evaluatePresetIconItemsToIcons } from '../lib/options';
+import { resolveOptions } from '../lib/options';
 import { getEditor } from '../lib/scrapbox';
 import type { Options } from '../types';
 
@@ -11,16 +11,6 @@ export async function registerIconSuggestion(options?: Options) {
   const editor = getEditor();
   editor.appendChild(container);
 
-  const presetIcons = options?.presetIcons ? await evaluatePresetIconItemsToIcons(options.presetIcons) : undefined;
-
-  render(
-    <App
-      isLaunchIconSuggestionKey={options?.isLaunchIconSuggestionKey}
-      isExitIconSuggestionKey={options?.isExitIconSuggestionKey}
-      isInsertQueryAsIconKey={options?.isInsertQueryAsIconKey}
-      presetIcons={presetIcons}
-      matcher={options?.matcher}
-    />,
-    container,
-  );
+  const resolvedOptions = await resolveOptions(options);
+  render(<App {...resolvedOptions} />, container);
 }

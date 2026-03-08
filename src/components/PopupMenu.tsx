@@ -9,27 +9,16 @@ import { isComposing } from '../lib/key';
 import type { CursorPosition } from '../types';
 import { PopupMenuButton } from './PopupMenu/Button';
 
-const DEFAULT_IS_CLOSE_POPUP_KEY = (e: KeyboardEvent) => {
-  return e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
-};
-
 export type PopupMenuProps = {
   emptyMessage?: string;
   cursorPosition: CursorPosition;
   icons: Icon[];
   onSelect?: (icon: Icon, index: number) => void;
   onClose?: () => void;
-  isClosePopupKey?: (e: KeyboardEvent) => boolean;
+  isClosePopupKey: (e: KeyboardEvent) => boolean;
 };
 
-export function PopupMenu({
-  emptyMessage,
-  cursorPosition,
-  icons,
-  onSelect,
-  onClose,
-  isClosePopupKey = DEFAULT_IS_CLOSE_POPUP_KEY,
-}: PopupMenuProps) {
+export function PopupMenu({ emptyMessage, cursorPosition, icons, onSelect, onClose, isClosePopupKey }: PopupMenuProps) {
   const { editor } = useScrapbox();
   const ref = useRef<HTMLDivElement>(null);
   const { width: buttonContainerWidth = 0 } = useResizeObserver(ref);

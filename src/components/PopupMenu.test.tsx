@@ -10,12 +10,19 @@ import {
   keydownCtrlGEvent,
 } from '../test/helpers/key';
 import type { CursorPosition } from '../types';
+import type { PopupMenuProps } from './PopupMenu';
 import { PopupMenu } from './PopupMenu';
 
 // ダミーの props
 const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
 const icons: Icon[] = [new Icon('project', 'icon1'), new Icon('project', 'icon2'), new Icon('project', 'icon3')];
-const props = { cursorPosition, icons };
+const props: PopupMenuProps = {
+  cursorPosition,
+  icons,
+  isClosePopupKey: (e) => {
+    return e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+  },
+};
 
 // keydown イベントが PopupMenu 側でキャンセルされずに突き抜けてきたことを確かめるための mock
 const keydownListener = vi.fn();

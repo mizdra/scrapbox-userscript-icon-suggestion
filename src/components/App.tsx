@@ -1,6 +1,5 @@
 import type { FunctionComponent } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
-import { forwardPartialFuzzyMatcher } from '..';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqueIcons } from '../lib/collection';
@@ -10,30 +9,20 @@ import { calcCursorPosition, insertText, scanEmbeddedIcons } from '../lib/scrapb
 import type { CursorPosition, Matcher } from '../types';
 import { SearchablePopupMenu } from './SearchablePopupMenu';
 
-const DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY = (e: KeyboardEvent) => {
-  return e.key === 'l' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
-};
-
-const DEFAULT_IS_INSERT_QUERY_AS_ICON_KEY = (e: KeyboardEvent) => {
-  if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && e.altKey && !e.metaKey) return true;
-  if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey && !e.altKey && e.metaKey) return true;
-  return false;
-};
-
 export type AppProps = {
-  isLaunchIconSuggestionKey?: (e: KeyboardEvent) => boolean;
-  isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
-  isInsertQueryAsIconKey?: (e: KeyboardEvent) => boolean;
-  presetIcons?: Icon[];
-  matcher?: Matcher;
+  isLaunchIconSuggestionKey: (e: KeyboardEvent) => boolean;
+  isExitIconSuggestionKey: (e: KeyboardEvent) => boolean;
+  isInsertQueryAsIconKey: (e: KeyboardEvent) => boolean;
+  presetIcons: Icon[];
+  matcher: Matcher;
 };
 
 export const App: FunctionComponent<AppProps> = ({
-  isLaunchIconSuggestionKey = DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY,
   isExitIconSuggestionKey,
-  isInsertQueryAsIconKey = DEFAULT_IS_INSERT_QUERY_AS_ICON_KEY,
-  presetIcons = [],
-  matcher = forwardPartialFuzzyMatcher,
+  isInsertQueryAsIconKey,
+  isLaunchIconSuggestionKey,
+  matcher,
+  presetIcons,
 }) => {
   const { textInput, cursor, editor, layout, projectName } = useScrapbox();
 

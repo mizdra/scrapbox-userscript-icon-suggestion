@@ -14,7 +14,7 @@ export type SearchablePopupMenuProps = {
   onSelect?: (icon: Icon) => void;
   onClose?: () => void;
   onInputQuery?: (query: string) => void;
-  isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
+  isExitIconSuggestionKey: (e: KeyboardEvent) => boolean;
 };
 
 export function SearchablePopupMenu({

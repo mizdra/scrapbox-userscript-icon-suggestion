@@ -4,6 +4,7 @@ import { Icon } from '../lib/icon';
 import { forwardMatcher } from '../lib/matcher';
 import { keydownEnterEvent, keydownEscapeEvent } from '../test/helpers/key';
 import type { CursorPosition } from '../types';
+import type { SearchablePopupMenuProps } from './SearchablePopupMenu';
 import { SearchablePopupMenu } from './SearchablePopupMenu';
 
 // ダミーの props
@@ -15,7 +16,13 @@ const icons = [
   new Icon('project', 'z'),
 ];
 const matcher = (query: string) => forwardMatcher({ query, composedIcons: icons, embeddedIcons: [], presetIcons: [] });
-const props = { cursorPosition, matcher };
+const props: SearchablePopupMenuProps = {
+  cursorPosition,
+  matcher,
+  isExitIconSuggestionKey: (e: KeyboardEvent) => {
+    return e.key === 'Escape' && !e.ctrlKey && !e.shiftKey && !e.altKey;
+  },
+};
 
 describe('SearchablePopupMenu', () => {
   test('ポップアップと SearchInput が表示される', () => {
