@@ -1,9 +1,4 @@
-import type { ComponentChild, JSX } from 'preact';
 import type { Icon } from './lib/icon';
-
-export type FormData = {
-  query: string;
-};
 
 export type CursorPosition = {
   styleTop: number;
@@ -19,16 +14,6 @@ export type PresetIconsItem =
   | Promise<Icon | Icon[]>
   | (() => PresetIconsItem[])
   | (() => Promise<PresetIconsItem[]>);
-
-/**
- * SearchablePopupMenu 内で利用している suggest 対象のデータを表す型
- * */
-export type Item<T> = {
-  key: JSX.IntrinsicAttributes['key'];
-  element: ComponentChild;
-  searchableText: string;
-  value: T;
-};
 
 /** matcher に渡すオプションの型 */
 export type MatcherOptions = {
