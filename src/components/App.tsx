@@ -12,14 +12,12 @@ import { ComboBox } from './ComboBox';
 export type AppProps = {
   isLaunchIconSuggestionKey: (e: KeyboardEvent) => boolean;
   isExitIconSuggestionKey: (e: KeyboardEvent) => boolean;
-  isInsertQueryAsIconKey: (e: KeyboardEvent) => boolean;
   presetIcons: Icon[];
   matcher: Matcher;
 };
 
 export const App: FunctionComponent<AppProps> = ({
   isExitIconSuggestionKey,
-  isInsertQueryAsIconKey,
   isLaunchIconSuggestionKey,
   matcher,
   presetIcons,
@@ -77,7 +75,6 @@ export const App: FunctionComponent<AppProps> = ({
   return (
     <Inner
       isExitIconSuggestionKey={isExitIconSuggestionKey}
-      isInsertQueryAsIconKey={isInsertQueryAsIconKey}
       presetIcons={presetIcons}
       matcher={matcher}
       embeddedIcons={embeddedIcons}
@@ -90,7 +87,6 @@ export const App: FunctionComponent<AppProps> = ({
 
 type InnerProps = {
   isExitIconSuggestionKey: (e: KeyboardEvent) => boolean;
-  isInsertQueryAsIconKey: (e: KeyboardEvent) => boolean;
   presetIcons: Icon[];
   matcher: Matcher;
   embeddedIcons: Icon[];
@@ -101,7 +97,6 @@ type InnerProps = {
 
 function Inner({
   isExitIconSuggestionKey,
-  isInsertQueryAsIconKey,
   presetIcons,
   matcher,
   embeddedIcons,
@@ -110,7 +105,6 @@ function Inner({
   onInsertText,
 }: InnerProps) {
   const { projectName } = useScrapbox();
-  const [query, setQuery] = useState('');
   const composedMatcher = useCallback(
     (query: string) => {
       const composedIcons = uniqueIcons([...embeddedIcons, ...presetIcons]);
@@ -126,14 +120,6 @@ function Inner({
     [projectName, onInsertText],
   );
 
-  const handleInsertQueryAsIconKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      onInsertText(`[${query}.icon]`);
-    },
-    [query, onInsertText],
-  );
   const handleExitIconSuggestionKey = useCallback(
     (e: KeyboardEvent) => {
       e.preventDefault();
@@ -145,23 +131,15 @@ function Inner({
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
       if (isComposing(e)) return;
-      if (isInsertQueryAsIconKey(e)) {
-        handleInsertQueryAsIconKeyDown(e);
-      } else if (isExitIconSuggestionKey(e)) {
+      if (isExitIconSuggestionKey(e)) {
         handleExitIconSuggestionKey(e);
       }
     },
-    [isInsertQueryAsIconKey, handleInsertQueryAsIconKeyDown, isExitIconSuggestionKey, handleExitIconSuggestionKey],
+    [isExitIconSuggestionKey, handleExitIconSuggestionKey],
   );
   useDocumentEventListener('keydown', handleKeydown);
 
   return (
-    <ComboBox
-      cursorPosition={cursorPosition}
-      matcher={composedMatcher}
-      onSelect={handleSelect}
-      onBlur={onClose}
-      onInputQuery={setQuery}
-    />
+    <ComboBox cursorPosition={cursorPosition} matcher={composedMatcher} onSelect={handleSelect} onBlur={onClose} />
   );
 }

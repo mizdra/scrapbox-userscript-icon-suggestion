@@ -8,13 +8,7 @@ import { forwardMatcher } from '../lib/matcher';
 import { insertText } from '../lib/scrapbox';
 import { fakeResolvedOptions } from '../test/faker';
 import { createEditor, createScrapboxAPI } from '../test/helpers/html';
-import {
-  keydownAEvent,
-  keydownAltEnterEvent,
-  keydownCtrlLEvent,
-  keydownEnterEvent,
-  keydownEscapeEvent,
-} from '../test/helpers/key';
+import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from '../test/helpers/key';
 import type { Matcher } from '../types';
 import { App, type AppProps } from './App';
 
@@ -112,17 +106,6 @@ describe('App', () => {
         });
         expect(mockInsertText).toBeCalledWith(expect.anything(), '[b.icon]');
       });
-    });
-    // FIXME
-    test.fails('isInsertQueryAsIconKey が真になるようなキーを押下したら、`[query.icon] が挿入される', async () => {
-      const { getByTestId } = await renderApp(<App {...props} />);
-      const searchInput = getByTestId('search-input');
-
-      await userEvent.type(searchInput, 'mizdra');
-      await act(() => {
-        fireEvent(document, keydownAltEnterEvent);
-      });
-      expect(mockInsertText).toBeCalledWith(expect.anything(), '[mizdra.icon]');
     });
   });
 
