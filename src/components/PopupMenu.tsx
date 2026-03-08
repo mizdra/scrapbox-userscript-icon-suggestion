@@ -1,3 +1,4 @@
+import type { ComponentChildren } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
 import { useResizeObserver } from '../hooks/useResizeObserver';
@@ -7,7 +8,6 @@ import type { Icon } from '../lib/icon';
 import { hasDuplicatedPageTitle } from '../lib/icon';
 import { isComposing } from '../lib/key';
 import type { CursorPosition } from '../types';
-import { PopupMenuButton } from './PopupMenu/Button';
 
 export type PopupMenuProps = {
   cursorPosition: CursorPosition;
@@ -60,7 +60,7 @@ export function PopupMenu({ cursorPosition, icons, onSelect }: PopupMenuProps) {
   const iconListElement = icons.map((icon, i) => {
     const label = hasDuplicatedPageTitle(icon, icons) ? `${icon.pageTitle} (${icon.projectName})` : icon.pageTitle;
     return (
-      <PopupMenuButton key={icon.fullPagePath} selected={selectedIndex === i}>
+      <Button key={icon.fullPagePath} selected={selectedIndex === i}>
         <span>
           <img
             alt={icon.imgAlt}
@@ -70,7 +70,7 @@ export function PopupMenu({ cursorPosition, icons, onSelect }: PopupMenuProps) {
           />{' '}
           <span data-testid="suggested-icon-label">{label}</span>
         </span>
-      </PopupMenuButton>
+      </Button>
     );
   });
 
@@ -82,4 +82,8 @@ export function PopupMenu({ cursorPosition, icons, onSelect }: PopupMenuProps) {
       <div className="triangle" style={triangleStyle} />
     </div>
   );
+}
+
+function Button({ children, selected }: { selected?: boolean; children: ComponentChildren }) {
+  return <div className={selected ? 'button selected' : 'button'}>{children}</div>;
 }
