@@ -5,11 +5,9 @@ import type { CursorPosition } from '../types';
 import { SearchInput } from './ComboBox/SearchInput';
 import { PopupMenu } from './PopupMenu';
 
-export type ComboBoxMatcher = (query: string) => Icon[];
-
 export type ComboBoxProps = {
   cursorPosition: CursorPosition;
-  matcher: ComboBoxMatcher;
+  matcher: (query: string) => Icon[];
   onSelect?: (icon: Icon) => void;
   onBlur?: () => void;
   onInputQuery?: (query: string) => void;
