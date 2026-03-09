@@ -2,6 +2,14 @@ import type { CursorPosition } from '../types';
 import type { Icon } from './icon';
 import { iconLinkElementToIcon } from './icon';
 
+export function getCursorLine(editor: HTMLElement): { element: HTMLElement; index: number } | undefined {
+  const cursorLine = editor.querySelector<HTMLElement>('.line.cursor-line');
+  if (!cursorLine) return undefined;
+  const id = cursorLine.id.slice(1);
+  const index = scrapbox.Page.lines.findIndex((line) => line.id === id);
+  return { element: cursorLine, index };
+}
+
 export function scanEmbeddedIcons(projectName: string, editor: HTMLElement): Icon[] {
   const iconLinkElements = Array.from(editor.querySelectorAll<HTMLAnchorElement>('a.link.icon'));
   return iconLinkElements.map((iconLinkElement) => iconLinkElementToIcon(projectName, iconLinkElement));

@@ -75,7 +75,7 @@ export function PopupMenu({ cursorPosition, icons, onSelect }: PopupMenuProps) {
   });
 
   return (
-    <div className="popup-menu" style={popupMenuStyle} data-testid="popup-menu">
+    <div className="popup-menu icon-suggestion-popup-menu" style={popupMenuStyle} data-testid="popup-menu">
       <div ref={ref} className="button-container" style={buttonContainerStyle} data-testid="button-container">
         {icons.length === 0 ? 'キーワードにマッチするアイコンがありません' : iconListElement}
       </div>
