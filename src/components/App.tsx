@@ -1,6 +1,7 @@
 import type { FunctionComponent } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
+import type { CursorIndex } from '../hooks/useScrapbox';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqueIcons } from '../lib/collection';
 import type { Icon } from '../lib/icon';
@@ -22,10 +23,11 @@ export const App: FunctionComponent<AppProps> = ({
   matcher,
   presetIcons,
 }) => {
-  const { textInput, cursor, editor, layout, projectName } = useScrapbox();
+  const { textInput, cursor, editor, layout, projectName, getCursorIndex, focus } = useScrapbox();
   const [open, setOpen] = useState(false);
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
+  const [cursorIndex, setCursorIndex] = useState<CursorIndex | undefined>(undefined);
 
   const handleLaunchIconSuggestionKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -33,6 +35,9 @@ export const App: FunctionComponent<AppProps> = ({
       e.preventDefault();
       e.stopPropagation();
 
+      const cursorIndex = getCursorIndex();
+      if (!cursorIndex) return;
+      setCursorIndex(cursorIndex);
       setCursorPosition(calcCursorPosition(cursor));
       // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanEmbeddedIcons` で
       // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった
@@ -44,7 +49,7 @@ export const App: FunctionComponent<AppProps> = ({
       setEmbeddedIcons(newEmbeddedIcons);
       setOpen(true);
     },
-    [cursor, editor, open, layout, projectName, textInput],
+    [cursor, editor, open, layout, projectName, textInput, getCursorIndex],
   );
 
   const handleKeydown = useCallback(
@@ -58,17 +63,18 @@ export const App: FunctionComponent<AppProps> = ({
   );
   useDocumentEventListener('keydown', handleKeydown);
 
-  const handleClose = useCallback(() => {
+  const handleClose = useCallback(async () => {
     setOpen(false);
-    textInput.focus();
-  }, [textInput]);
+    if (cursorIndex) await focus(cursorIndex);
+  }, [focus, cursorIndex]);
 
   const handleSelect = useCallback(
-    (icon: Icon) => {
+    async (icon: Icon) => {
       setOpen(false);
+      if (cursorIndex) await focus(cursorIndex);
       insertText(textInput, icon.getNotation(projectName));
     },
-    [projectName, textInput],
+    [focus, cursorIndex, textInput, projectName],
   );
 
   if (!open || layout !== 'page') return null;
@@ -79,7 +85,9 @@ export const App: FunctionComponent<AppProps> = ({
       matcher={matcher}
       embeddedIcons={embeddedIcons}
       cursorPosition={cursorPosition}
+      // oxlint-disable-next-line typescript/no-misused-promises
       onClose={handleClose}
+      // oxlint-disable-next-line typescript/no-misused-promises
       onSelect={handleSelect}
     />
   );
