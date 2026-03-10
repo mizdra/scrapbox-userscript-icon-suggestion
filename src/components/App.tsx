@@ -6,7 +6,7 @@ import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqueIcons } from '../lib/collection';
 import type { Icon } from '../lib/icon';
 import { isComposing } from '../lib/key';
-import { calcCursorPosition, insertText, scanEmbeddedIcons } from '../lib/scrapbox';
+import { calcCursorPosition, scanEmbeddedIcons } from '../lib/scrapbox';
 import type { CursorPosition, Matcher } from '../types';
 import { ComboBox } from './ComboBox';
 
@@ -23,7 +23,7 @@ export const App: FunctionComponent<AppProps> = ({
   matcher,
   presetIcons,
 }) => {
-  const { textInput, cursor, editor, layout, projectName, getCursorIndex, focus } = useScrapbox();
+  const { cursor, editor, layout, projectName, getCursorIndex, focus, blur, insertText } = useScrapbox();
   const [open, setOpen] = useState(false);
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
@@ -42,14 +42,14 @@ export const App: FunctionComponent<AppProps> = ({
       // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanEmbeddedIcons` で
       // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった
       // 行のアイコン記法が画像化されるようにしておく。
-      textInput.blur();
+      blur();
       // 画像化されたらエディタを走査してアイコンを収集
       const newEmbeddedIcons = scanEmbeddedIcons(projectName, editor);
 
       setEmbeddedIcons(newEmbeddedIcons);
       setOpen(true);
     },
-    [cursor, editor, open, layout, projectName, textInput, getCursorIndex],
+    [cursor, editor, open, layout, projectName, getCursorIndex, blur],
   );
 
   const handleKeydown = useCallback(
@@ -72,9 +72,9 @@ export const App: FunctionComponent<AppProps> = ({
     async (icon: Icon) => {
       setOpen(false);
       if (cursorIndex) await focus(cursorIndex);
-      insertText(textInput, icon.getNotation(projectName));
+      insertText(icon.getNotation(projectName));
     },
-    [focus, cursorIndex, textInput, projectName],
+    [focus, cursorIndex, projectName, insertText],
   );
 
   if (!open || layout !== 'page') return null;

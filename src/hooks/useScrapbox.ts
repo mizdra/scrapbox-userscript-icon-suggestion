@@ -11,9 +11,10 @@ export type UseScrapboxResult = {
   projectName: string;
   editor: HTMLElement;
   cursor: HTMLDivElement;
-  textInput: HTMLTextAreaElement;
   getCursorIndex: () => CursorIndex | undefined;
   focus: (index: CursorIndex) => Promise<void>;
+  blur: () => void;
+  insertText: (text: string) => void;
 };
 
 /** Scrapbox のインターフェイスにアクセスするための hooks */
@@ -89,8 +90,25 @@ export function useScrapbox(): UseScrapboxResult {
     },
     [pointerEvent],
   );
+  const blur = useCallback(() => {
+    textInput.blur();
+  }, [textInput]);
 
-  return { layout, projectName, editor, cursor, textInput, getCursorIndex, focus };
+  // https://scrapbox.io/customize/scrapbox-insert-text よりコピペ。
+  // Thanks @takker99!
+  const insertText = useCallback(
+    (text: string) => {
+      textInput.focus();
+      textInput.value = text;
+      const uiEvent = document.createEvent('UIEvent');
+      // oxlint-disable-next-line typescript/no-deprecated
+      uiEvent.initEvent('input', true, false);
+      textInput.dispatchEvent(uiEvent);
+    },
+    [textInput],
+  );
+
+  return { layout, projectName, editor, cursor, getCursorIndex, focus, blur, insertText };
 }
 
 function click(element: HTMLElement, clientX: number, clientY: number) {
