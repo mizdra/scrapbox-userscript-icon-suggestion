@@ -16,17 +16,6 @@ export function calcCursorPosition(cursor: HTMLElement): CursorPosition {
   };
 }
 
-// https://scrapbox.io/customize/scrapbox-insert-text よりコピペ。
-// Thanks @takker99!
-export function insertText(textInput: HTMLTextAreaElement, text: string) {
-  textInput.focus();
-  textInput.value = text;
-  const uiEvent = document.createEvent('UIEvent');
-  // oxlint-disable-next-line typescript/no-deprecated
-  uiEvent.initEvent('input', true, false);
-  textInput.dispatchEvent(uiEvent);
-}
-
 export function getEditor(): HTMLElement {
   const editor = document.querySelector<HTMLElement>('.editor');
   if (editor) return editor;
