@@ -42,11 +42,27 @@ export function createEditor(options?: CreateEditorOptions): HTMLDivElement {
   editor.setAttribute('id', 'editor');
   editor.style.width = '1000px';
 
+  editor.appendChild(createPointerEvent());
   editor.appendChild(createCursor(options?.cursorPosition ?? { styleTop: 0, styleLeft: 0 }));
   editor.appendChild(createTextInput());
   if (options?.embeddedIcons) embedIcons(editor, options.embeddedIcons);
 
   return editor;
+}
+
+function createPointerEvent(): HTMLDivElement {
+  const pointerEvent = document.createElement('div');
+  pointerEvent.setAttribute('class', 'pointer-event');
+
+  const lines = document.createElement('div');
+  lines.setAttribute('class', 'lines');
+
+  const cursorLine = document.createElement('div');
+  cursorLine.setAttribute('class', 'line cursor-line');
+  lines.appendChild(cursorLine);
+
+  pointerEvent.appendChild(lines);
+  return pointerEvent;
 }
 
 function embedIcons(editor: HTMLElement, icons: Icon[]) {
