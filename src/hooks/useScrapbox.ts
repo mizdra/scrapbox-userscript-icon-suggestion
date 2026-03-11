@@ -46,7 +46,8 @@ export function useScrapbox(): UseScrapboxResult {
     return el;
   }, [editor]);
   const pointerEvent = useMemo(() => {
-    const el = document.querySelector<HTMLElement>('.pointer-event');
+    // NOTE: 古い Cosense では .pointer-event にクラス名が付いていないので、has() セレクタでも取得する
+    const el = document.querySelector<HTMLElement>('.pointer-event, div:has(> .lines)');
     if (!el) throw new Error('.pointer-event が存在しません');
     return el;
   }, []);
