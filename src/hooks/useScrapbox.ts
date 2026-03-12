@@ -8,7 +8,7 @@ export type CursorIndex = {
   char: number;
 };
 
-export type UseScrapboxResult = {
+export type Scrapbox = {
   layout: string;
   projectName: string;
   editor: HTMLElement;
@@ -22,7 +22,7 @@ export type UseScrapboxResult = {
 };
 
 /** Scrapbox のインターフェイスにアクセスするための hooks */
-export function useScrapbox(): UseScrapboxResult {
+export function useScrapbox(): Scrapbox {
   const { scrapbox } = useContext(ScrapboxContext);
   const [layout, setLayout] = useState(scrapbox.Layout);
   const [projectName, setProjectName] = useState(scrapbox.Project.name);

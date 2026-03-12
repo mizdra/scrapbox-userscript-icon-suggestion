@@ -4,11 +4,11 @@ interface Project {
 
 type EventName = 'layout:changed' | 'project:changed';
 
-interface Scrapbox {
+interface ScrapboxAPI {
   Layout: string;
   Project: Project;
-  addListener: (eventName: EventName, listener: () => void) => Scrapbox;
-  removeListener: (eventName: EventName, listener: () => void) => Scrapbox;
+  addListener: (eventName: EventName, listener: () => void) => ScrapboxAPI;
+  removeListener: (eventName: EventName, listener: () => void) => ScrapboxAPI;
 }
 
 // 本当はグローバルに露出しているが、コードベースの様々なところから無秩序に

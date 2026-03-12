@@ -1,7 +1,7 @@
 import { createContext } from 'preact';
 
 export type ScrapboxContextValue = {
-  scrapbox: Scrapbox;
+  scrapbox: ScrapboxAPI;
 };
 
 /** icon-suggestion から参照する Scrapbox のインターフェイスを詰め込んだコンテキスト */

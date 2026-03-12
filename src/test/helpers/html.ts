@@ -90,7 +90,7 @@ function createTextInput(): HTMLTextAreaElement {
 }
 
 // scrapbox が window に露出させている API を再現したものを返す関数
-export function createScrapboxAPI(): Scrapbox {
+export function createScrapboxAPI(): ScrapboxAPI {
   const scrapbox = {
     Layout: 'page',
     Project: {
