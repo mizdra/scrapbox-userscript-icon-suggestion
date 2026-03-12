@@ -6,7 +6,6 @@ import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqueIcons } from '../lib/collection';
 import type { Icon } from '../lib/icon';
 import { isComposing } from '../lib/key';
-import { calcCursorPosition, scanEmbeddedIcons } from '../lib/scrapbox';
 import type { CursorPosition, Matcher } from '../types';
 import { ComboBox } from './ComboBox';
 
@@ -23,7 +22,7 @@ export const App: FunctionComponent<AppProps> = ({
   matcher,
   presetIcons,
 }) => {
-  const { cursor, editor, layout, projectName, getCursorIndex, focus, blur, insertText } = useScrapbox();
+  const scrapbox = useScrapbox();
   const [open, setOpen] = useState(false);
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
@@ -31,25 +30,25 @@ export const App: FunctionComponent<AppProps> = ({
 
   const handleLaunchIconSuggestionKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (open || layout !== 'page') return;
+      if (open || scrapbox.layout !== 'page') return;
       e.preventDefault();
       e.stopPropagation();
 
-      const cursorIndex = getCursorIndex();
+      const cursorIndex = scrapbox.getCursorIndex();
       if (!cursorIndex) return;
       setCursorIndex(cursorIndex);
-      setCursorPosition(calcCursorPosition(cursor));
+      setCursorPosition(scrapbox.getCursorPosition());
       // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanEmbeddedIcons` で
       // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった
       // 行のアイコン記法が画像化されるようにしておく。
-      blur();
+      scrapbox.blur();
       // 画像化されたらエディタを走査してアイコンを収集
-      const newEmbeddedIcons = scanEmbeddedIcons(projectName, editor);
+      const newEmbeddedIcons = scrapbox.getEmbeddedIcons();
 
       setEmbeddedIcons(newEmbeddedIcons);
       setOpen(true);
     },
-    [cursor, editor, open, layout, projectName, getCursorIndex, blur],
+    [scrapbox, open],
   );
 
   const handleKeydown = useCallback(
@@ -65,19 +64,19 @@ export const App: FunctionComponent<AppProps> = ({
 
   const handleClose = useCallback(async () => {
     setOpen(false);
-    if (cursorIndex) await focus(cursorIndex);
-  }, [focus, cursorIndex]);
+    if (cursorIndex) await scrapbox.focus(cursorIndex);
+  }, [scrapbox, cursorIndex]);
 
   const handleSelect = useCallback(
     async (icon: Icon) => {
       setOpen(false);
-      if (cursorIndex) await focus(cursorIndex);
-      insertText(icon.getNotation(projectName));
+      if (cursorIndex) await scrapbox.focus(cursorIndex);
+      scrapbox.insertText(icon.getNotation(scrapbox.projectName));
     },
-    [focus, cursorIndex, projectName, insertText],
+    [scrapbox, cursorIndex],
   );
 
-  if (!open || layout !== 'page') return null;
+  if (!open || scrapbox.layout !== 'page') return null;
   return (
     <Inner
       isExitIconSuggestionKey={isExitIconSuggestionKey}
