@@ -1,5 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/hooks';
-import { ScrapboxContext } from '../contexts/ScrapboxContext';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { iconLinkElementToIcon, type Icon } from '../lib/icon';
 import type { CursorPosition } from '../types';
 
@@ -23,7 +22,6 @@ export type Scrapbox = {
 
 /** Scrapbox のインターフェイスにアクセスするための hooks */
 export function useScrapbox(): Scrapbox {
-  const { scrapbox } = useContext(ScrapboxContext);
   const [layout, setLayout] = useState(scrapbox.Layout);
   const [projectName, setProjectName] = useState(scrapbox.Project.name);
 
@@ -37,7 +35,7 @@ export function useScrapbox(): Scrapbox {
       scrapbox.removeListener('layout:changed', onLayoutChanged);
       scrapbox.removeListener('project:changed', onProjectChanged);
     };
-  }, [scrapbox]);
+  }, []);
 
   const editor = useMemo(() => {
     const el = document.querySelector<HTMLElement>('.editor');

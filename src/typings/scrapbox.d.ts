@@ -1,22 +1,16 @@
 interface Project {
   name: string;
 }
-
 type EventName = 'layout:changed' | 'project:changed';
-
-interface ScrapboxAPI {
-  Layout: string;
-  Project: Project;
-  addListener: (eventName: EventName, listener: () => void) => ScrapboxAPI;
-  removeListener: (eventName: EventName, listener: () => void) => ScrapboxAPI;
+declare global {
+  interface ScrapboxAPI {
+    Layout: string;
+    Project: Project;
+    addListener: (eventName: EventName, listener: () => void) => ScrapboxAPI;
+    removeListener: (eventName: EventName, listener: () => void) => ScrapboxAPI;
+  }
+  var scrapbox: ScrapboxAPI;
 }
-
-// 本当はグローバルに露出しているが、コードベースの様々なところから無秩序に
-// アクセスしてほしくないので、非公開にしている
-// declare const scrapbox: Scrapbox;
-// interface Window {
-//   scrapbox: Scrapbox;
-// }
 
 /** https://scrapbox.io/api/projects/<project-name> を叩くと返ってくる JSON の型 */
 interface ProjectJson {
@@ -42,3 +36,6 @@ interface Link {
   title: string;
   image: string | null;
 }
+
+// oxlint-disable-next-line typescript/no-useless-empty-export
+export {};
