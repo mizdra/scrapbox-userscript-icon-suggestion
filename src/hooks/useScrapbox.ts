@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 import { iconLinkElementToIcon, type Icon } from '../lib/icon';
 
 export type CursorPosition = {
@@ -44,28 +44,8 @@ export function useScrapbox(): Scrapbox {
     };
   }, []);
 
-  const editor = useMemo(() => {
-    const el = document.querySelector<HTMLElement>('.editor');
-    if (!el) throw new Error('.editor が存在しません');
-    return el;
-  }, []);
-  const cursor = useMemo(() => {
-    const el = editor.querySelector<HTMLDivElement>('.cursor');
-    if (!el) throw new Error('.cursor が存在しません');
-    return el;
-  }, [editor]);
-  const textInput = useMemo(() => {
-    const el = editor.querySelector<HTMLTextAreaElement>('#text-input');
-    if (!el) throw new Error('#text-input が存在しません');
-    return el;
-  }, [editor]);
-  const pointerEvent = useMemo(() => {
-    // NOTE: 古い Cosense では .pointer-event にクラス名が付いていないので、has() セレクタでも取得する
-    const el = document.querySelector<HTMLElement>('.pointer-event, div:has(> .lines)');
-    if (!el) throw new Error('.pointer-event が存在しません');
-    return el;
-  }, []);
   const getCursorPosition = useCallback((): CursorPosition | undefined => {
+    const cursor = document.querySelector<HTMLDivElement>('.cursor')!;
     const cursorRect = cursor.getBoundingClientRect();
     const top = cursorRect.top + window.scrollY;
     const left = cursorRect.left + window.scrollX;
@@ -81,54 +61,53 @@ export function useScrapbox(): Scrapbox {
       }
     }
     return { lineId: cursorLine.id, char: chars.length, top, left };
-  }, [cursor]);
-  const focus = useCallback(
-    async (position: CursorPosition) => {
-      const lines = Array.from(document.querySelectorAll('.lines .line'));
-      const targetLine = lines.find((line) => line.id === position.lineId);
-      if (!targetLine) return false;
-      const targetLineRect = targetLine.getBoundingClientRect();
+  }, []);
+  const focus = useCallback(async (position: CursorPosition) => {
+    // NOTE: 古い Cosense では .pointer-event にクラス名が付いていないので、has() セレクタでも取得する
+    const pointerEvent = document.querySelector<HTMLElement>('.pointer-event, div:has(> .lines)')!;
+    const lines = Array.from(document.querySelectorAll('.lines .line'));
+    const targetLine = lines.find((line) => line.id === position.lineId);
+    if (!targetLine) return false;
+    const targetLineRect = targetLine.getBoundingClientRect();
 
-      // まずその行の末尾にフォーカスして、行全体をテキスト化させる。
-      // そうしないとアイコン記法などが画像化されたままになってしまい、
-      // 正確な位置にカーソルを移動させることができない。
-      click(pointerEvent, targetLineRect.right - 1, targetLineRect.top + targetLineRect.height / 2);
+    // まずその行の末尾にフォーカスして、行全体をテキスト化させる。
+    // そうしないとアイコン記法などが画像化されたままになってしまい、
+    // 正確な位置にカーソルを移動させることができない。
+    click(pointerEvent, targetLineRect.right - 1, targetLineRect.top + targetLineRect.height / 2);
 
-      // 次に文字位置にフォーカスする。
-      // NOTE: 文字位置が行の末尾を超えている場合は何もしない (行の末尾にフォーカスしたまま)。
-      const chars = Array.from(targetLine.querySelectorAll<HTMLElement>('.char-index'));
-      const targetChar = chars[position.char];
-      if (targetChar) {
-        const targetCharRect = targetChar.getBoundingClientRect();
-        click(pointerEvent, targetCharRect.left + 1, targetCharRect.top + targetCharRect.height / 2);
-      }
-      // textarea にフォーカスが移動するのを待つ
-      await new Promise(requestAnimationFrame);
-      return true;
-    },
-    [pointerEvent],
-  );
+    // 次に文字位置にフォーカスする。
+    // NOTE: 文字位置が行の末尾を超えている場合は何もしない (行の末尾にフォーカスしたまま)。
+    const chars = Array.from(targetLine.querySelectorAll<HTMLElement>('.char-index'));
+    const targetChar = chars[position.char];
+    if (targetChar) {
+      const targetCharRect = targetChar.getBoundingClientRect();
+      click(pointerEvent, targetCharRect.left + 1, targetCharRect.top + targetCharRect.height / 2);
+    }
+    // textarea にフォーカスが移動するのを待つ
+    await new Promise(requestAnimationFrame);
+    return true;
+  }, []);
   const blur = useCallback(() => {
+    const textInput = document.querySelector<HTMLTextAreaElement>('#text-input')!;
     textInput.blur();
-  }, [textInput]);
+  }, []);
 
   // https://scrapbox.io/customize/scrapbox-insert-text よりコピペ。
   // Thanks @takker99!
-  const insertText = useCallback(
-    (text: string) => {
-      textInput.focus();
-      textInput.value = text;
-      const uiEvent = document.createEvent('UIEvent');
-      // oxlint-disable-next-line typescript/no-deprecated
-      uiEvent.initEvent('input', true, false);
-      textInput.dispatchEvent(uiEvent);
-    },
-    [textInput],
-  );
+  const insertText = useCallback((text: string) => {
+    const textInput = document.querySelector<HTMLTextAreaElement>('#text-input')!;
+    textInput.focus();
+    textInput.value = text;
+    const uiEvent = document.createEvent('UIEvent');
+    // oxlint-disable-next-line typescript/no-deprecated
+    uiEvent.initEvent('input', true, false);
+    textInput.dispatchEvent(uiEvent);
+  }, []);
   const getEmbeddedIcons = useCallback(() => {
+    const editor = document.querySelector<HTMLElement>('.editor')!;
     const iconLinkElements = Array.from(editor.querySelectorAll<HTMLAnchorElement>('a.link.icon'));
     return iconLinkElements.map((iconLinkElement) => iconLinkElementToIcon(projectName, iconLinkElement));
-  }, [editor, projectName]);
+  }, [projectName]);
 
   return {
     layout,
