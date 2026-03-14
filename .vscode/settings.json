@@ -23,5 +23,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.oxc": "always"
   },
-  "oxc.typeAware": true
+  // oxlint の suggestion をエディタのコードアクションから適用できるように
+  "oxc.fixKind": "dangerous_fix_or_suggestion"
 }

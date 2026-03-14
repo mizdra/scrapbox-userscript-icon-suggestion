@@ -44,7 +44,7 @@ describe('PopupMenu', () => {
       await act(() => {
         fireEvent(document, keydownEnterEvent);
       });
-      expect(onSelect).toBeCalledTimes(0);
+      expect(onSelect).toHaveBeenCalledTimes(0);
     });
   });
   describe('アイテムが1つ以上ある時', () => {
@@ -84,21 +84,21 @@ describe('PopupMenu', () => {
       const onSelect = vi.fn();
       render(<PopupMenu {...props} onSelect={onSelect} />);
 
-      expect(onSelect).toBeCalledTimes(0);
+      expect(onSelect).toHaveBeenCalledTimes(0);
       await act(() => {
         fireEvent(document, keydownTabEvent);
       });
       await act(() => {
         fireEvent(document, keydownEnterEvent);
       });
-      expect(onSelect).toBeCalledTimes(1);
+      expect(onSelect).toHaveBeenCalledTimes(1);
       expect(onSelect).lastCalledWith(icons[1], 1);
 
       // ただし IME による変換中の Enter 押下では、 onSelect は呼び出されない
       await act(() => {
         fireEvent(document, keydownEnterWithComposingEvent);
       });
-      expect(onSelect).toBeCalledTimes(1);
+      expect(onSelect).toHaveBeenCalledTimes(1);
     });
     test('Tab / Shift+Tab / Enter 以外が押下された時はイベントがキャンセルされるが、それ以外ではキャンセルされない', async () => {
       render(<PopupMenu {...props} />);
@@ -109,7 +109,7 @@ describe('PopupMenu', () => {
         fireEvent(document, keydownEnterWithComposingEvent); // キャンセルされない
         fireEvent(document, keydownAEvent); // キャンセルされない
       });
-      expect(keydownListener).toBeCalledTimes(2);
+      expect(keydownListener).toHaveBeenCalledTimes(2);
     });
     test('同名のページタイトルのアイコンが suggest されている場合は、括弧付きでプロジェクト名が表示される', () => {
       const { queryAllByTestId } = render(
