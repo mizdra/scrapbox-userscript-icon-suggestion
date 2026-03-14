@@ -1,12 +1,12 @@
 import type { FunctionComponent } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
-import type { CursorIndex } from '../hooks/useScrapbox';
+import type { CursorPosition } from '../hooks/useScrapbox';
 import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqueIcons } from '../lib/collection';
 import type { Icon } from '../lib/icon';
 import { isComposing } from '../lib/key';
-import type { CursorPosition, Matcher } from '../types';
+import type { Matcher } from '../types';
 import { ComboBox } from './ComboBox';
 
 export type AppProps = {
@@ -25,8 +25,7 @@ export const App: FunctionComponent<AppProps> = ({
   const scrapbox = useScrapbox();
   const [open, setOpen] = useState(false);
   const [embeddedIcons, setEmbeddedIcons] = useState<Icon[]>([]);
-  const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ styleTop: 0, styleLeft: 0 });
-  const [cursorIndex, setCursorIndex] = useState<CursorIndex | undefined>(undefined);
+  const [cursorPosition, setCursorPosition] = useState<CursorPosition | undefined>(undefined);
 
   const handleLaunchIconSuggestionKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -34,10 +33,9 @@ export const App: FunctionComponent<AppProps> = ({
       e.preventDefault();
       e.stopPropagation();
 
-      const cursorIndex = scrapbox.getCursorIndex();
-      if (!cursorIndex) return;
-      setCursorIndex(cursorIndex);
-      setCursorPosition(scrapbox.getCursorPosition());
+      const cursorPosition = scrapbox.getCursorPosition();
+      if (!cursorPosition) return;
+      setCursorPosition(cursorPosition);
       // NOTE: ある行にフォーカスがあると、行全体がテキスト化されてしまい、`scanEmbeddedIcons` で
       // アイコンを取得することができなくなってしまう。そのため、予めフォーカスを外し、フォーカスのあった
       // 行のアイコン記法が画像化されるようにしておく。
@@ -64,16 +62,16 @@ export const App: FunctionComponent<AppProps> = ({
 
   const handleClose = useCallback(async () => {
     setOpen(false);
-    if (cursorIndex) await scrapbox.focus(cursorIndex);
-  }, [scrapbox, cursorIndex]);
+    if (cursorPosition) await scrapbox.focus(cursorPosition);
+  }, [scrapbox, cursorPosition]);
 
   const handleSelect = useCallback(
     async (icon: Icon) => {
       setOpen(false);
-      if (cursorIndex) await scrapbox.focus(cursorIndex);
+      if (cursorPosition) await scrapbox.focus(cursorPosition);
       scrapbox.insertText(icon.getNotation(scrapbox.projectName));
     },
-    [scrapbox, cursorIndex],
+    [scrapbox, cursorPosition],
   );
 
   if (!open || scrapbox.layout !== 'page') return null;
