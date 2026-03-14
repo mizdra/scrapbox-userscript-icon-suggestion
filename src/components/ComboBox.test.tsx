@@ -40,6 +40,14 @@ describe('ComboBox', () => {
     await userEvent.type(searchInput, 'd');
     expect(buttonContainer.childElementCount).toEqual(0);
   });
+  test('マッチするアイコンが8件を超える場合、最大8件に絞られる', () => {
+    const manyIcons = Array.from({ length: 10 }, (_, i) => new Icon('project', `icon-${i}`));
+    const manyMatcher = (query: string) =>
+      forwardMatcher({ query, composedIcons: manyIcons, embeddedIcons: [], presetIcons: [] });
+    const { getByTestId } = render(<ComboBox matcher={manyMatcher} />);
+    const buttonContainer = getByTestId('button-container');
+    expect(buttonContainer.childElementCount).toEqual(8);
+  });
   test('Enter 押下で onSelect が呼び出される', async () => {
     const onSelect = vi.fn();
     render(<ComboBox {...props} onSelect={onSelect} />);
