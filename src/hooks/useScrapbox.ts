@@ -91,17 +91,16 @@ export function useScrapbox(): Scrapbox {
     const textInput = document.querySelector<HTMLTextAreaElement>('#text-input')!;
     textInput.blur();
   }, []);
-
-  // https://scrapbox.io/customize/scrapbox-insert-text よりコピペ。
-  // Thanks @takker99!
   const insertText = useCallback((text: string) => {
     const textInput = document.querySelector<HTMLTextAreaElement>('#text-input')!;
-    textInput.focus();
     textInput.value = text;
-    const uiEvent = document.createEvent('UIEvent');
-    // oxlint-disable-next-line typescript/no-deprecated
-    uiEvent.initEvent('input', true, false);
-    textInput.dispatchEvent(uiEvent);
+    const event = new InputEvent('input', {
+      bubbles: true,
+      cancelable: false,
+      inputType: 'insertText',
+      data: text,
+    });
+    textInput.dispatchEvent(event);
   }, []);
   const getEmbeddedIcons = useCallback(() => {
     const editor = document.querySelector<HTMLElement>('.editor')!;
