@@ -59,15 +59,15 @@ export function useScrapbox(): Scrapbox {
     return el;
   }, []);
   const getCursorPosition = useCallback(() => {
-    const styleTop = +cursor.style.top.slice(0, -2);
-    const styleLeft = +cursor.style.left.slice(0, -2);
+    const cursorRect = cursor.getBoundingClientRect();
+    const styleTop = cursorRect.top + window.scrollY;
+    const styleLeft = cursorRect.left + window.scrollX;
     const lines = Array.from(document.querySelectorAll('.lines .line'));
     const cursorLine = lines.find((line) => line.classList.contains('cursor-line'));
     if (!cursorLine) return undefined;
 
     const lineIndex = lines.indexOf(cursorLine);
     const chars = Array.from(cursorLine.querySelectorAll<HTMLElement>('.char-index'));
-    const cursorRect = cursor.getBoundingClientRect();
     for (const char of chars) {
       const charRect = char.getBoundingClientRect();
       if (charRect.left <= cursorRect.left && cursorRect.left <= charRect.right) {

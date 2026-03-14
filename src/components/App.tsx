@@ -74,18 +74,20 @@ export const App: FunctionComponent<AppProps> = ({
     [scrapbox, cursorPosition],
   );
 
-  if (!open || scrapbox.layout !== 'page') return null;
+  if (!open || scrapbox.layout !== 'page' || !cursorPosition) return null;
   return (
-    <Inner
-      isExitIconSuggestionKey={isExitIconSuggestionKey}
-      presetIcons={presetIcons}
-      matcher={matcher}
-      embeddedIcons={embeddedIcons}
-      // oxlint-disable-next-line typescript/no-misused-promises
-      onClose={handleClose}
-      // oxlint-disable-next-line typescript/no-misused-promises
-      onSelect={handleSelect}
-    />
+    <div style={{ position: 'absolute', top: cursorPosition.styleTop, left: cursorPosition.styleLeft }}>
+      <Inner
+        isExitIconSuggestionKey={isExitIconSuggestionKey}
+        presetIcons={presetIcons}
+        matcher={matcher}
+        embeddedIcons={embeddedIcons}
+        // oxlint-disable-next-line typescript/no-misused-promises
+        onClose={handleClose}
+        // oxlint-disable-next-line typescript/no-misused-promises
+        onSelect={handleSelect}
+      />
+    </div>
   );
 };
 
