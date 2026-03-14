@@ -88,16 +88,3 @@ function createTextInput(): HTMLTextAreaElement {
   textInput.setAttribute('id', 'text-input');
   return textInput;
 }
-
-// scrapbox が window に露出させている API を再現したものを返す関数
-export function createScrapboxAPI(): ScrapboxAPI {
-  const scrapbox = {
-    Layout: 'page',
-    Project: {
-      name: 'project',
-    },
-    addListener: () => scrapbox,
-    removeListener: () => scrapbox,
-  };
-  return scrapbox;
-}

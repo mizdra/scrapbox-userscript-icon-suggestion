@@ -11,3 +11,16 @@ export function fakeResolvedOptions(args?: Partial<ResolvedOptions>): ResolvedOp
     ...args,
   };
 }
+
+export function fakeScrapboxAPI(args?: Partial<ScrapboxAPI>): ScrapboxAPI {
+  const scrapbox: ScrapboxAPI = {
+    Layout: 'page',
+    Project: {
+      name: 'project',
+    },
+    addListener: () => scrapbox,
+    removeListener: () => scrapbox,
+    ...args,
+  };
+  return scrapbox;
+}

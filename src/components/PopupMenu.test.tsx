@@ -1,4 +1,4 @@
-import { act, fireEvent, render } from '@testing-library/preact';
+import { act, fireEvent } from '@testing-library/preact';
 import { Icon } from '../lib/icon';
 import {
   keydownEnterEvent,
@@ -7,6 +7,7 @@ import {
   keydownEnterWithComposingEvent,
   keydownAEvent,
 } from '../test/helpers/key';
+import { render } from '../test/renderer';
 import type { CursorPosition } from '../types';
 import type { PopupMenuProps } from './PopupMenu';
 import { PopupMenu } from './PopupMenu';

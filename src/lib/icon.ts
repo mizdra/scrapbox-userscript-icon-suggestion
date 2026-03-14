@@ -52,7 +52,7 @@ export function iconLinkElementToIcon(currentProjectName: string, iconLinkElemen
   const imgElement = iconLinkElement.querySelector<HTMLImageElement>('img.icon');
   if (!imgElement)
     throw new Error(
-      `.icon.link の子要素 img.icon がありません。iconLinkElement.innnerHTML: ${iconLinkElement.innerHTML}`,
+      `.icon.link の子要素 img.icon がありません。iconLinkElement.innerHTML: ${iconLinkElement.innerHTML}`,
     );
 
   const isCurrentProjectIcon = iconLinkElement.pathname.startsWith(`/${currentProjectName}/`);

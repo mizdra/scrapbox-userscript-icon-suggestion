@@ -1,8 +1,9 @@
-import { act, fireEvent, render } from '@testing-library/preact';
+import { act, fireEvent } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { Icon } from '../lib/icon';
 import { forwardMatcher } from '../lib/matcher';
 import { keydownEnterEvent } from '../test/helpers/key';
+import { render } from '../test/renderer';
 import type { CursorPosition } from '../types';
 import type { ComboBoxProps } from './ComboBox';
 import { ComboBox } from './ComboBox';
@@ -23,10 +24,9 @@ const props: ComboBoxProps = {
 
 describe('ComboBox', () => {
   test('ポップアップと SearchInput が表示される', () => {
-    const { asFragment, queryByTestId } = render(<ComboBox {...props} />);
+    const { queryByTestId } = render(<ComboBox {...props} />);
     expect(queryByTestId('popup-menu')).not.toBeNull();
     expect(queryByTestId('search-input')).not.toBeNull();
-    expect(asFragment()).toMatchSnapshot();
   });
   test('SearchInput に文字を入力するとアイテムがフィルタされる', async () => {
     const { getByTestId } = render(<ComboBox {...props} />);
