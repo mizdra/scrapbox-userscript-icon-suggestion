@@ -83,7 +83,6 @@ export const App: FunctionComponent<AppProps> = ({
       presetIcons={presetIcons}
       matcher={matcher}
       embeddedIcons={embeddedIcons}
-      cursorPosition={cursorPosition}
       // oxlint-disable-next-line typescript/no-misused-promises
       onClose={handleClose}
       // oxlint-disable-next-line typescript/no-misused-promises
@@ -97,20 +96,11 @@ type InnerProps = {
   presetIcons: Icon[];
   matcher: Matcher;
   embeddedIcons: Icon[];
-  cursorPosition: CursorPosition;
   onClose: () => void;
   onSelect: (icon: Icon) => void;
 };
 
-function Inner({
-  isExitIconSuggestionKey,
-  presetIcons,
-  matcher,
-  embeddedIcons,
-  cursorPosition,
-  onClose,
-  onSelect,
-}: InnerProps) {
+function Inner({ isExitIconSuggestionKey, presetIcons, matcher, embeddedIcons, onClose, onSelect }: InnerProps) {
   const composedMatcher = useCallback(
     (query: string) => {
       const composedIcons = uniqueIcons([...embeddedIcons, ...presetIcons]);
@@ -138,5 +128,5 @@ function Inner({
   );
   useDocumentEventListener('keydown', handleKeydown);
 
-  return <ComboBox cursorPosition={cursorPosition} matcher={composedMatcher} onSelect={onSelect} onBlur={onClose} />;
+  return <ComboBox matcher={composedMatcher} onSelect={onSelect} onBlur={onClose} />;
 }

@@ -1,30 +1,21 @@
 import type { ComponentChildren } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 import { useDocumentEventListener } from '../hooks/useDocumentEventListener';
-import { useResizeObserver } from '../hooks/useResizeObserver';
-import { useScrapbox } from '../hooks/useScrapbox';
-import { calcButtonContainerStyle, calcPopupMenuStyle, calcTriangleStyle } from '../lib/calc-style';
 import type { Icon } from '../lib/icon';
 import { hasDuplicatedPageTitle } from '../lib/icon';
 import { isComposing } from '../lib/key';
-import type { CursorPosition } from '../types';
 
 export type PopupMenuProps = {
-  cursorPosition: CursorPosition;
   icons: Icon[];
   onSelect?: (icon: Icon, index: number) => void;
 };
 
-export function PopupMenu({ cursorPosition, icons, onSelect }: PopupMenuProps) {
-  const { editor } = useScrapbox();
+export function PopupMenu({ icons, onSelect }: PopupMenuProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const { width: buttonContainerWidth = 0 } = useResizeObserver(ref);
   const isEmpty = icons.length === 0;
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(icons.length === 0 ? null : 0);
   const [prevIcons, setPrevIcons] = useState(icons);
-  const editorRef = useRef(editor);
-  const { width: editorWidth = 0 } = useResizeObserver(editorRef);
 
   // icons が変わったら選択位置を 0 番目に戻す。ただし空なら null にセットする。
   if (prevIcons !== icons) {
@@ -54,9 +45,6 @@ export function PopupMenu({ cursorPosition, icons, onSelect }: PopupMenuProps) {
   };
   useDocumentEventListener('keydown', handleKeydown);
 
-  const popupMenuStyle = calcPopupMenuStyle(cursorPosition);
-  const triangleStyle = calcTriangleStyle(cursorPosition, isEmpty);
-  const buttonContainerStyle = calcButtonContainerStyle(editorWidth, buttonContainerWidth, cursorPosition, isEmpty);
   const iconListElement = icons.map((icon, i) => {
     const label = hasDuplicatedPageTitle(icon, icons) ? `${icon.pageTitle} (${icon.projectName})` : icon.pageTitle;
     return (
@@ -75,11 +63,11 @@ export function PopupMenu({ cursorPosition, icons, onSelect }: PopupMenuProps) {
   });
 
   return (
-    <div className="popup-menu" style={popupMenuStyle} data-testid="popup-menu">
-      <div ref={ref} className="button-container" style={buttonContainerStyle} data-testid="button-container">
+    <div className="popup-menu" data-testid="popup-menu">
+      <div ref={ref} className="button-container" data-testid="button-container">
         {icons.length === 0 ? 'キーワードにマッチするアイコンがありません' : iconListElement}
       </div>
-      <div className="triangle" style={triangleStyle} />
+      <div className="triangle" />
     </div>
   );
 }
