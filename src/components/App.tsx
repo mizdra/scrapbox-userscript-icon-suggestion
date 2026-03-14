@@ -76,7 +76,13 @@ export const App: FunctionComponent<AppProps> = ({
 
   if (!open || scrapbox.layout !== 'page' || !cursorPosition) return null;
   return (
-    <div style={{ position: 'absolute', top: cursorPosition.styleTop, left: cursorPosition.styleLeft }}>
+    <div
+      style={{
+        position: 'absolute',
+        top: cursorPosition.styleTop,
+        left: cursorPosition.styleLeft,
+        lineHeight: '28px',
+      }}>
       <Inner
         isExitIconSuggestionKey={isExitIconSuggestionKey}
         presetIcons={presetIcons}

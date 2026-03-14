@@ -49,15 +49,12 @@ export function PopupMenu({ icons, onSelect }: PopupMenuProps) {
     const label = hasDuplicatedPageTitle(icon, icons) ? `${icon.pageTitle} (${icon.projectName})` : icon.pageTitle;
     return (
       <Button key={icon.fullPagePath} selected={selectedIndex === i}>
-        <span>
-          <img
-            alt={icon.imgAlt}
-            title={icon.imgTitle}
-            style="width: 1.3em; height: 1.3em; object-fit: contain;"
-            src={icon.imgSrc}
-          />{' '}
-          <span data-testid="suggested-icon-label">{label}</span>
+        <span className="button-label" data-testid="suggested-icon-label">
+          {label}
         </span>
+        <div className="icon">
+          <img alt={icon.imgAlt} title={icon.imgTitle} src={icon.imgSrc} />
+        </div>
       </Button>
     );
   });
@@ -67,7 +64,7 @@ export function PopupMenu({ icons, onSelect }: PopupMenuProps) {
       <div ref={ref} className="button-container" data-testid="button-container">
         {icons.length === 0 ? 'キーワードにマッチするアイコンがありません' : iconListElement}
       </div>
-      <div className="triangle" />
+      <div className="triangle" style={{ left: 10 }} />
     </div>
   );
 }
