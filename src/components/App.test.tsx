@@ -4,7 +4,7 @@ import type { ComponentChild } from 'preact';
 import { uniqueIcons } from '../lib/collection';
 import { Icon } from '../lib/icon';
 import { forwardMatcher } from '../lib/matcher';
-import { fakeResolvedOptions } from '../test/faker';
+import { DEFAULT_IS_EXIT_ICON_SUGGESTION_KEY, DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY } from '../lib/options';
 import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from '../test/helpers/key';
 import { render } from '../test/renderer';
 import type { Matcher } from '../types';
@@ -14,10 +14,12 @@ const presetIcons = [new Icon('project', 'b'), new Icon('project', 'c'), new Ico
 const embeddedIcons = [new Icon('project', 'a'), new Icon('project', 'a'), new Icon('project', 'b')];
 vi.spyOn(scrapbox.Project, 'name', 'get').mockReturnValue('project');
 
-const props: AppProps = fakeResolvedOptions({
-  presetIcons,
+const props: AppProps = {
+  isLaunchIconSuggestionKey: DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY,
+  isExitIconSuggestionKey: DEFAULT_IS_EXIT_ICON_SUGGESTION_KEY,
+  presetIcons: presetIcons,
   matcher: forwardMatcher,
-});
+};
 
 describe('App', () => {
   describe('初期状態', () => {
