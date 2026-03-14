@@ -63,27 +63,32 @@ export function useScrapbox(): Scrapbox {
     return { lineId: cursorLine.id, char: chars.length, top, left };
   }, []);
   const focus = useCallback(async (position: CursorPosition) => {
-    // NOTE: 古い Cosense では .pointer-event にクラス名が付いていないので、has() セレクタでも取得する
+    // https://scrapbox.io/assets/index.js を読むと、Cosense では .pointer-event の mouseup/mousedown イベントで
+    // フォーカスを制御していることがわかる。ここではそれを逆手にとって、擬似的に同じイベントを dispatch させて、
+    // エディタにフォーカスさせる。
+
+    // .pointer-event 要素を取得する。古い Cosense では .pointer-event にクラス名が付いていないので、has() セレクタでも取得する。
     const pointerEvent = document.querySelector<HTMLElement>('.pointer-event, div:has(> .lines)')!;
+
+    // フォーカスすべき行を計算する
     const lines = Array.from(document.querySelectorAll('.lines .line'));
     const targetLine = lines.find((line) => line.id === position.lineId);
     if (!targetLine) return false;
     const targetLineRect = targetLine.getBoundingClientRect();
 
-    // まずその行の末尾にフォーカスして、行全体をテキスト化させる。
-    // そうしないとアイコン記法などが画像化されたままになってしまい、
-    // 正確な位置にカーソルを移動させることができない。
-    click(pointerEvent, targetLineRect.right - 1, targetLineRect.top + targetLineRect.height / 2);
+    // 目的の位置にフォーカスする前に、まずはその行の末尾にフォーカスして、行全体をテキスト化させる。
+    // そうしないとアイコン記法などが画像化されたままになってしまい、正確な位置にカーソルを移動させることができない。
+    focusEditor(pointerEvent, targetLineRect.right - 1, targetLineRect.top + targetLineRect.height / 2);
 
-    // 次に文字位置にフォーカスする。
+    // 改めて目的の位置にフォーカスする。
     // NOTE: 文字位置が行の末尾を超えている場合は何もしない (行の末尾にフォーカスしたまま)。
     const chars = Array.from(targetLine.querySelectorAll<HTMLElement>('.char-index'));
     const targetChar = chars[position.char];
     if (targetChar) {
       const targetCharRect = targetChar.getBoundingClientRect();
-      click(pointerEvent, targetCharRect.left + 1, targetCharRect.top + targetCharRect.height / 2);
+      focusEditor(pointerEvent, targetCharRect.left + 1, targetCharRect.top + targetCharRect.height / 2);
     }
-    // textarea にフォーカスが移動するのを待つ
+    // #text-input にフォーカスが移動するのは requestAnimationFrame の後なので、それを待つ
     await new Promise(requestAnimationFrame);
     return true;
   }, []);
@@ -92,6 +97,9 @@ export function useScrapbox(): Scrapbox {
     textInput.blur();
   }, []);
   const insertText = useCallback((text: string) => {
+    // https://scrapbox.io/assets/index.js を読むと、#text-input の input イベントでテキストの入力を検知し、
+    // エディタにテキストが挿入されることがわかる。ここではそれを逆手にとって、#text-input に
+    // 擬似的に input イベントを dispatch させて、エディタにテキストを挿入させる。
     const textInput = document.querySelector<HTMLTextAreaElement>('#text-input')!;
     textInput.value = text;
     const event = new InputEvent('input', {
@@ -119,7 +127,8 @@ export function useScrapbox(): Scrapbox {
   };
 }
 
-function click(element: HTMLElement, clientX: number, clientY: number) {
+function focusEditor(element: HTMLElement, clientX: number, clientY: number) {
+  // mousedown イベントだけだと 範囲選択モードになってしまうため、mouseup イベントも dispatch する
   element.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, button: 0, clientX, clientY }));
   element.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, button: 0, clientX, clientY }));
 }
