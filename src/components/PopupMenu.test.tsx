@@ -89,7 +89,7 @@ describe('PopupMenu', () => {
         fireEvent(document, keydownEnterEvent);
       });
       expect(onSelect).toHaveBeenCalledTimes(1);
-      expect(onSelect).lastCalledWith(icons[1], 1);
+      expect(onSelect).lastCalledWith(icons[1]);
 
       // ただし IME による変換中の Enter 押下では、 onSelect は呼び出されない
       await act(() => {
