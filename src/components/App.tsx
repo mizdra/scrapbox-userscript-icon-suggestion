@@ -62,14 +62,19 @@ export const App: FunctionComponent<AppProps> = ({
 
   const handleClose = useCallback(async () => {
     setOpen(false);
-    if (cursorPosition) await scrapbox.focus(cursorPosition);
+    await scrapbox.focus(cursorPosition!);
   }, [scrapbox, cursorPosition]);
 
   const handleSelect = useCallback(
     async (icon: Icon) => {
       setOpen(false);
-      if (cursorPosition) await scrapbox.focus(cursorPosition);
-      scrapbox.insertText(icon.getNotation(scrapbox.projectName));
+      const success = await scrapbox.focus(cursorPosition!);
+      if (success) {
+        scrapbox.insertText(icon.getNotation(scrapbox.projectName));
+      } else {
+        // oxlint-disable-next-line no-alert
+        alert('カーソルのあった行が削除されたため、アイコンを挿入できませんでした。');
+      }
     },
     [scrapbox, cursorPosition],
   );
@@ -79,8 +84,8 @@ export const App: FunctionComponent<AppProps> = ({
     <div
       style={{
         position: 'absolute',
-        top: cursorPosition.styleTop,
-        left: cursorPosition.styleLeft,
+        top: cursorPosition.top,
+        left: cursorPosition.left,
         lineHeight: '28px',
       }}>
       <Inner
