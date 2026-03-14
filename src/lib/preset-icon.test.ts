@@ -13,7 +13,7 @@ import {
   DUMMY_MEMBER_PAGE_JSON_FOR_PUBLIC_AND_MEMBER,
   DUMMY_NON_EXIST_PAGE_JSON,
   NON_EXIST_PAGE_JSON_URL_RE,
-} from '../test/fixtures/scrapbox-api';
+} from '../test/scrapbox-api';
 import { Icon } from './icon';
 import { fetchMemberPageIcons, fetchRelatedPageIconsByHashTag } from './preset-icon';
 

@@ -6,7 +6,7 @@ import {
   keydownShiftTabEvent,
   keydownEnterWithComposingEvent,
   keydownAEvent,
-} from '../test/helpers/key';
+} from '../test/key';
 import { render } from '../test/renderer';
 import type { PopupMenuProps } from './PopupMenu';
 import { PopupMenu } from './PopupMenu';

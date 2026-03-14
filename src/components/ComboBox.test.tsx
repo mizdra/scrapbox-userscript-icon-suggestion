@@ -2,7 +2,7 @@ import { act, fireEvent } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { Icon } from '../lib/icon';
 import { forwardMatcher } from '../lib/matcher';
-import { keydownEnterEvent } from '../test/helpers/key';
+import { keydownEnterEvent } from '../test/key';
 import { render } from '../test/renderer';
 import type { ComboBoxProps } from './ComboBox';
 import { ComboBox } from './ComboBox';
