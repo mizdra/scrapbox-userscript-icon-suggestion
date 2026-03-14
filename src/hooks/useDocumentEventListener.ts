@@ -6,10 +6,7 @@ export function useDocumentEventListener<K extends keyof DocumentEventMap>(
   listener: (this: Document, ev: DocumentEventMap[K]) => any,
 ) {
   const listenerRef = useRef(listener);
-  useEffect(() => {
-    listenerRef.current = listener;
-  }, [listener]);
-
+  listenerRef.current = listener;
   useEffect(() => {
     const handler = (ev: DocumentEventMap[K]) => listenerRef.current.call(document, ev);
     document.addEventListener(type, handler, { capture: true });
