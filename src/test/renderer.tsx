@@ -20,9 +20,7 @@ export function render(
       </ScrapboxLayout>
     );
   }
-  const result = nativeRender(null, { wrapper: Wrapper });
-  result.rerender(ui);
-  return result;
+  return nativeRender(ui, { wrapper: Wrapper });
 }
 
 /**
