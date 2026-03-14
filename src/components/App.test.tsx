@@ -3,21 +3,23 @@ import userEvent from '@testing-library/user-event';
 import type { ComponentChild } from 'preact';
 import { uniqueIcons } from '../lib/collection';
 import { Icon } from '../lib/icon';
+import type { Matcher } from '../lib/matcher';
 import { forwardMatcher } from '../lib/matcher';
-import { fakeResolvedOptions } from '../test/faker';
-import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from '../test/helpers/key';
+import { DEFAULT_IS_EXIT_ICON_SUGGESTION_KEY, DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY } from '../lib/options';
+import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from '../test/key';
 import { render } from '../test/renderer';
-import type { Matcher } from '../types';
 import { App, type AppProps } from './App';
 
 const presetIcons = [new Icon('project', 'b'), new Icon('project', 'c'), new Icon('project', 'c')];
 const embeddedIcons = [new Icon('project', 'a'), new Icon('project', 'a'), new Icon('project', 'b')];
 vi.spyOn(scrapbox.Project, 'name', 'get').mockReturnValue('project');
 
-const props: AppProps = fakeResolvedOptions({
-  presetIcons,
+const props: AppProps = {
+  isLaunchIconSuggestionKey: DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY,
+  isExitIconSuggestionKey: DEFAULT_IS_EXIT_ICON_SUGGESTION_KEY,
+  presetIcons: presetIcons,
   matcher: forwardMatcher,
-});
+};
 
 describe('App', () => {
   describe('初期状態', () => {
@@ -67,7 +69,7 @@ describe('App', () => {
       expect(queryByTestId('popup-menu')).not.toBeInTheDocument();
     });
     test('Enter を押すと選択中のアイコンが挿入される', async () => {
-      const { getByTestId, getAllByTestId } = await renderApp(<App {...props} />, { embeddedIcons });
+      const { getByTestId, getAllByTestId, container } = await renderApp(<App {...props} />, { embeddedIcons });
       const searchInput = getByTestId('search-input');
 
       expect(getAllByTestId('suggested-icon-label').map((icon) => icon.textContent)).toEqual(['a', 'b', 'c']); // a, b, c の 3アイコンが表示される
@@ -76,7 +78,9 @@ describe('App', () => {
       await act(() => {
         fireEvent(document, keydownEnterEvent);
       });
-      // TODO: アイコンが挿入されたかどうかを確認する
+      await new Promise(requestAnimationFrame);
+      await new Promise(requestAnimationFrame);
+      expect(container.querySelector('#text-input')!).toHaveValue('[b.icon]');
     });
     test('embeddedIcons や presetIcons の状態で matcher に渡される引数が変わる', async () => {
       const matcher: Matcher = vi.fn(() => []);

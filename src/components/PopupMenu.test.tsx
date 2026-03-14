@@ -6,7 +6,7 @@ import {
   keydownShiftTabEvent,
   keydownEnterWithComposingEvent,
   keydownAEvent,
-} from '../test/helpers/key';
+} from '../test/key';
 import { render } from '../test/renderer';
 import type { PopupMenuProps } from './PopupMenu';
 import { PopupMenu } from './PopupMenu';
@@ -89,7 +89,7 @@ describe('PopupMenu', () => {
         fireEvent(document, keydownEnterEvent);
       });
       expect(onSelect).toHaveBeenCalledTimes(1);
-      expect(onSelect).lastCalledWith(icons[1], 1);
+      expect(onSelect).lastCalledWith(icons[1]);
 
       // ただし IME による変換中の Enter 押下では、 onSelect は呼び出されない
       await act(() => {

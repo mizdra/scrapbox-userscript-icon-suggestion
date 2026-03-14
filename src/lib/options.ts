@@ -1,5 +1,5 @@
-import type { Options, PresetIconsItem, ResolvedOptions } from '../types';
 import { Icon } from './icon';
+import type { Matcher } from './matcher';
 import { forwardPartialFuzzyMatcher } from './matcher';
 
 export const DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY = (e: KeyboardEvent) => {
@@ -32,6 +32,42 @@ export async function evaluatePresetIconItemsToIcons(presetIconItems: PresetIcon
   const nestedPagePaths = await Promise.all(presetIconItems.map(evaluatePresetIconItemToPagePaths));
   return nestedPagePaths.flat();
 }
+
+/**
+ * `presetIcons` オプションの要素の型
+ * */
+type PresetIconsItem =
+  | Icon
+  | Icon[]
+  | Promise<Icon | Icon[]>
+  | (() => PresetIconsItem[])
+  | (() => Promise<PresetIconsItem[]>);
+
+export type Options = {
+  /**
+   * ポップアップを開くキーかどうかを判定するコールバック。キーが押下される度に呼び出される。
+   * `true` ならポップアップを開くキーだと判定される。
+   * */
+  isLaunchIconSuggestionKey?: (e: KeyboardEvent) => boolean;
+  /**
+   * ポップアップを閉じるキーかどうかを判定するコールバック。キーが押下される度に呼び出される。
+   * `true` ならポップアップを閉じるキーだと判定される。
+   * */
+  isExitIconSuggestionKey?: (e: KeyboardEvent) => boolean;
+  /** suggest に含めたいプリセットアイコンのリスト */
+  presetIcons?: PresetIconsItem[];
+  /**
+   * suggest されたアイコンを絞り込むために利用される matcher。
+   */
+  matcher?: Matcher;
+};
+
+type ResolvedOptions = {
+  isLaunchIconSuggestionKey: (e: KeyboardEvent) => boolean;
+  isExitIconSuggestionKey: (e: KeyboardEvent) => boolean;
+  presetIcons: Icon[];
+  matcher: Matcher;
+};
 
 export async function resolveOptions(options?: Options): Promise<ResolvedOptions> {
   return {

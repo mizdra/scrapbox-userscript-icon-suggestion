@@ -1,5 +1,4 @@
-import type { ComponentChild } from 'preact';
-import { useCallback, useMemo, useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import type { Icon } from '../lib/icon';
 import { PopupMenu } from './PopupMenu';
 import { SearchInput } from './SearchInput';
@@ -21,17 +20,9 @@ export function ComboBox({ matcher, onSelect, onBlur }: ComboBoxProps) {
     () => matcher(query).slice(0, 8),
     [matcher, query],
   );
-
-  const handleSelect = useCallback(
-    (_icon: ComponentChild, index: number) => {
-      onSelect?.(matchedIcons[index]!);
-    },
-    [matchedIcons, onSelect],
-  );
-
   return (
     <div>
-      <PopupMenu icons={matchedIcons} onSelect={handleSelect} />
+      <PopupMenu icons={matchedIcons} onSelect={onSelect} />
       <SearchInput defaultQuery={query} onInput={setQuery} onBlur={onBlur} />
     </div>
   );

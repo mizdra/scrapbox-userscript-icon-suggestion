@@ -7,7 +7,7 @@ import { isComposing } from '../lib/key';
 
 export type PopupMenuProps = {
   icons: Icon[];
-  onSelect?: (icon: Icon, index: number) => void;
+  onSelect?: (icon: Icon) => void;
 };
 
 export function PopupMenu({ icons, onSelect }: PopupMenuProps) {
@@ -41,7 +41,7 @@ export function PopupMenu({ icons, onSelect }: PopupMenuProps) {
 
     if (isTab) setSelectedIndex((prev) => (prev !== null ? (prev + 1) % icons.length : 0));
     if (isShiftTab) setSelectedIndex((prev) => (prev !== null ? (prev - 1 + icons.length) % icons.length : 0));
-    if (isEnter) onSelect?.(icons[selectedIndex]!, selectedIndex);
+    if (isEnter) onSelect?.(icons[selectedIndex]!);
   };
   useDocumentEventListener('keydown', handleKeydown);
 

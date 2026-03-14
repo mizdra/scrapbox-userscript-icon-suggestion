@@ -49,12 +49,7 @@ export class Icon {
 }
 
 export function iconLinkElementToIcon(currentProjectName: string, iconLinkElement: HTMLAnchorElement): Icon {
-  const imgElement = iconLinkElement.querySelector<HTMLImageElement>('img.icon');
-  if (!imgElement)
-    throw new Error(
-      `.icon.link の子要素 img.icon がありません。iconLinkElement.innerHTML: ${iconLinkElement.innerHTML}`,
-    );
-
+  const imgElement = iconLinkElement.querySelector<HTMLImageElement>('img.icon')!;
   const isCurrentProjectIcon = iconLinkElement.pathname.startsWith(`/${currentProjectName}/`);
   const projectName = isCurrentProjectIcon
     ? currentProjectName
