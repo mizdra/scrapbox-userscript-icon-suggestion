@@ -1,16 +1,14 @@
 import { render } from 'preact';
 import { App } from '../components/App';
 import { resolveOptions } from '../lib/options';
-import { getEditor } from '../lib/scrapbox';
 import type { Options } from '../types';
 
 export async function registerIconSuggestion(options?: Options) {
-  // 直接 editor に mount すると scrapbox 側の react renderer と干渉して壊れるので、
-  // editor 内に差し込んだ container に mount する
-  const container = document.createElement('div');
-  const editor = getEditor();
-  editor.appendChild(container);
+  const app = document.querySelector('#app-container .app');
+  if (!app) throw new Error('.app が存在しません');
 
   const resolvedOptions = await resolveOptions(options);
+  const container = document.createElement('div');
+  app.appendChild(container);
   render(<App {...resolvedOptions} />, container);
 }

@@ -1,12 +1,13 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/hooks';
-import { ScrapboxContext } from '../contexts/ScrapboxContext';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import { iconLinkElementToIcon, type Icon } from '../lib/icon';
+import type { CursorPosition } from '../types';
 
 export type CursorIndex = {
   line: number;
   char: number;
 };
 
-export type UseScrapboxResult = {
+export type Scrapbox = {
   layout: string;
   projectName: string;
   editor: HTMLElement;
@@ -15,11 +16,12 @@ export type UseScrapboxResult = {
   focus: (index: CursorIndex) => Promise<void>;
   blur: () => void;
   insertText: (text: string) => void;
+  getEmbeddedIcons: () => Icon[];
+  getCursorPosition: () => CursorPosition;
 };
 
 /** Scrapbox のインターフェイスにアクセスするための hooks */
-export function useScrapbox(): UseScrapboxResult {
-  const { scrapbox, editor } = useContext(ScrapboxContext);
+export function useScrapbox(): Scrapbox {
   const [layout, setLayout] = useState(scrapbox.Layout);
   const [projectName, setProjectName] = useState(scrapbox.Project.name);
 
@@ -33,8 +35,13 @@ export function useScrapbox(): UseScrapboxResult {
       scrapbox.removeListener('layout:changed', onLayoutChanged);
       scrapbox.removeListener('project:changed', onProjectChanged);
     };
-  }, [scrapbox]);
+  }, []);
 
+  const editor = useMemo(() => {
+    const el = document.querySelector<HTMLElement>('.editor');
+    if (!el) throw new Error('.editor が存在しません');
+    return el;
+  }, []);
   const cursor = useMemo(() => {
     const el = editor.querySelector<HTMLDivElement>('.cursor');
     if (!el) throw new Error('.cursor が存在しません');
@@ -108,8 +115,31 @@ export function useScrapbox(): UseScrapboxResult {
     },
     [textInput],
   );
+  const getEmbeddedIcons = useCallback(() => {
+    const iconLinkElements = Array.from(editor.querySelectorAll<HTMLAnchorElement>('a.link.icon'));
+    return iconLinkElements.map((iconLinkElement) => iconLinkElementToIcon(projectName, iconLinkElement));
+  }, [editor, projectName]);
+  const getCursorPosition = useCallback(() => {
+    const top = +cursor.style.top.slice(0, -2);
+    const left = +cursor.style.left.slice(0, -2);
+    return {
+      styleTop: top,
+      styleLeft: left,
+    };
+  }, [cursor]);
 
-  return { layout, projectName, editor, cursor, getCursorIndex, focus, blur, insertText };
+  return {
+    layout,
+    projectName,
+    editor,
+    cursor,
+    getCursorIndex,
+    focus,
+    blur,
+    insertText,
+    getEmbeddedIcons,
+    getCursorPosition,
+  };
 }
 
 function click(element: HTMLElement, clientX: number, clientY: number) {

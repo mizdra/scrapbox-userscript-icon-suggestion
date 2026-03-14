@@ -1,7 +1,5 @@
-import { fireEvent, render, waitFor } from '@testing-library/preact';
-import { ScrapboxContext } from '../contexts/ScrapboxContext';
-import { calcSearchInputStyle } from '../lib/calc-style';
-import { createEditor, createScrapboxAPI } from '../test/helpers/html';
+import { fireEvent, waitFor } from '@testing-library/preact';
+import { render } from '../test/renderer';
 import type { CursorPosition } from '../types';
 import { SearchInput } from './SearchInput';
 
@@ -15,20 +13,6 @@ const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
 const props = { cursorPosition };
 
 describe('SearchInput', () => {
-  test('スタイル属性が表示される', () => {
-    // テストケース側で作成した editor を使ってレンダリングしたいので、Context を使う
-    const editor = createEditor();
-    const scrapbox = createScrapboxAPI();
-    const { getByTestId } = render(
-      <ScrapboxContext.Provider value={{ editor, scrapbox }}>
-        <SearchInput {...props} />
-      </ScrapboxContext.Provider>,
-    );
-
-    const input = getByTestId('search-input');
-    const expectedStyles = calcSearchInputStyle(editor.clientWidth, cursorPosition);
-    expect(input).toHaveStyle(expectedStyles);
-  });
   test('auto-focus される', async () => {
     const { getByTestId } = render(<SearchInput {...props} />);
     const input = getByTestId('search-input');

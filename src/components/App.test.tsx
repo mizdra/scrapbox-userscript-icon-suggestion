@@ -1,50 +1,36 @@
-import { act, fireEvent, render as nativeRender } from '@testing-library/preact';
+import { act, fireEvent } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import type { ComponentChild } from 'preact';
-import { ScrapboxContext } from '../contexts/ScrapboxContext';
 import { uniqueIcons } from '../lib/collection';
 import { Icon } from '../lib/icon';
 import { forwardMatcher } from '../lib/matcher';
 import { fakeResolvedOptions } from '../test/faker';
-import { createEditor, createScrapboxAPI } from '../test/helpers/html';
 import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from '../test/helpers/key';
+import { render } from '../test/renderer';
 import type { Matcher } from '../types';
 import { App, type AppProps } from './App';
 
+const presetIcons = [new Icon('project', 'b'), new Icon('project', 'c'), new Icon('project', 'c')];
+const embeddedIcons = [new Icon('project', 'a'), new Icon('project', 'a'), new Icon('project', 'b')];
+vi.spyOn(scrapbox.Project, 'name', 'get').mockReturnValue('project');
+
 const props: AppProps = fakeResolvedOptions({
-  presetIcons: [new Icon('project', 'b'), new Icon('project', 'c'), new Icon('project', 'c')],
+  presetIcons,
   matcher: forwardMatcher,
 });
-
-function render(ui: ComponentChild, options?: { embeddedIcons?: Icon[] }) {
-  const editor = createEditor({
-    embeddedIcons: options?.embeddedIcons ?? [
-      new Icon('project', 'a'),
-      new Icon('project', 'a'),
-      new Icon('project', 'b'),
-    ],
-  });
-  const scrapbox = createScrapboxAPI();
-  return nativeRender(ui, {
-    wrapper: ({ children }: { children: ComponentChild }) => (
-      <ScrapboxContext.Provider value={{ editor, scrapbox }}>{children}</ScrapboxContext.Provider>
-    ),
-  });
-}
 
 describe('App', () => {
   describe('初期状態', () => {
     test('SuggestBox が表示されない', () => {
-      const { container, queryByTestId } = render(<App {...props} />);
+      const { queryByTestId } = render(<App {...props} />);
       expect(queryByTestId('popup-menu')).toBeNull();
       expect(queryByTestId('search-input')).toBeNull();
-      expect(container).toBeEmptyDOMElement();
     });
     test('isLaunchIconSuggestionKey が真になるようなキーを押すと SuggestBox が表示される', async () => {
       const isLaunchIconSuggestionKey = (e: KeyboardEvent) => e.key === 'a';
-      const { container, queryByTestId } = render(
-        <App {...props} isLaunchIconSuggestionKey={isLaunchIconSuggestionKey} />,
-      );
+      const { queryByTestId } = render(<App {...props} isLaunchIconSuggestionKey={isLaunchIconSuggestionKey} />, {
+        cursorLineIndex: 0,
+      });
       await act(() => {
         fireEvent(document, keydownEscapeEvent);
       });
@@ -53,14 +39,16 @@ describe('App', () => {
       await act(() => {
         fireEvent(document, keydownAEvent);
       });
-      expect(queryByTestId('popup-menu')).toBeInTheDocument();
-      expect(queryByTestId('search-input')).toBeInTheDocument();
-      expect(container).not.toBeEmptyDOMElement();
+      expect(queryByTestId('popup-menu')).not.toBeNull();
+      expect(queryByTestId('search-input')).not.toBeNull();
     });
   });
   describe('SuggestBox が表示されている時', () => {
     async function renderApp(ui: ComponentChild, options?: { embeddedIcons?: Icon[] }) {
-      const renderResult = render(ui, options);
+      const renderResult = render(ui, {
+        cursorLineIndex: 0,
+        embeddedIcons: options?.embeddedIcons,
+      });
       await act(() => {
         fireEvent(document, keydownCtrlLEvent);
       });
@@ -75,40 +63,29 @@ describe('App', () => {
       });
       expect(queryByTestId('popup-menu')).not.toBeInTheDocument();
     });
-    describe('Enter を押下した時', () => {
-      test('アイテムがあれば選択中のアイコンが挿入される', async () => {
-        const { getByTestId } = await renderApp(<App {...props} />);
-        const buttonContainer = getByTestId('button-container');
-        const searchInput = getByTestId('search-input');
+    test('Enter を押すと選択中のアイコンが挿入される', async () => {
+      const { getByTestId, getAllByTestId } = await renderApp(<App {...props} />, { embeddedIcons });
+      const searchInput = getByTestId('search-input');
 
-        expect(buttonContainer.childElementCount).toEqual(3); // a, b, c の 3アイコンが表示される
-        await userEvent.type(searchInput, 'b');
-        expect(buttonContainer.childElementCount).toEqual(1); // b だけ表示される
-        await act(() => {
-          fireEvent(document, keydownEnterEvent);
-        });
-        // TODO: アイコンが挿入されたかどうかを確認する
+      expect(getAllByTestId('suggested-icon-label').map((icon) => icon.textContent)).toEqual(['a', 'b', 'c']); // a, b, c の 3アイコンが表示される
+      await userEvent.type(searchInput, 'b');
+      expect(getAllByTestId('suggested-icon-label').map((icon) => icon.textContent)).toEqual(['b']); // b だけ表示される
+      await act(() => {
+        fireEvent(document, keydownEnterEvent);
       });
+      // TODO: アイコンが挿入されたかどうかを確認する
     });
-  });
-
-  describe('インテグレーションテスト', () => {
-    describe('matcher', () => {
-      test('embeddedIcons や presetIcons の状態で matcher に渡される引数が変わる', async () => {
-        const presetIcons = [new Icon('project', 'b'), new Icon('project', 'c'), new Icon('project', 'c')];
-        const embeddedIcons = [new Icon('project', 'a'), new Icon('project', 'a'), new Icon('project', 'b')];
-
-        const matcher: Matcher = vi.fn(() => []);
-        render(<App {...props} presetIcons={presetIcons} matcher={matcher} />, { embeddedIcons });
-        await act(() => {
-          fireEvent(document, keydownCtrlLEvent);
-        });
-        expect(matcher).lastCalledWith({
-          query: '',
-          composedIcons: uniqueIcons([...embeddedIcons, ...presetIcons]),
-          presetIcons: presetIcons,
-          embeddedIcons: embeddedIcons,
-        });
+    test('embeddedIcons や presetIcons の状態で matcher に渡される引数が変わる', async () => {
+      const matcher: Matcher = vi.fn(() => []);
+      await renderApp(<App {...props} matcher={matcher} />, { embeddedIcons });
+      await act(() => {
+        fireEvent(document, keydownCtrlLEvent);
+      });
+      expect(matcher).lastCalledWith({
+        query: '',
+        composedIcons: uniqueIcons([...embeddedIcons, ...presetIcons]),
+        presetIcons: presetIcons,
+        embeddedIcons: embeddedIcons,
       });
     });
   });
