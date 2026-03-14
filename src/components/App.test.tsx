@@ -69,7 +69,7 @@ describe('App', () => {
       expect(queryByTestId('popup-menu')).not.toBeInTheDocument();
     });
     test('Enter を押すと選択中のアイコンが挿入される', async () => {
-      const { getByTestId, getAllByTestId } = await renderApp(<App {...props} />, { embeddedIcons });
+      const { getByTestId, getAllByTestId, container } = await renderApp(<App {...props} />, { embeddedIcons });
       const searchInput = getByTestId('search-input');
 
       expect(getAllByTestId('suggested-icon-label').map((icon) => icon.textContent)).toEqual(['a', 'b', 'c']); // a, b, c の 3アイコンが表示される
@@ -78,7 +78,9 @@ describe('App', () => {
       await act(() => {
         fireEvent(document, keydownEnterEvent);
       });
-      // TODO: アイコンが挿入されたかどうかを確認する
+      await new Promise(requestAnimationFrame);
+      await new Promise(requestAnimationFrame);
+      expect(container.querySelector('#text-input')!).toHaveValue('[b.icon]');
     });
     test('embeddedIcons や presetIcons の状態で matcher に渡される引数が変わる', async () => {
       const matcher: Matcher = vi.fn(() => []);
