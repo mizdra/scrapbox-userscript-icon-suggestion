@@ -79,8 +79,8 @@ export const App: FunctionComponent<AppProps> = ({
     <div
       style={{
         position: 'absolute',
-        top: cursorPosition.styleTop,
-        left: cursorPosition.styleLeft,
+        top: cursorPosition.top,
+        left: cursorPosition.left,
         lineHeight: '28px',
       }}>
       <Inner

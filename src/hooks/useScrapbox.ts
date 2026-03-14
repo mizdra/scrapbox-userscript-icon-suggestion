@@ -2,17 +2,19 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { iconLinkElementToIcon, type Icon } from '../lib/icon';
 
 export type CursorPosition = {
+  /** カーソルのある行のインデックス (0-based) */
   line: number;
+  /** カーソルのある文字のインデックス (0-based)。行の末尾にある場合は、その行の文字数と同じ値になる。 */
   char: number;
-  styleTop: number;
-  styleLeft: number;
+  /** ページの上端からの距離 */
+  top: number;
+  /** ページの左端からの距離 */
+  left: number;
 };
 
 export type Scrapbox = {
   layout: string;
   projectName: string;
-  editor: HTMLElement;
-  cursor: HTMLDivElement;
   getCursorPosition: () => CursorPosition | undefined;
   focus: (position: CursorPosition) => Promise<void>;
   blur: () => void;
@@ -60,8 +62,8 @@ export function useScrapbox(): Scrapbox {
   }, []);
   const getCursorPosition = useCallback(() => {
     const cursorRect = cursor.getBoundingClientRect();
-    const styleTop = cursorRect.top + window.scrollY;
-    const styleLeft = cursorRect.left + window.scrollX;
+    const top = cursorRect.top + window.scrollY;
+    const left = cursorRect.left + window.scrollX;
     const lines = Array.from(document.querySelectorAll('.lines .line'));
     const cursorLine = lines.find((line) => line.classList.contains('cursor-line'));
     if (!cursorLine) return undefined;
@@ -71,10 +73,10 @@ export function useScrapbox(): Scrapbox {
     for (const char of chars) {
       const charRect = char.getBoundingClientRect();
       if (charRect.left <= cursorRect.left && cursorRect.left <= charRect.right) {
-        return { line: lineIndex, char: +char.dataset.charIndex!, styleTop, styleLeft };
+        return { line: lineIndex, char: +char.dataset.charIndex!, top, left };
       }
     }
-    return { line: lineIndex, char: chars.length, styleTop, styleLeft };
+    return { line: lineIndex, char: chars.length, top, left };
   }, [cursor]);
   const focus = useCallback(
     async (position: CursorPosition) => {
@@ -126,8 +128,6 @@ export function useScrapbox(): Scrapbox {
   return {
     layout,
     projectName,
-    editor,
-    cursor,
     getCursorPosition,
     focus,
     blur,
