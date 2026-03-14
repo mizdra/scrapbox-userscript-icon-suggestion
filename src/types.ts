@@ -26,11 +26,6 @@ export type ResolvedOptions = {
   matcher: Matcher;
 };
 
-export type CursorPosition = {
-  styleTop: number;
-  styleLeft: number;
-};
-
 /**
  * `presetIcons` オプションの要素の型
  * */

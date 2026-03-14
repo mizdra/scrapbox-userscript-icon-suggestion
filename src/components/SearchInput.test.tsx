@@ -1,6 +1,5 @@
 import { fireEvent, waitFor } from '@testing-library/preact';
 import { render } from '../test/renderer';
-import type { CursorPosition } from '../types';
 import { SearchInput } from './SearchInput';
 
 const waitRaf = async () =>
@@ -9,8 +8,7 @@ const waitRaf = async () =>
   });
 
 // ダミーの props
-const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
-const props = { cursorPosition };
+const props = {};
 
 describe('SearchInput', () => {
   test('auto-focus される', async () => {

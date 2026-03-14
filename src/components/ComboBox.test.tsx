@@ -4,12 +4,10 @@ import { Icon } from '../lib/icon';
 import { forwardMatcher } from '../lib/matcher';
 import { keydownEnterEvent } from '../test/helpers/key';
 import { render } from '../test/renderer';
-import type { CursorPosition } from '../types';
 import type { ComboBoxProps } from './ComboBox';
 import { ComboBox } from './ComboBox';
 
 // ダミーの props
-const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
 const icons = [
   new Icon('project', 'a'),
   new Icon('project', 'ab'),
@@ -18,7 +16,6 @@ const icons = [
 ];
 const matcher = (query: string) => forwardMatcher({ query, composedIcons: icons, embeddedIcons: [], presetIcons: [] });
 const props: ComboBoxProps = {
-  cursorPosition,
   matcher,
 };
 

@@ -8,15 +8,12 @@ import {
   keydownAEvent,
 } from '../test/helpers/key';
 import { render } from '../test/renderer';
-import type { CursorPosition } from '../types';
 import type { PopupMenuProps } from './PopupMenu';
 import { PopupMenu } from './PopupMenu';
 
 // ダミーの props
-const cursorPosition: CursorPosition = { styleTop: 0, styleLeft: 0 };
 const icons: Icon[] = [new Icon('project', 'icon1'), new Icon('project', 'icon2'), new Icon('project', 'icon3')];
 const props: PopupMenuProps = {
-  cursorPosition,
   icons,
 };
 

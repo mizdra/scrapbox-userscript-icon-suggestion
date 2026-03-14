@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { iconLinkElementToIcon, type Icon } from '../lib/icon';
-import type { CursorPosition } from '../types';
 
-export type CursorIndex = {
+export type CursorPosition = {
   line: number;
   char: number;
+  styleTop: number;
+  styleLeft: number;
 };
 
 export type Scrapbox = {
@@ -12,12 +13,11 @@ export type Scrapbox = {
   projectName: string;
   editor: HTMLElement;
   cursor: HTMLDivElement;
-  getCursorIndex: () => CursorIndex | undefined;
-  focus: (index: CursorIndex) => Promise<void>;
+  getCursorPosition: () => CursorPosition | undefined;
+  focus: (position: CursorPosition) => Promise<void>;
   blur: () => void;
   insertText: (text: string) => void;
   getEmbeddedIcons: () => Icon[];
-  getCursorPosition: () => CursorPosition;
 };
 
 /** Scrapbox のインターフェイスにアクセスするための hooks */
@@ -58,25 +58,28 @@ export function useScrapbox(): Scrapbox {
     if (!el) throw new Error('.pointer-event が存在しません');
     return el;
   }, []);
-  const getCursorIndex = useCallback(() => {
+  const getCursorPosition = useCallback(() => {
+    const cursorRect = cursor.getBoundingClientRect();
+    const styleTop = cursorRect.top + window.scrollY;
+    const styleLeft = cursorRect.left + window.scrollX;
     const lines = Array.from(document.querySelectorAll('.lines .line'));
     const cursorLine = lines.find((line) => line.classList.contains('cursor-line'));
     if (!cursorLine) return undefined;
+
     const lineIndex = lines.indexOf(cursorLine);
     const chars = Array.from(cursorLine.querySelectorAll<HTMLElement>('.char-index'));
-    const cursorRect = cursor.getBoundingClientRect();
     for (const char of chars) {
       const charRect = char.getBoundingClientRect();
       if (charRect.left <= cursorRect.left && cursorRect.left <= charRect.right) {
-        return { line: lineIndex, char: +char.dataset.charIndex! };
+        return { line: lineIndex, char: +char.dataset.charIndex!, styleTop, styleLeft };
       }
     }
-    return { line: lineIndex, char: chars.length };
+    return { line: lineIndex, char: chars.length, styleTop, styleLeft };
   }, [cursor]);
   const focus = useCallback(
-    async (index: CursorIndex) => {
+    async (position: CursorPosition) => {
       const lines = Array.from(document.querySelectorAll('.lines .line'));
-      const targetLine = lines[index.line];
+      const targetLine = lines[position.line];
       if (!targetLine) return;
       const targetLineRect = targetLine.getBoundingClientRect();
 
@@ -88,7 +91,7 @@ export function useScrapbox(): Scrapbox {
       // 次に文字位置にフォーカスする。
       // NOTE: 文字位置が行の末尾を超えている場合は何もしない (行の末尾にフォーカスしたまま)。
       const chars = Array.from(targetLine.querySelectorAll<HTMLElement>('.char-index'));
-      const targetChar = chars[index.char];
+      const targetChar = chars[position.char];
       if (targetChar) {
         const targetCharRect = targetChar.getBoundingClientRect();
         click(pointerEvent, targetCharRect.left + 1, targetCharRect.top + targetCharRect.height / 2);
@@ -119,26 +122,17 @@ export function useScrapbox(): Scrapbox {
     const iconLinkElements = Array.from(editor.querySelectorAll<HTMLAnchorElement>('a.link.icon'));
     return iconLinkElements.map((iconLinkElement) => iconLinkElementToIcon(projectName, iconLinkElement));
   }, [editor, projectName]);
-  const getCursorPosition = useCallback(() => {
-    const top = +cursor.style.top.slice(0, -2);
-    const left = +cursor.style.left.slice(0, -2);
-    return {
-      styleTop: top,
-      styleLeft: left,
-    };
-  }, [cursor]);
 
   return {
     layout,
     projectName,
     editor,
     cursor,
-    getCursorIndex,
+    getCursorPosition,
     focus,
     blur,
     insertText,
     getEmbeddedIcons,
-    getCursorPosition,
   };
 }
 

@@ -1,23 +1,14 @@
 import type { FunctionComponent, TargetedEvent } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
-import { useResizeObserver } from '../hooks/useResizeObserver';
-import { useScrapbox } from '../hooks/useScrapbox';
-import { calcSearchInputStyle } from '../lib/calc-style';
-import type { CursorPosition } from '../types';
 
 export type SearchInputProps = {
   defaultQuery?: string;
-  cursorPosition: CursorPosition;
   onInput?: (newQuery: string) => void;
   onBlur?: () => void;
 };
 
-export const SearchInput: FunctionComponent<SearchInputProps> = ({ defaultQuery, cursorPosition, onInput, onBlur }) => {
-  const { editor } = useScrapbox();
+export const SearchInput: FunctionComponent<SearchInputProps> = ({ defaultQuery, onInput, onBlur }) => {
   const ref = useRef<HTMLInputElement>(null);
-  const editorRef = useRef(editor);
-  const { width: editorWidth = 0 } = useResizeObserver(editorRef);
-  const searchInputStyle = calcSearchInputStyle(editorWidth, cursorPosition);
 
   // mount されたら即 focus する
   useEffect(() => {
@@ -39,7 +30,6 @@ export const SearchInput: FunctionComponent<SearchInputProps> = ({ defaultQuery,
       <input
         ref={ref}
         className="form-control"
-        style={searchInputStyle}
         defaultValue={defaultQuery}
         onInput={handleInput}
         onBlur={onBlur}
