@@ -22,5 +22,7 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.oxc": "always"
-  }
+  },
+  // oxlint の suggestion をエディタのコードアクションから適用できるように
+  "oxc.fixKind": "dangerous_fix_or_suggestion"
 }
