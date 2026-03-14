@@ -12,7 +12,7 @@ export type CursorPosition = {
   left: number;
 };
 
-export type Scrapbox = {
+type Scrapbox = {
   layout: string;
   projectName: string;
   getCursorPosition: () => CursorPosition | undefined;
