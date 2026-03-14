@@ -16,7 +16,11 @@ export type ComboBoxProps = {
  */
 export function ComboBox({ matcher, onSelect, onBlur }: ComboBoxProps) {
   const [query, setQuery] = useState('');
-  const matchedIcons = useMemo(() => matcher(query), [matcher, query]);
+  const matchedIcons = useMemo(
+    // 多すぎるとポップアップがデカすぎて表示が崩れるので最大8件に絞る
+    () => matcher(query).slice(0, 8),
+    [matcher, query],
+  );
 
   const handleSelect = useCallback(
     (_icon: ComponentChild, index: number) => {
