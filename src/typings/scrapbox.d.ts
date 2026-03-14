@@ -37,5 +37,4 @@ interface Link {
   image: string | null;
 }
 
-// oxlint-disable-next-line typescript/no-useless-empty-export
 export {};

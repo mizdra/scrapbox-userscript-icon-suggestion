@@ -46,10 +46,10 @@ describe('ComboBox', () => {
   test('Enter 押下で onSelect が呼び出される', async () => {
     const onSelect = vi.fn();
     render(<ComboBox {...props} onSelect={onSelect} />);
-    expect(onSelect).toBeCalledTimes(0);
+    expect(onSelect).toHaveBeenCalledTimes(0);
     await act(() => {
       fireEvent(document, keydownEnterEvent);
     });
-    expect(onSelect).toBeCalledTimes(1);
+    expect(onSelect).toHaveBeenCalledTimes(1);
   });
 });
