@@ -29,6 +29,7 @@
     "preact": "^10.28.4"
   },
   "devDependencies": {
+    "@mizdra/oxfmt-config": "^0.1.1",
     "@mizdra/oxlint-config": "^0.2.0",
     "@preact/preset-vite": "^2.10.3",
     "@testing-library/jest-dom": "^6.9.1",
