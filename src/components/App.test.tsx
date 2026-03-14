@@ -21,6 +21,9 @@ const props: AppProps = fakeResolvedOptions({
 
 describe('App', () => {
   describe('初期状態', () => {
+    test('ページリストに App を mount してもエラーが発生しない', () => {
+      expect(() => render(<App {...props} />, { type: 'list' })).not.toThrow();
+    });
     test('SuggestBox が表示されない', () => {
       const { queryByTestId } = render(<App {...props} />);
       expect(queryByTestId('popup-menu')).toBeNull();
