@@ -3,11 +3,11 @@ import userEvent from '@testing-library/user-event';
 import type { ComponentChild } from 'preact';
 import { uniqueIcons } from '../lib/collection';
 import { Icon } from '../lib/icon';
+import type { Matcher } from '../lib/matcher';
 import { forwardMatcher } from '../lib/matcher';
 import { DEFAULT_IS_EXIT_ICON_SUGGESTION_KEY, DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY } from '../lib/options';
 import { keydownAEvent, keydownCtrlLEvent, keydownEnterEvent, keydownEscapeEvent } from '../test/key';
 import { render } from '../test/renderer';
-import type { Matcher } from '../types';
 import { App, type AppProps } from './App';
 
 const presetIcons = [new Icon('project', 'b'), new Icon('project', 'c'), new Icon('project', 'c')];

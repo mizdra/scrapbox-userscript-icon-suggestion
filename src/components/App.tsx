@@ -6,7 +6,7 @@ import { useScrapbox } from '../hooks/useScrapbox';
 import { uniqueIcons } from '../lib/collection';
 import type { Icon } from '../lib/icon';
 import { isComposing } from '../lib/key';
-import type { Matcher } from '../types';
+import type { Matcher } from '../lib/matcher';
 import { ComboBox } from './ComboBox';
 
 export type AppProps = {

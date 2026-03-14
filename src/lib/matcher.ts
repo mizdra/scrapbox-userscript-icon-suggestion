@@ -1,7 +1,21 @@
 import Asearch from 'asearch';
-import type { MatcherOptions } from '../types';
 import { uniqueIcons } from './collection';
 import type { Icon } from './icon';
+
+/** matcher に渡すオプションの型 */
+type MatcherOptions = {
+  /** 検索欄に入力された文字列 */
+  query: string;
+  /** `[...presetIcons, ...embeddedIcons]` を表すアイコンリスト。 */
+  composedIcons: Icon[];
+  /** プリセットアイコンのリスト */
+  presetIcons: Icon[];
+  /** ページに埋め込まれているアイコンのリスト */
+  embeddedIcons: Icon[];
+};
+
+/** ComboBox 内でアイテムのフィルタに利用される matcher の型 */
+export type Matcher = (options: MatcherOptions) => Icon[];
 
 /**
  * 曖昧一致による matcher。
