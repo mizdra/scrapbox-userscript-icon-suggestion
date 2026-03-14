@@ -22,6 +22,5 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.oxc": "always"
-  },
-  "oxc.typeAware": true
+  }
 }
