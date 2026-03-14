@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { iconLinkElementToIcon, type Icon } from '../lib/icon';
 
 export type CursorPosition = {
-  /** カーソルのある行のインデックス (0-based) */
-  line: number;
+  /** カーソルのある行の ID */
+  lineId: string;
   /** カーソルのある文字のインデックス (0-based)。行の末尾にある場合は、その行の文字数と同じ値になる。 */
   char: number;
   /** ページの上端からの距離 */
@@ -16,8 +16,13 @@ export type Scrapbox = {
   layout: string;
   projectName: string;
   getCursorPosition: () => CursorPosition | undefined;
-  focus: (position: CursorPosition) => Promise<void>;
+  /**
+   * 指定した位置にカーソルを移動させる。
+   * @returns カーソルの移動に成功したかどうか。カーソルのあった行が削除されている場合は失敗する。
+   */
+  focus: (position: CursorPosition) => Promise<boolean>;
   blur: () => void;
+  /** カーソルのある位置にテキストを挿入する */
   insertText: (text: string) => void;
   getEmbeddedIcons: () => Icon[];
 };
@@ -60,7 +65,7 @@ export function useScrapbox(): Scrapbox {
     if (!el) throw new Error('.pointer-event が存在しません');
     return el;
   }, []);
-  const getCursorPosition = useCallback(() => {
+  const getCursorPosition = useCallback((): CursorPosition | undefined => {
     const cursorRect = cursor.getBoundingClientRect();
     const top = cursorRect.top + window.scrollY;
     const left = cursorRect.left + window.scrollX;
@@ -68,21 +73,20 @@ export function useScrapbox(): Scrapbox {
     const cursorLine = lines.find((line) => line.classList.contains('cursor-line'));
     if (!cursorLine) return undefined;
 
-    const lineIndex = lines.indexOf(cursorLine);
     const chars = Array.from(cursorLine.querySelectorAll<HTMLElement>('.char-index'));
     for (const char of chars) {
       const charRect = char.getBoundingClientRect();
       if (charRect.left <= cursorRect.left && cursorRect.left <= charRect.right) {
-        return { line: lineIndex, char: +char.dataset.charIndex!, top, left };
+        return { lineId: cursorLine.id, char: +char.dataset.charIndex!, top, left };
       }
     }
-    return { line: lineIndex, char: chars.length, top, left };
+    return { lineId: cursorLine.id, char: chars.length, top, left };
   }, [cursor]);
   const focus = useCallback(
     async (position: CursorPosition) => {
       const lines = Array.from(document.querySelectorAll('.lines .line'));
-      const targetLine = lines[position.line];
-      if (!targetLine) return;
+      const targetLine = lines.find((line) => line.id === position.lineId);
+      if (!targetLine) return false;
       const targetLineRect = targetLine.getBoundingClientRect();
 
       // まずその行の末尾にフォーカスして、行全体をテキスト化させる。
@@ -100,6 +104,7 @@ export function useScrapbox(): Scrapbox {
       }
       // textarea にフォーカスが移動するのを待つ
       await new Promise(requestAnimationFrame);
+      return true;
     },
     [pointerEvent],
   );
