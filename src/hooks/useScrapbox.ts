@@ -136,8 +136,23 @@ export function useScrapbox(): Scrapbox {
   };
 }
 
-function focusEditor(element: HTMLElement, clientX: number, clientY: number) {
+/**
+ * 指定した位置にカーソルをフォーカスする。
+ * @param x フォーカスする位置の x 座標 (layout viewport の左端からの距離)
+ * @param y フォーカスする位置の y 座標 (layout viewport の上端からの距離)
+ */
+function focusEditor(pointerEvent: HTMLElement, x: number, y: number) {
+  const eventInitDict = {
+    bubbles: true,
+    cancelable: true,
+    button: 0,
+    // clientX, clientY は仕様上は viewport の左上からの相対座標とされているが、
+    // 実際には、layout viewport の左上からの相対座標にスクロール量を加算したものである。
+    // そこで、スクロール量を加算して clientX, clientY を計算する。
+    clientX: window.scrollX + x,
+    clientY: window.scrollY + y,
+  };
   // mousedown イベントだけだと 範囲選択モードになってしまうため、mouseup イベントも dispatch する
-  element.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, button: 0, clientX, clientY }));
-  element.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, button: 0, clientX, clientY }));
+  pointerEvent.dispatchEvent(new MouseEvent('mousedown', eventInitDict));
+  pointerEvent.dispatchEvent(new MouseEvent('mouseup', eventInitDict));
 }
