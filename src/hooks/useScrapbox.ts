@@ -60,7 +60,8 @@ export function useScrapbox(): Scrapbox {
       const charRect = char.getBoundingClientRect();
       // NOTE: カーソルは必ずしも文字の境界にあるとは限らない (`iiii` と書かれた行で動作確認するとわかりやすい)。
       // そこで文字の中央を基準にしてカーソルがどちら側にあるかを判定する。
-      if (cursorRect.left < charRect.left + charRect.width / 2) {
+      // NOTE: 文字が多い行では折り返しが発生している可能性があるため、文字の位置がカーソルと同じ行にあるかどうかも判定する必要がある。
+      if (cursorRect.top <= charRect.top && cursorRect.left < charRect.left + charRect.width / 2) {
         return { lineId: cursorLine.id, char: +char.dataset.charIndex!, top, left };
       }
     }
@@ -80,17 +81,21 @@ export function useScrapbox(): Scrapbox {
     if (!targetLine) return false;
     const targetLineRect = targetLine.getBoundingClientRect();
 
-    // 目的の位置にフォーカスする前に、まずはその行の末尾にフォーカスして、行全体をテキスト化させる。
+    // 目的の位置にフォーカスする前に、まずはその行の右端にフォーカスして、行全体をテキスト化させる。
     // そうしないとアイコン記法などが画像化されたままになってしまい、正確な位置にカーソルを移動させることができない。
     focusEditor(pointerEvent, targetLineRect.right - 1, targetLineRect.top + targetLineRect.height / 2);
 
     // 改めて目的の位置にフォーカスする。
-    // NOTE: 文字位置が行の末尾を超えている場合は何もしない (行の末尾にフォーカスしたまま)。
     const chars = Array.from(targetLine.querySelectorAll<HTMLElement>('.char-index'));
+    // NOTE: 空行では `chars` は長さ 1 の配列になるので、空行でも targetChar は取得できる。
     const targetChar = chars[position.char];
     if (targetChar) {
       const targetCharRect = targetChar.getBoundingClientRect();
       focusEditor(pointerEvent, targetCharRect.left, targetCharRect.top + targetCharRect.height / 2);
+    } else {
+      const lastCharRect = chars[chars.length - 1]!.getBoundingClientRect();
+      // targetChar が見つからない、かつ行に文字がある場合は、行末へのフォーカスする
+      focusEditor(pointerEvent, lastCharRect.right, lastCharRect.top + lastCharRect.height / 2);
     }
     // #text-input にフォーカスが移動するのは requestAnimationFrame の後なので、それを待つ
     await new Promise(requestAnimationFrame);
