@@ -54,9 +54,13 @@ export function useScrapbox(): Scrapbox {
     if (!cursorLine) return undefined;
 
     const chars = Array.from(cursorLine.querySelectorAll<HTMLElement>('.char-index'));
+    // 行内の文字 の BoundingClientRect を見て、カーソルの位置から最も近い文字を探す。
+    // カーソルが文字の中央より左側にある場合はその文字を、右側にある場合は次以降の文字を指すものとする。
     for (const char of chars) {
       const charRect = char.getBoundingClientRect();
-      if (charRect.left <= cursorRect.left && cursorRect.left <= charRect.right) {
+      // NOTE: カーソルは必ずしも文字の境界にあるとは限らない (`iiii` と書かれた行で動作確認するとわかりやすい)。
+      // そこで文字の中央を基準にしてカーソルがどちら側にあるかを判定する。
+      if (cursorRect.left < charRect.left + charRect.width / 2) {
         return { lineId: cursorLine.id, char: +char.dataset.charIndex!, top, left };
       }
     }
@@ -86,7 +90,7 @@ export function useScrapbox(): Scrapbox {
     const targetChar = chars[position.char];
     if (targetChar) {
       const targetCharRect = targetChar.getBoundingClientRect();
-      focusEditor(pointerEvent, targetCharRect.left + 1, targetCharRect.top + targetCharRect.height / 2);
+      focusEditor(pointerEvent, targetCharRect.left, targetCharRect.top + targetCharRect.height / 2);
     }
     // #text-input にフォーカスが移動するのは requestAnimationFrame の後なので、それを待つ
     await new Promise(requestAnimationFrame);
