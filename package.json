@@ -1,6 +1,6 @@
 {
   "name": "scrapbox-userscript-icon-suggestion",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "Scrapbox's UserScript to suggest and insert icons.",
   "homepage": "https://github.com/mizdra/scrapbox-userscript-icon-suggestion#readme",
   "bugs": {
