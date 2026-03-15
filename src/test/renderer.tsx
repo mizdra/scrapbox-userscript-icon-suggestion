@@ -62,13 +62,20 @@ function PageLayout({ cursorLineIndex, embeddedIcons }: { cursorLineIndex?: numb
         <textarea id="text-input" className="text-input" />
         <div className="pointer-event">
           <div className="lines">
+            {/* 空行 */}
             <div className={`line${cursorLineIndex !== undefined ? ' cursor-line' : ''}`}>
-              {embeddedIcons?.map((icon, i) => (
-                <a key={i} className="link icon" href={icon.fullPagePath}>
-                  <img className="icon" alt={icon.imgAlt} title={icon.imgTitle} src={icon.imgSrc} />
-                </a>
-              ))}
+              <span className="char-index" data-char-index="0" />
             </div>
+            {/* アイコンが埋め込まれた行 */}
+            {embeddedIcons && (
+              <div className="line">
+                {embeddedIcons.map((icon, i) => (
+                  <a key={i} className="link icon" href={icon.fullPagePath}>
+                    <img className="icon" alt={icon.imgAlt} title={icon.imgTitle} src={icon.imgSrc} />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
