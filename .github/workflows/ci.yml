@@ -20,7 +20,7 @@ jobs:
           cache: true
       - parallel:
           - run: vp run check
-          - run: vp run build
+          - run: vp run pack
 
   test:
     runs-on: ubuntu-latest

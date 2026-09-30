@@ -14,8 +14,8 @@
   },
   "type": "module",
   "scripts": {
-    "build": "rolldown -c",
-    "watch": "rolldown -w -c",
+    "pack": "vp pack",
+    "watch": "vp pack --watch",
     "check": "vp check",
     "test": "vp test"
   },
@@ -33,7 +33,6 @@
     "@testing-library/user-event": "^14.6.7",
     "@types/node": "^26.6.3",
     "jsdom": "^30.1.1",
-    "rolldown": "^1.2.11",
     "typescript": "^7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:",

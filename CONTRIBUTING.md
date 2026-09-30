@@ -8,7 +8,7 @@
   pnpm version <type>
   ```
 - ```bash
-  rm -rf dist && pnpm run build
+  vp pack
   ```
 - `dist/index.js` をコピーし、https://scrapbox.io/customize/icon-suggestion のソースコードコーナーに貼り付ける。
   - ```bash

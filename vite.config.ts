@@ -11,6 +11,14 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     globals: true,
   },
+  pack: {
+    entry: ['src/index.ts'],
+    platform: 'browser',
+    target: false,
+    minify: true,
+    deps: { alwaysBundle: [/.*/u], onlyBundle: false },
+    outputOptions: { comments: { annotation: false } },
+  },
   fmt: mizdraFmt,
   lint: {
     extends: [mizdraLint.base, mizdraLint.typescript, mizdraLint.node, mizdraLint.react],

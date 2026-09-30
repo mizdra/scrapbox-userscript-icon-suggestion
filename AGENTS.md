@@ -2,20 +2,20 @@
 
 ## プロジェクト概要
 
-Scrapbox のページ内アイコンを suggest・挿入する UserScript。略称は icon-suggestion。Preact で UI を構築し、Rolldown でバンドルして `dist/index.js` として出力する。ユーザーはビルド成果物を Scrapbox のページにコピペしてデプロイする。
+Scrapbox のページ内アイコンを suggest・挿入する UserScript。略称は icon-suggestion。Preact で UI を構築し、`vp pack` でバンドルして `dist/index.js` として出力する。ユーザーはビルド成果物を Scrapbox のページにコピペしてデプロイする。
 
 ## コマンド
 
-- `pnpm run build` - プロダクションビルド
-- `pnpm run check` - format, lint, type-check
+- `vp pack` - プロダクションビルド
+- `vp check` - format, lint, type-check
 - `vp check --fix` - format と自動修正可能な lint エラーを修正
-- `pnpm run test` - Vitest でテスト実行（watch: false）
+- `vp test` - Vitest でテスト実行（watch: false）
 - `vp test src/lib/icon.test.ts` - 単一テストファイルの実行
 
 ## アーキテクチャ
 
 - **UIフレームワーク**: Preact
-- **ビルド**: Rolldown で `src/index.ts` をバンドル
+- **ビルド**: `vp pack` (tsdown) で `src/index.ts` をバンドル
 - **format / lint / テスト**: Vite+ (Oxfmt / Oxlint / Vitest)
 - **テスト環境**: jsdom + @testing-library/preact
 
