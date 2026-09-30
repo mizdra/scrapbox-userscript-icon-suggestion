@@ -1,3 +1,4 @@
+import { afterEach, describe, expect, test, vi } from 'vite-plus/test';
 import {
   DUMMY_PROJECT_JSON_FOR_PUBLIC_AND_GUEST,
   DUMMY_MEMBER_PAGE_JSON_FOR_PUBLIC_AND_GUEST,

@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vite-plus/test';
 import { uniqueBy, uniqueIcons } from './collection';
 import { Icon } from './icon';
 

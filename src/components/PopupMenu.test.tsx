@@ -1,4 +1,5 @@
 import { act, fireEvent } from '@testing-library/preact';
+import { beforeEach, describe, expect, test, vi } from 'vite-plus/test';
 import { Icon } from '../lib/icon';
 import {
   keydownEnterEvent,

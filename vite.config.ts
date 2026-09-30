@@ -9,7 +9,6 @@ export default defineConfig({
     watch: false,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
-    globals: true,
   },
   pack: {
     entry: ['src/index.ts'],

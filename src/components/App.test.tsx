@@ -1,6 +1,7 @@
 import { act, fireEvent } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import type { ComponentChild } from 'preact';
+import { describe, expect, test, vi } from 'vite-plus/test';
 import { uniqueIcons } from '../lib/collection';
 import { Icon } from '../lib/icon';
 import type { Matcher } from '../lib/matcher';

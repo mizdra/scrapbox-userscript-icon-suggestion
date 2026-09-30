@@ -6,7 +6,7 @@
     "module": "preserve",
     "moduleResolution": "bundler",
     "lib": ["esnext", "dom"],
-    "types": ["node", "vitest/globals"],
+    "types": ["node"],
     "noEmit": true,
 
     // Other Outputs
