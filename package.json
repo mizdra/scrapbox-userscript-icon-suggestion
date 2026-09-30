@@ -16,13 +16,8 @@
   "scripts": {
     "build": "rolldown -c",
     "watch": "rolldown -w -c",
-    "lint": "run-s -c lint:*",
-    "lint:oxlint": "oxlint",
-    "lint:oxfmt": "oxfmt --check",
-    "lint-fix": "run-s -c lint-fix:*",
-    "lint-fix:oxfmt": "oxfmt --write",
-    "lint-fix:oxlint": "pnpm run lint:oxlint --fix",
-    "test": "vitest"
+    "check": "vp check",
+    "test": "vp test"
   },
   "dependencies": {
     "asearch": "^1.0.1",
@@ -38,13 +33,11 @@
     "@testing-library/user-event": "^14.6.7",
     "@types/node": "^26.6.3",
     "jsdom": "^30.1.1",
-    "npm-run-all2": "^9.0.3",
-    "oxfmt": "^0.70.0",
-    "oxlint": "^1.85.0",
-    "oxlint-tsgolint": "^7.0.2003",
     "rolldown": "^1.2.11",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.2"
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
   },
   "devEngines": {
     "packageManager": {

@@ -7,16 +7,17 @@ Scrapbox のページ内アイコンを suggest・挿入する UserScript。略�
 ## コマンド
 
 - `pnpm run build` - プロダクションビルド
-- `pnpm run lint` - lint, format
-- `pnpm run lint-fix` - 自動修正可能な lint エラーを修正
+- `pnpm run check` - format, lint, type-check
+- `vp check --fix` - format と自動修正可能な lint エラーを修正
 - `pnpm run test` - Vitest でテスト実行（watch: false）
-- `pnpm exec vitest run test/lib/icon.test.ts` - 単一テストファイルの実行
+- `vp test src/lib/icon.test.ts` - 単一テストファイルの実行
 
 ## アーキテクチャ
 
 - **UIフレームワーク**: Preact
 - **ビルド**: Rolldown で `src/index.ts` をバンドル
-- **テスト**: Vitest + jsdom + @testing-library/preact
+- **format / lint / テスト**: Vite+ (Oxfmt / Oxlint / Vitest)
+- **テスト環境**: jsdom + @testing-library/preact
 
 ### エントリポイントと主要モジュール
 
