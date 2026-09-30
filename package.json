@@ -28,6 +28,13 @@
     "asearch": "^1.0.1",
     "preact": "^11.0.0"
   },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^12.7.0",
+      "onFail": "download"
+    }
+  },
   "devDependencies": {
     "@mizdra/oxfmt-config": "^0.1.1",
     "@mizdra/oxlint-config": "^0.2.0",
@@ -45,6 +52,5 @@
     "rolldown": "^1.0.0-rc.9",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
-  },
-  "packageManager": "pnpm@11.8.0"
+  }
 }
