@@ -6,11 +6,11 @@ Scrapbox のページ内アイコンを suggest・挿入する UserScript。略�
 
 ## コマンド
 
-- `npm run build` - プロダクションビルド
-- `npm run lint` - lint, format
-- `npm run lint-fix` - 自動修正可能な lint エラーを修正
-- `npm run test` - Vitest でテスト実行（watch: false）
-- `npx vitest run test/lib/icon.test.ts` - 単一テストファイルの実行
+- `pnpm run build` - プロダクションビルド
+- `pnpm run lint` - lint, format
+- `pnpm run lint-fix` - 自動修正可能な lint エラーを修正
+- `pnpm run test` - Vitest でテスト実行（watch: false）
+- `pnpm exec vitest run test/lib/icon.test.ts` - 単一テストファイルの実行
 
 ## アーキテクチャ
 
