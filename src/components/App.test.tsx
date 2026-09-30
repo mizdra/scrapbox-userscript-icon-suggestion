@@ -17,7 +17,7 @@ vi.spyOn(scrapbox.Project, 'name', 'get').mockReturnValue('project');
 const props: AppProps = {
   isLaunchIconSuggestionKey: DEFAULT_IS_LAUNCH_ICON_SUGGESTION_KEY,
   isExitIconSuggestionKey: DEFAULT_IS_EXIT_ICON_SUGGESTION_KEY,
-  presetIcons: presetIcons,
+  presetIcons,
   matcher: forwardMatcher,
 };
 
@@ -91,8 +91,8 @@ describe('App', () => {
       expect(matcher).lastCalledWith({
         query: '',
         composedIcons: uniqueIcons([...embeddedIcons, ...presetIcons]),
-        presetIcons: presetIcons,
-        embeddedIcons: embeddedIcons,
+        presetIcons,
+        embeddedIcons,
       });
     });
   });

@@ -121,10 +121,10 @@ describe('PopupMenu', () => {
         />,
       );
       const suggestedIconLabels = queryAllByTestId('suggested-icon-label');
-      expect(suggestedIconLabels[0]).toHaveTextContent(/^a$/);
-      expect(suggestedIconLabels[1]).toHaveTextContent(/^b \(project\)$/);
-      expect(suggestedIconLabels[2]).toHaveTextContent(/^b \(external-project-1\)$/);
-      expect(suggestedIconLabels[3]).toHaveTextContent(/^c$/);
+      expect(suggestedIconLabels[0]).toHaveTextContent(/^a$/u);
+      expect(suggestedIconLabels[1]).toHaveTextContent(/^b \(project\)$/u);
+      expect(suggestedIconLabels[2]).toHaveTextContent(/^b \(external-project-1\)$/u);
+      expect(suggestedIconLabels[3]).toHaveTextContent(/^c$/u);
     });
   });
 });
