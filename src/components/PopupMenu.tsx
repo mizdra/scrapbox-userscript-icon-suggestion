@@ -64,7 +64,7 @@ export function PopupMenu({ icons, onSelect }: PopupMenuProps) {
       <div ref={ref} className="button-container" data-testid="button-container">
         {icons.length === 0 ? 'キーワードにマッチするアイコンがありません' : iconListElement}
       </div>
-      <div className="triangle" style={{ left: 10 }} />
+      <div className="triangle" style={{ left: '10px' }} />
     </div>
   );
 }

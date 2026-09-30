@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "asearch": "^1.0.1",
-    "preact": "^10.28.4"
+    "preact": "^11.0.0"
   },
   "devDependencies": {
     "@mizdra/oxfmt-config": "^0.1.1",

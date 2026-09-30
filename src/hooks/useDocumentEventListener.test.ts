@@ -20,7 +20,8 @@ describe('useDocumentEventListener', () => {
     const listener = vi.fn();
     const { unmount } = renderHook(() => useDocumentEventListener('keydown', listener));
 
-    unmount();
+    // unmount 時の useEffect の cleanup は描画後まで遅延されるので、act() で flush する
+    await act(() => unmount());
 
     await act(() => {
       fireEvent(document, event);
