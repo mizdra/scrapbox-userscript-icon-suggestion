@@ -1,21 +1,21 @@
-## ビルド方法
+# コントリビューションガイド
 
-```console
-$ npm install
-$ npm run build
-```
+コントリビューター向けのガイドです。
 
 ## リリース方法
 
-```console
-$ git switch master
-$ git pull
-$ npm version
-$ rm -rf dist && npm run build
-
-$ cat dist/index.js | pbcopy
-$ open https://scrapbox.io/customize/icon-suggestion
-$ # ソースコードコーナーにクリップボードの中身をペースト
-
-$ git push --follow-tags
-```
+- ```bash
+  pnpm version <type>
+  ```
+- ```bash
+  rm -rf dist && pnpm run build
+  ```
+- `dist/index.js` をコピーし、https://scrapbox.io/customize/icon-suggestion のソースコードコーナーに貼り付ける。
+  - ```bash
+    cat dist/index.js | pbcopy
+    ```
+- ```bash
+  git push --follow-tags
+  ```
+- GitHub で release を作成する。
+  - https://github.com/mizdra/scrapbox-userscript-icon-suggestion/releases/new
