@@ -1,6 +1,6 @@
-export const PROJECT_JSON_URL_RE = /\/api\/projects\/project$/;
-export const MEMBER_PAGE_JSON_URL_RE = /\/api\/pages\/project\/member$/;
-export const NON_EXIST_PAGE_JSON_URL_RE = /\/api\/pages\/project\/non-exist$/;
+export const PROJECT_JSON_URL_RE = /\/api\/projects\/project$/u;
+export const MEMBER_PAGE_JSON_URL_RE = /\/api\/pages\/project\/member$/u;
+export const NON_EXIST_PAGE_JSON_URL_RE = /\/api\/pages\/project\/non-exist$/u;
 
 export const DUMMY_PROJECT_JSON_FOR_NOT_EXISTS = JSON.stringify({
   name: 'NotFoundError',

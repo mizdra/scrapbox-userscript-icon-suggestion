@@ -1,5 +1,6 @@
 import { fireEvent } from '@testing-library/dom';
 import { renderHook, act } from '@testing-library/preact';
+import { describe, expect, test, vi } from 'vite-plus/test';
 import { useDocumentEventListener } from './useDocumentEventListener';
 
 describe('useDocumentEventListener', () => {

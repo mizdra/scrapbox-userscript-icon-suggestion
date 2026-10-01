@@ -14,35 +14,35 @@
   },
   "type": "module",
   "scripts": {
-    "build": "rolldown -c",
-    "watch": "rolldown -w -c",
-    "lint": "run-s -c lint:*",
-    "lint:oxlint": "oxlint",
-    "lint:oxfmt": "oxfmt --check",
-    "lint-fix": "run-s -c lint-fix:*",
-    "lint-fix:oxfmt": "oxfmt --write",
-    "lint-fix:oxlint": "npm run lint:oxlint -- --fix",
-    "test": "vitest"
+    "pack": "vp pack",
+    "watch": "vp pack --watch",
+    "check": "vp check",
+    "test": "vp test"
   },
   "dependencies": {
     "asearch": "^1.0.1",
     "preact": "^11.0.0"
   },
   "devDependencies": {
-    "@mizdra/oxfmt-config": "^0.1.1",
-    "@mizdra/oxlint-config": "^0.2.0",
-    "@preact/preset-vite": "^2.10.3",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@mizdra/oxfmt-config": "^0.2.0",
+    "@mizdra/oxlint-config": "^0.5.0",
+    "@preact/preset-vite": "^2.10.6",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/preact": "^3.2.4",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^25.3.5",
-    "jsdom": "^28.1.0",
-    "npm-run-all2": "^8.0.4",
-    "oxfmt": "^0.40.0",
-    "oxlint": "^1.55.0",
-    "oxlint-tsgolint": "^0.16.0",
-    "rolldown": "^1.0.0-rc.9",
-    "typescript": "^5.9.3",
-    "vitest": "^4.1.0"
+    "@testing-library/user-event": "^14.6.7",
+    "@types/node": "^26.6.3",
+    "jsdom": "^30.1.1",
+    "typescript": "^7.0.2",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^12.7.0",
+      "onFail": "download"
+    }
   }
 }

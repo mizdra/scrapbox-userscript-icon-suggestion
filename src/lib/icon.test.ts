@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vite-plus/test';
 import { hasDuplicatedPageTitle, Icon, iconLinkElementToIcon } from './icon';
 
 // scrapbox のアイコンの a タグを再現したものを返す関数

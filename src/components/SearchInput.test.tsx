@@ -1,4 +1,5 @@
 import { fireEvent, waitFor } from '@testing-library/preact';
+import { describe, expect, test, vi } from 'vite-plus/test';
 import { render } from '../test/renderer';
 import { SearchInput } from './SearchInput';
 

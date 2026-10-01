@@ -1,4 +1,5 @@
 import { act, fireEvent } from '@testing-library/preact';
+import { beforeEach, describe, expect, test, vi } from 'vite-plus/test';
 import { Icon } from '../lib/icon';
 import {
   keydownEnterEvent,
@@ -121,10 +122,10 @@ describe('PopupMenu', () => {
         />,
       );
       const suggestedIconLabels = queryAllByTestId('suggested-icon-label');
-      expect(suggestedIconLabels[0]).toHaveTextContent(/^a$/);
-      expect(suggestedIconLabels[1]).toHaveTextContent(/^b \(project\)$/);
-      expect(suggestedIconLabels[2]).toHaveTextContent(/^b \(external-project-1\)$/);
-      expect(suggestedIconLabels[3]).toHaveTextContent(/^c$/);
+      expect(suggestedIconLabels[0]?.textContent).toBe('a');
+      expect(suggestedIconLabels[1]?.textContent).toBe('b (project)');
+      expect(suggestedIconLabels[2]?.textContent).toBe('b (external-project-1)');
+      expect(suggestedIconLabels[3]?.textContent).toBe('c');
     });
   });
 });

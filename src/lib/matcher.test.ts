@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vite-plus/test';
 import { Icon } from './icon';
 import { forwardPartialFuzzyMatcher, fuzzyMatcher, partialMatcher, forwardMatcher } from './matcher';
 
