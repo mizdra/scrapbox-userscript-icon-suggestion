@@ -6,6 +6,7 @@ Scrapbox のページ内アイコンを suggest・挿入する UserScript。略�
 
 ## コマンド
 
+- `vp install` - 依存関係のインストール
 - `vp pack` - プロダクションビルド
 - `vp check` - format, lint, type-check
 - `vp check --fix` - format と自動修正可能な lint エラーを修正
